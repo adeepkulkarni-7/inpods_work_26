@@ -1,0 +1,171 @@
+{
+  "id": "86de0943",
+  "name": "Mapping_2026-01-23_3",
+  "created_at": "2026-01-23T18:43:57.910685",
+  "dimension": "area_topics",
+  "mode": "B",
+  "source_file": "audit_output_area_topics_20260123_184159.xlsx",
+  "question_count": 10,
+  "recommendations": [
+    {
+      "agreement_score": 0.3,
+      "confidence": 0.9,
+      "current_mapping": {
+        "subtopic": "Sepsis",
+        "topic": "CVS & Blood"
+      },
+      "justification": "Bacterial pneumonia is a secondary bacterial infection, which aligns better with the 'Bacterial/Viral/Parasitic infections' subtopic under Infectious Diseases.",
+      "mapped_id": "",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "1.D",
+      "question_text": "The patient develops bacterial pneumonia during recovery. Give reason.",
+      "rating": "incorrect",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "agreement_score": 0.2,
+      "confidence": 0.95,
+      "current_mapping": {
+        "subtopic": "HIV/AIDS",
+        "topic": "CVS & Blood"
+      },
+      "justification": "STIs caused by bacterial agents are better categorized under 'Bacterial/Viral/Parasitic infections' within Infectious Diseases.",
+      "mapped_id": "",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "2.A",
+      "question_text": "Mention the bacterial agents causing Sexually transmitted infections.",
+      "rating": "incorrect",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "agreement_score": 0,
+      "confidence": 0.95,
+      "current_mapping": {
+        "subtopic": "HIV/AIDS",
+        "topic": "CVS & Blood"
+      },
+      "justification": "Congenital syphilis is a bacterial infection and should be mapped under 'Bacterial infections' for better alignment.",
+      "mapped_id": "",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "2.D",
+      "question_text": "Neonates with Congenital syphilis may be asymptomatic at birth. Give reason.",
+      "rating": "incorrect",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "agreement_score": 0.3,
+      "confidence": 0.95,
+      "current_mapping": {
+        "subtopic": "Fungal infection",
+        "topic": "Musculoskeletal, Skin & Soft Tissue"
+      },
+      "justification": "The question should be mapped under 'Infectious Diseases & Laboratory' with a focus on fungal infections, as it involves systemic fungal disease.",
+      "mapped_id": "",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "8",
+      "question_text": "Discuss the Clinical features and laboratory diagnosis of Cryptococcal Meningitis.",
+      "rating": "incorrect",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "agreement_score": 0,
+      "confidence": 1,
+      "current_mapping": {
+        "subtopic": "Sepsis",
+        "topic": "CVS & Blood"
+      },
+      "justification": "Schistosomiasis, a parasitic infection, is the primary cause of endemic haematuria, making this the correct mapping.",
+      "mapped_id": "",
+      "mapped_subtopic": "Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "12",
+      "question_text": "Endemic Haematuria.",
+      "rating": "incorrect",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Parasitic infections"
+    },
+    {
+      "agreement_score": 0,
+      "confidence": 1,
+      "current_mapping": {
+        "subtopic": "Fungal infection",
+        "topic": "Musculoskeletal, Skin & Soft Tissue"
+      },
+      "justification": "Aspergilloma is a fungal infection and should be categorized under fungal infections in the infectious diseases section.",
+      "mapped_id": "",
+      "mapped_subtopic": "Fungal infection",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "14",
+      "question_text": "Aspergilloma.",
+      "rating": "incorrect",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Fungal infection"
+    },
+    {
+      "agreement_score": 0.3,
+      "confidence": 0.95,
+      "current_mapping": {
+        "subtopic": "Sepsis",
+        "topic": "CVS & Blood"
+      },
+      "justification": "VAP is a bacterial respiratory infection and fits better under 'Infectious Diseases & Laboratory / Bacterial infections'.",
+      "mapped_id": "",
+      "mapped_subtopic": "Bacterial infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 9",
+      "question_text": "A 24 year old male was admitted to the Critical care unit following a RTA... Suspected VAP...",
+      "rating": "incorrect",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial infections"
+    },
+    {
+      "agreement_score": 0.2,
+      "confidence": 0.9,
+      "current_mapping": {
+        "subtopic": "Anaerobic infection (Gas gangrene)",
+        "topic": "Musculoskeletal, Skin & Soft Tissue"
+      },
+      "justification": "Haemophilus ducreyi is a bacterial pathogen, and the question aligns better with 'Bacterial infections' under 'Infectious Diseases & Laboratory'.",
+      "mapped_id": "",
+      "mapped_subtopic": "Bacterial infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 10",
+      "question_text": "Assertion and Reasoning: Assertion(A): Haemophilus ducreyi causes painful genital ulcers...",
+      "rating": "incorrect",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial infections"
+    },
+    {
+      "agreement_score": 0,
+      "confidence": 0.95,
+      "current_mapping": {
+        "subtopic": "Morphology of Bacteria",
+        "topic": "General Microbiology"
+      },
+      "justification": "The question pertains to characteristics of viruses, which aligns with viral morphology.",
+      "mapped_id": "",
+      "mapped_subtopic": "Viral Morphology",
+      "mapped_topic": "General Microbiology",
+      "question_num": "MCQ 12",
+      "question_text": "Multiple Completion type: Which of the following are characteristics of Adenoviruses?",
+      "rating": "incorrect",
+      "recommended_mapping": "General Microbiology / Viral Morphology"
+    },
+    {
+      "agreement_score": 0,
+      "confidence": 0.95,
+      "current_mapping": {
+        "subtopic": "Fungal infection",
+        "topic": "Musculoskeletal, Skin & Soft Tissue"
+      },
+      "justification": "Fungal infections involving the eye are better categorized under infectious diseases rather than musculoskeletal or skin conditions.",
+      "mapped_id": "",
+      "mapped_subtopic": "Fungal infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 16",
+      "question_text": "A 32 yr old farmer presents with severe pain redness & blurred vision in the right eye...",
+      "rating": "incorrect",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Fungal infections"
+    }
+  ]
+}

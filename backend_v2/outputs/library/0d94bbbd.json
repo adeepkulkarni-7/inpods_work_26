@@ -1,0 +1,407 @@
+{
+  "id": "0d94bbbd",
+  "name": "Mapping_2026-01-26_o6",
+  "created_at": "2026-01-26T16:30:21.076270",
+  "dimension": "objective",
+  "mode": "A",
+  "source_file": "RamaiaMicroExamCSV_CLEANED_1.csv",
+  "question_count": 44,
+  "recommendations": [
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question focuses on explaining the sequence of events in the pathogenesis of infection, which aligns with understanding how microorganisms cause human infection.",
+      "mapped_id": "O1",
+      "question_num": "1.A",
+      "question_text": "Explain the sequence of events involved in the pathogenesis of Infection.",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The question directly addresses laboratory diagnosis, which is explicitly covered under Objective O5.",
+      "mapped_id": "O5",
+      "question_num": "1.B",
+      "question_text": "Discuss the Laboratory diagnosis of the agent associated with the clinical condition.",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.92,
+      "current_mapping": null,
+      "justification": "The question pertains to immunoprophylactic measures, which are a form of prophylaxis for infecting microorganisms, aligning with Objective O6.",
+      "mapped_id": "O6",
+      "question_num": "1.C",
+      "question_text": "Discuss the Immunoprophylactic measures available to combat this condition.",
+      "recommended_mapping": "O6"
+    },
+    {
+      "confidence": 0.88,
+      "current_mapping": null,
+      "justification": "The question involves reasoning about bacterial pneumonia during recovery, which relates to host defense mechanisms against microorganisms as described in Objective O4.",
+      "mapped_id": "O4",
+      "question_num": "1.D",
+      "question_text": "The patient develops bacterial pneumonia during recovery. Give reason.",
+      "recommended_mapping": "O4"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The question asks about bacterial agents causing sexually transmitted infections, which aligns with describing characteristics of microorganisms, including their pathogenicity.",
+      "mapped_id": "O3",
+      "question_num": "2.A",
+      "question_text": "Mention the bacterial agents causing Sexually transmitted infections.",
+      "recommended_mapping": "O3"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question focuses on the pathogenesis and clinical sequelae of an infection, which aligns with explaining how microorganisms cause human infection.",
+      "mapped_id": "O1",
+      "question_num": "2.B",
+      "question_text": "Discuss the pathogenesis & the clinical sequelae if the infection is associated with the pathogen shown in the picture.",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The question emphasizes serological tests for diagnosis, which directly relates to describing laboratory diagnosis of human infections.",
+      "mapped_id": "O5",
+      "question_num": "2.C",
+      "question_text": "Mention the Specific Serological tests for the diagnosis & Explain any one in detail.",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The question asks for reasoning about asymptomatic congenital syphilis, which involves understanding how microorganisms cause infection and their clinical implications.",
+      "mapped_id": "O1",
+      "question_num": "2.D",
+      "question_text": "Neonates with Congenital syphilis may be asymptomatic at birth. Give reason.",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question addresses clinical features and laboratory diagnosis of cerebral malaria, which aligns with describing laboratory diagnosis of human infections.",
+      "mapped_id": "O5",
+      "question_num": "3",
+      "question_text": "Discuss the Clinical features and laboratory diagnosis of Cerebral Malaria.",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The question focuses on clinical features and laboratory diagnosis of trichomoniasis, which is directly related to the objective of describing laboratory diagnosis of infections.",
+      "mapped_id": "O5",
+      "question_num": "4",
+      "question_text": "Clinical features and laboratory diagnosis of Trichomoniasis.",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question focuses on clinical features and laboratory diagnosis, which aligns most closely with the objective describing laboratory diagnosis of human infections.",
+      "mapped_id": "O5",
+      "question_num": "5",
+      "question_text": "Clinical features and Laboratory diagnosis of Human Anthrax.",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The emphasis on laboratory diagnosis of human rabies directly corresponds to the objective on laboratory diagnosis of human infections.",
+      "mapped_id": "O5",
+      "question_num": "6",
+      "question_text": "Discuss the Lab diagnosis of Human Rabies.",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The question addresses drug resistance, which relates to the characteristics of microorganisms, particularly resistance mechanisms.",
+      "mapped_id": "O3",
+      "question_num": "7",
+      "question_text": "Discuss detection of Drug resistant Pulmonary Tuberculosis & its implications.",
+      "recommended_mapping": "O3"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The focus on clinical features and laboratory diagnosis of Cryptococcal Meningitis aligns with the objective on laboratory diagnosis of human infections.",
+      "mapped_id": "O5",
+      "question_num": "8",
+      "question_text": "Discuss the Clinical features and laboratory diagnosis of Cryptococcal Meningitis.",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The care-bundle approach for preventing ventilator-associated pneumonia (VAP) relates to prophylaxis for infecting microorganisms.",
+      "mapped_id": "O6",
+      "question_num": "9",
+      "question_text": "Care-bundle approach in prevention of VAP.",
+      "recommended_mapping": "O6"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "Group B Streptococci are commensal organisms that can become opportunistic pathogens, aligning with understanding commensal, opportunistic, and pathogenic organisms.",
+      "mapped_id": "O2",
+      "question_num": "10",
+      "question_text": "Group B Streptococci.",
+      "recommended_mapping": "O2"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "Drawing a labelled diagram of the Hydatid cyst relates to describing the morphology and characteristics of microorganisms.",
+      "mapped_id": "O3",
+      "question_num": "11",
+      "question_text": "Draw a neatly labelled diagram of the Hydatid cyst",
+      "recommended_mapping": "O3"
+    },
+    {
+      "confidence": 0.8,
+      "current_mapping": null,
+      "justification": "Endemic haematuria is often caused by specific microorganisms, requiring an explanation of how they cause human infection.",
+      "mapped_id": "O1",
+      "question_num": "12",
+      "question_text": "Endemic Haematuria.",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The DPT vaccine is a prophylactic measure against specific infections, directly aligning with describing prophylaxis for infecting microorganisms.",
+      "mapped_id": "O6",
+      "question_num": "13",
+      "question_text": "DPT Vaccine.",
+      "recommended_mapping": "O6"
+    },
+    {
+      "confidence": 0.88,
+      "current_mapping": null,
+      "justification": "Aspergilloma involves understanding the morphology and characteristics of Aspergillus species, which fits describing microorganism characteristics.",
+      "mapped_id": "O3",
+      "question_num": "14",
+      "question_text": "Aspergilloma.",
+      "recommended_mapping": "O3"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "Dimorphic fungi in CNS infections relates to the characteristics, including morphology and virulence, of microorganisms.",
+      "mapped_id": "O3",
+      "question_num": "15",
+      "question_text": "Dimorphic fungi in CNS infections.",
+      "recommended_mapping": "O3"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "NS1 Antigen is a diagnostic marker, aligning with the objective of describing laboratory diagnosis of infections.",
+      "mapped_id": "O5",
+      "question_num": "16",
+      "question_text": "NS1 Antigen.",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.92,
+      "current_mapping": null,
+      "justification": "Specimen collection and storage are critical components of laboratory diagnosis of bacterial meningitis.",
+      "mapped_id": "O5",
+      "question_num": "17",
+      "question_text": "Specimen collection & storage in bacterial meningitis.",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "Informed consent involves understanding the interaction between host and external factors, aligning with host defense mechanisms.",
+      "mapped_id": "O4",
+      "question_num": "18",
+      "question_text": "Informed consent",
+      "recommended_mapping": "O4"
+    },
+    {
+      "confidence": 0.88,
+      "current_mapping": null,
+      "justification": "Calculating CAUTI rates involves understanding how microorganisms cause infections in clinical settings.",
+      "mapped_id": "O1",
+      "question_num": "MCQ 1",
+      "question_text": "The infection surveillance officer had to calculate the CAUTI rates...",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The question involves understanding how a microorganism causes infection in a diabetic patient with end-stage renal disease, which aligns with explaining how microorganisms cause human infections.",
+      "mapped_id": "O1",
+      "question_num": "MCQ 2",
+      "question_text": "A 45 old diabetic with end stage renal disease presented with complaints of eye & facial pain...",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The question focuses on the characteristics of a microorganism (Klebsiella pneumoniae) causing pneumonia, particularly its virulence and associated symptoms, which aligns with describing microorganism characteristics.",
+      "mapped_id": "O3",
+      "question_num": "MCQ 3",
+      "question_text": "Assertion and Reasoning: A 55 yr old alcoholic develops pneumonia with copious “Currant jelly sputum”...",
+      "recommended_mapping": "O3"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The question pertains to the use of antigens in the IGRA test, which is a diagnostic tool, aligning with the objective of describing laboratory diagnosis of human infections.",
+      "mapped_id": "O5",
+      "question_num": "MCQ 4",
+      "question_text": "Multiple Completion type: Which of the following are key antigens used in IGRA Test?",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.8,
+      "current_mapping": null,
+      "justification": "The clinical presentation involves host immune responses (fever and petechial rashes), which aligns with explaining host defense mechanisms against microorganisms.",
+      "mapped_id": "O4",
+      "question_num": "MCQ 5",
+      "question_text": "A 40 year old male presented to the medical OPD with high grade fever with petechial rashes...",
+      "recommended_mapping": "O4"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question directly addresses the BCG vaccine, which is a prophylactic measure against tuberculosis, aligning with the objective of describing prophylaxis for infecting microorganisms.",
+      "mapped_id": "O6",
+      "question_num": "MCQ 6",
+      "question_text": "Multiple completion type: 1. BCG is a Live Attenuated vaccine...",
+      "recommended_mapping": "O6"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question pertains to the Covishield vaccine, which falls under prophylaxis for infecting microorganisms.",
+      "mapped_id": "O6",
+      "question_num": "MCQ 7",
+      "question_text": "The component of Covishield vaccine which serves as a vector...",
+      "recommended_mapping": "O6"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The evaluation of OPV strains involves understanding the characteristics (e.g., virulence) of microorganisms.",
+      "mapped_id": "O3",
+      "question_num": "MCQ 8",
+      "question_text": "A Virologist is evaluating the strains used in OPV...",
+      "recommended_mapping": "O3"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The case of suspected VAP requires knowledge of laboratory diagnosis of infections to confirm the causative agent.",
+      "mapped_id": "O5",
+      "question_num": "MCQ 9",
+      "question_text": "A 24 year old male was admitted to the Critical care unit following a RTA... Suspected VAP...",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.88,
+      "current_mapping": null,
+      "justification": "The question focuses on how Haemophilus ducreyi causes infection, aligning with the objective of explaining infection mechanisms.",
+      "mapped_id": "O1",
+      "question_num": "MCQ 10",
+      "question_text": "Assertion and Reasoning: Assertion(A): Haemophilus ducreyi causes painful genital ulcers...",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.8,
+      "current_mapping": null,
+      "justification": "The case involves a diabetic patient, suggesting a focus on opportunistic infections, which aligns with understanding commensal, opportunistic, and pathogenic organisms.",
+      "mapped_id": "O2",
+      "question_num": "MCQ 11",
+      "question_text": "A 35 year old diabetic presented to the neurosurgery OPD with symptoms of focal seizures...",
+      "recommended_mapping": "O2"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question focuses on the characteristics of Adenoviruses, which aligns with describing morphology, resistance, and virulence of microorganisms.",
+      "mapped_id": "O3",
+      "question_num": "MCQ 12",
+      "question_text": "Multiple Completion type: Which of the following are characteristics of Adenoviruses?",
+      "recommended_mapping": "O3"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The clinical vignette suggests an infectious disease likely caused by a microorganism, aligning with explaining how microorganisms cause human infection.",
+      "mapped_id": "O1",
+      "question_num": "MCQ 13",
+      "question_text": "A 30 year old veterinarian presented with fever night sweats arthralgia...",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The scenario involves Waterhouse-Friderichsen syndrome, which is linked to host defense mechanisms and their failure in response to infection.",
+      "mapped_id": "O4",
+      "question_num": "MCQ 14",
+      "question_text": "A 21 year old army recruit develops features suggestive of Waterhouse Friederichsen syndrome...",
+      "recommended_mapping": "O4"
+    },
+    {
+      "confidence": 0.88,
+      "current_mapping": null,
+      "justification": "The question discusses the infectious stage of pertussis, which relates to explaining how microorganisms cause human infection.",
+      "mapped_id": "O1",
+      "question_num": "MCQ 15",
+      "question_text": "Assertion and Reasoning: Assertion (A): The Catarrhal stage of pertussis is the most infectious...",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.92,
+      "current_mapping": null,
+      "justification": "The clinical presentation suggests an eye infection, likely requiring laboratory diagnosis to identify the causative microorganism.",
+      "mapped_id": "O5",
+      "question_num": "MCQ 16",
+      "question_text": "A 32 yr old farmer presents with severe pain redness & blurred vision in the right eye...",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question focuses on the use of NNN medium, which is a laboratory diagnostic tool for culturing L. donovani, aligning with the objective of describing laboratory diagnosis of human infections.",
+      "mapped_id": "O5",
+      "question_num": "MCQ 17",
+      "question_text": "Multiple Completion type: 1. NNN Medium is used to cultivate L.donovani...",
+      "recommended_mapping": "O5"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The clinical scenario of Watercan perineum suggests an infection caused by a microorganism, aligning with the objective of explaining how microorganisms cause human infections.",
+      "mapped_id": "O1",
+      "question_num": "MCQ 18",
+      "question_text": "A 25 year old male presented with features of Watercan perineum...",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The presentation of sterile pyuria, flank pain, and haematuria indicates an infection process, which aligns with understanding how microorganisms cause human infections.",
+      "mapped_id": "O1",
+      "question_num": "MCQ 19",
+      "question_text": "A 38 year old man presents with sterile pyuria flank pain and haematuria...",
+      "recommended_mapping": "O1"
+    },
+    {
+      "confidence": 0.92,
+      "current_mapping": null,
+      "justification": "The sudden fever, chills, and painful groin swelling in a rural setting suggest an infectious etiology, aligning with the objective of explaining how microorganisms cause human infections.",
+      "mapped_id": "O1",
+      "question_num": "MCQ 20",
+      "question_text": "A 25 year old male from a rural area presented with sudden fever chills and painful swelling in the right groin...",
+      "recommended_mapping": "O1"
+    }
+  ]
+}

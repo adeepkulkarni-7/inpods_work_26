@@ -1,0 +1,451 @@
+{
+  "id": "8333db22",
+  "name": "Mapping_2026-01-23",
+  "created_at": "2026-01-23T18:25:17.111880",
+  "dimension": "area_topics",
+  "mode": "A",
+  "source_file": "RamaiaMicroExamCSV_CLEANED_1.csv",
+  "question_count": 44,
+  "recommendations": [
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question focuses on the sequence of events in the pathogenesis of infection, which aligns with understanding microbial infections in detail.",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "General Microbiology",
+      "question_num": "1.A",
+      "question_text": "Explain the sequence of events involved in the pathogenesis of Infection.",
+      "recommended_mapping": "General Microbiology / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "confidence": 0.98,
+      "current_mapping": null,
+      "justification": "The question explicitly asks about laboratory diagnosis, which falls under this subtopic.",
+      "mapped_subtopic": "Lab diagnosis",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "1.B",
+      "question_text": "Discuss the Laboratory diagnosis of the agent associated with the clinical condition.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Lab diagnosis"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "Immunoprophylaxis involves immunity-related measures, making this the most relevant subtopic.",
+      "mapped_subtopic": "Immunity",
+      "mapped_topic": "Immunology",
+      "question_num": "1.C",
+      "question_text": "Discuss the Immunoprophylactic measures available to combat this condition.",
+      "recommended_mapping": "Immunology / Immunity"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "Bacterial pneumonia during recovery may relate to systemic infection or sepsis, which is covered under this subtopic.",
+      "mapped_subtopic": "Sepsis",
+      "mapped_topic": "CVS & Blood",
+      "question_num": "1.D",
+      "question_text": "The patient develops bacterial pneumonia during recovery. Give reason.",
+      "recommended_mapping": "CVS & Blood / Sepsis"
+    },
+    {
+      "confidence": 0.8,
+      "current_mapping": null,
+      "justification": "Sexually transmitted infections are closely associated with HIV/AIDS, making this the most relevant subtopic.",
+      "mapped_subtopic": "HIV/AIDS",
+      "mapped_topic": "CVS & Blood",
+      "question_num": "2.A",
+      "question_text": "Mention the bacterial agents causing Sexually transmitted infections.",
+      "recommended_mapping": "CVS & Blood / HIV/AIDS"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question addresses the pathogenesis and clinical sequelae of an infection caused by a pathogen, which aligns with the study of infectious diseases and their specific causative agents.",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "2.B",
+      "question_text": "Discuss the pathogenesis & the clinical sequelae if the infection is associated with the pathogen shown in the picture.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The question focuses on serological tests for diagnosis, which falls under laboratory diagnostic methods in infectious diseases.",
+      "mapped_subtopic": "Lab diagnosis",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "2.C",
+      "question_text": "Mention the Specific Serological tests for the diagnosis & Explain any one in detail.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Lab diagnosis"
+    },
+    {
+      "confidence": 0.92,
+      "current_mapping": null,
+      "justification": "Congenital syphilis is a bacterial infection, and the question relates to its clinical presentation, which is covered under infectious diseases.",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "2.D",
+      "question_text": "Neonates with Congenital syphilis may be asymptomatic at birth. Give reason.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "confidence": 0.97,
+      "current_mapping": null,
+      "justification": "Cerebral malaria is caused by a parasitic infection (Plasmodium species), and the question addresses its clinical and laboratory aspects, making this subtopic most relevant.",
+      "mapped_subtopic": "Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "3",
+      "question_text": "Discuss the Clinical features and laboratory diagnosis of Cerebral Malaria.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Parasitic infections"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "Trichomoniasis is a parasitic infection caused by Trichomonas vaginalis, and the question pertains to its clinical features and diagnosis, fitting this subtopic.",
+      "mapped_subtopic": "Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "4",
+      "question_text": "Clinical features and laboratory diagnosis of Trichomoniasis.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Parasitic infections"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "Human Anthrax is a bacterial infection, and the question focuses on its clinical features and laboratory diagnosis, which aligns with this subtopic.",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "5",
+      "question_text": "Clinical features and Laboratory diagnosis of Human Anthrax.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "Human Rabies is a viral infection, and the question pertains to its laboratory diagnosis, fitting under this subtopic.",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "6",
+      "question_text": "Discuss the Lab diagnosis of Human Rabies.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "confidence": 0.92,
+      "current_mapping": null,
+      "justification": "The detection of drug-resistant Pulmonary Tuberculosis involves laboratory diagnostic techniques, making this the most relevant subtopic.",
+      "mapped_subtopic": "Lab diagnosis",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "7",
+      "question_text": "Discuss detection of Drug resistant Pulmonary Tuberculosis & its implications.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Lab diagnosis"
+    },
+    {
+      "confidence": 0.88,
+      "current_mapping": null,
+      "justification": "Cryptococcal Meningitis is caused by a fungal pathogen, and the question focuses on its clinical features and lab diagnosis, aligning with this subtopic.",
+      "mapped_subtopic": "Fungal infection",
+      "mapped_topic": "Musculoskeletal, Skin & Soft Tissue",
+      "question_num": "8",
+      "question_text": "Discuss the Clinical features and laboratory diagnosis of Cryptococcal Meningitis.",
+      "recommended_mapping": "Musculoskeletal, Skin & Soft Tissue / Fungal infection"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The care-bundle approach for VAP prevention addresses biohazards and infection control in clinical settings, making this subtopic appropriate.",
+      "mapped_subtopic": "Biohazards",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "9",
+      "question_text": "Care-bundle approach in prevention of VAP.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Biohazards"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "Group B Streptococci is a bacterial infection and fits under the subtopic of bacterial infections within the infectious diseases category.",
+      "mapped_subtopic": "Bacterial infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "10",
+      "question_text": "Group B Streptococci.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial infections"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "Hydatid cysts are caused by parasitic infections (Echinococcus species), making this the most relevant subtopic.",
+      "mapped_subtopic": "Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "11",
+      "question_text": "Draw a neatly labelled diagram of the Hydatid cyst",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Parasitic infections"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "Endemic haematuria is often linked to infections like schistosomiasis, which can lead to systemic effects such as sepsis, making this subtopic appropriate.",
+      "mapped_subtopic": "Sepsis",
+      "mapped_topic": "CVS & Blood",
+      "question_num": "12",
+      "question_text": "Endemic Haematuria.",
+      "recommended_mapping": "CVS & Blood / Sepsis"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The DPT vaccine covers diphtheria, pertussis, and tetanus, with tetanus being the most relevant subtopic in the provided list.",
+      "mapped_subtopic": "Tetanus",
+      "mapped_topic": "Musculoskeletal, Skin & Soft Tissue",
+      "question_num": "13",
+      "question_text": "DPT Vaccine.",
+      "recommended_mapping": "Musculoskeletal, Skin & Soft Tissue / Tetanus"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "Aspergilloma is caused by Aspergillus, a fungal pathogen, making fungal infection the most appropriate subtopic.",
+      "mapped_subtopic": "Fungal infection",
+      "mapped_topic": "Musculoskeletal, Skin & Soft Tissue",
+      "question_num": "14",
+      "question_text": "Aspergilloma.",
+      "recommended_mapping": "Musculoskeletal, Skin & Soft Tissue / Fungal infection"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "Dimorphic fungi causing CNS infections is best categorized under fungal infections as it relates to systemic fungal diseases.",
+      "mapped_subtopic": "Fungal infection",
+      "mapped_topic": "Musculoskeletal, Skin & Soft Tissue",
+      "question_num": "15",
+      "question_text": "Dimorphic fungi in CNS infections.",
+      "recommended_mapping": "Musculoskeletal, Skin & Soft Tissue / Fungal infection"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "NS1 Antigen is a specific viral antigen, making it most relevant to the Antigen/Antibody subtopic in Immunology.",
+      "mapped_subtopic": "Antigen/Antibody",
+      "mapped_topic": "Immunology",
+      "question_num": "16",
+      "question_text": "NS1 Antigen.",
+      "recommended_mapping": "Immunology / Antigen/Antibody"
+    },
+    {
+      "confidence": 0.92,
+      "current_mapping": null,
+      "justification": "Specimen collection and storage are integral to laboratory diagnosis, particularly in bacterial meningitis.",
+      "mapped_subtopic": "Lab diagnosis",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "17",
+      "question_text": "Specimen collection & storage in bacterial meningitis.",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Lab diagnosis"
+    },
+    {
+      "confidence": 0.98,
+      "current_mapping": null,
+      "justification": "Informed consent is a core principle of bioethics, emphasizing patient autonomy and ethical practice.",
+      "mapped_subtopic": "Bioethics",
+      "mapped_topic": "AETCOM & Bioethics",
+      "question_num": "18",
+      "question_text": "Informed consent",
+      "recommended_mapping": "AETCOM & Bioethics / Bioethics"
+    },
+    {
+      "confidence": 0.88,
+      "current_mapping": null,
+      "justification": "Calculating CAUTI rates is part of infection surveillance, which aligns with biohazards and infection control in a clinical setting.",
+      "mapped_subtopic": "Biohazards",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 1",
+      "question_text": "The infection surveillance officer had to calculate the CAUTI rates...",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Biohazards"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The presentation of eye and facial pain in a diabetic with end-stage renal disease suggests mucormycosis, a fungal infection commonly seen in such patients.",
+      "mapped_subtopic": "Fungal infection",
+      "mapped_topic": "Musculoskeletal, Skin & Soft Tissue",
+      "question_num": "MCQ 2",
+      "question_text": "A 45 old diabetic with end stage renal disease presented with complaints of eye & facial pain...",
+      "recommended_mapping": "Musculoskeletal, Skin & Soft Tissue / Fungal infection"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The description of pneumonia with 'currant jelly sputum' is characteristic of Klebsiella pneumonia, which can lead to sepsis in alcoholic patients.",
+      "mapped_subtopic": "Sepsis",
+      "mapped_topic": "CVS & Blood",
+      "question_num": "MCQ 3",
+      "question_text": "Assertion and Reasoning: A 55 yr old alcoholic develops pneumonia with copious “Currant jelly sputum”...",
+      "recommended_mapping": "CVS & Blood / Sepsis"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The IGRA test is used to detect antigens specific to Mycobacterium tuberculosis, directly mapping to the antigen/antibody subtopic.",
+      "mapped_subtopic": "Antigen/Antibody",
+      "mapped_topic": "Immunology",
+      "question_num": "MCQ 4",
+      "question_text": "Multiple Completion type: Which of the following are key antigens used in IGRA Test?",
+      "recommended_mapping": "Immunology / Antigen/Antibody"
+    },
+    {
+      "confidence": 0.88,
+      "current_mapping": null,
+      "justification": "High-grade fever with petechial rashes is indicative of septicemia, which is a key feature of sepsis.",
+      "mapped_subtopic": "Sepsis",
+      "mapped_topic": "CVS & Blood",
+      "question_num": "MCQ 5",
+      "question_text": "A 40 year old male presented to the medical OPD with high grade fever with petechial rashes...",
+      "recommended_mapping": "CVS & Blood / Sepsis"
+    },
+    {
+      "confidence": 0.92,
+      "current_mapping": null,
+      "justification": "The question about BCG being a live attenuated vaccine relates to immunity and vaccination, which falls under the immunity subtopic.",
+      "mapped_subtopic": "Immunity",
+      "mapped_topic": "Immunology",
+      "question_num": "MCQ 6",
+      "question_text": "Multiple completion type: 1. BCG is a Live Attenuated vaccine...",
+      "recommended_mapping": "Immunology / Immunity"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question pertains to the Covishield vaccine, which involves understanding the role of vectors in immunity development.",
+      "mapped_subtopic": "Immunity",
+      "mapped_topic": "Immunology",
+      "question_num": "MCQ 7",
+      "question_text": "The component of Covishield vaccine which serves as a vector...",
+      "recommended_mapping": "Immunology / Immunity"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The evaluation of strains in OPV (Oral Polio Vaccine) is directly related to viral infections and their laboratory study.",
+      "mapped_subtopic": "Viral infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 8",
+      "question_text": "A Virologist is evaluating the strains used in OPV...",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Viral infections"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The suspected ventilator-associated pneumonia (VAP) in a critical care setting is strongly linked to sepsis as a complication.",
+      "mapped_subtopic": "Sepsis",
+      "mapped_topic": "CVS & Blood",
+      "question_num": "MCQ 9",
+      "question_text": "A 24 year old male was admitted to the Critical care unit following a RTA... Suspected VAP...",
+      "recommended_mapping": "CVS & Blood / Sepsis"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "Haemophilus ducreyi is a bacterial pathogen causing genital ulcers, making bacterial infections the most relevant subtopic.",
+      "mapped_subtopic": "Bacterial infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 10",
+      "question_text": "Assertion and Reasoning: Assertion(A): Haemophilus ducreyi causes painful genital ulcers...",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial infections"
+    },
+    {
+      "confidence": 0.88,
+      "current_mapping": null,
+      "justification": "The symptoms of focal seizures in a diabetic patient presenting to neurosurgery OPD suggest a possible fungal infection, such as mucormycosis.",
+      "mapped_subtopic": "Fungal infection",
+      "mapped_topic": "Musculoskeletal, Skin & Soft Tissue",
+      "question_num": "MCQ 11",
+      "question_text": "A 35 year old diabetic presented to the neurosurgery OPD with symptoms of focal seizures...",
+      "recommended_mapping": "Musculoskeletal, Skin & Soft Tissue / Fungal infection"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "Adenoviruses are studied under microbiology, and their characteristics align with morphology and virology principles.",
+      "mapped_subtopic": "Morphology of Bacteria",
+      "mapped_topic": "General Microbiology",
+      "question_num": "MCQ 12",
+      "question_text": "Multiple Completion type: Which of the following are characteristics of Adenoviruses?",
+      "recommended_mapping": "General Microbiology / Morphology of Bacteria"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "The clinical presentation of fever, night sweats, and arthralgia in a veterinarian suggests a zoonotic bacterial infection, likely Brucellosis.",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 13",
+      "question_text": "A 30 year old veterinarian presented with fever night sweats arthralgia...",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "Waterhouse-Friderichsen syndrome is a severe complication of meningococcemia, which is closely related to sepsis.",
+      "mapped_subtopic": "Sepsis",
+      "mapped_topic": "CVS & Blood",
+      "question_num": "MCQ 14",
+      "question_text": "A 21 year old army recruit develops features suggestive of Waterhouse Friederichsen syndrome...",
+      "recommended_mapping": "CVS & Blood / Sepsis"
+    },
+    {
+      "confidence": 0.88,
+      "current_mapping": null,
+      "justification": "The Catarrhal stage of pertussis is a key infectious phase of Bordetella pertussis, fitting under bacterial infections.",
+      "mapped_subtopic": "Bacterial/Viral/Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 15",
+      "question_text": "Assertion and Reasoning: Assertion (A): The Catarrhal stage of pertussis is the most infectious...",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial/Viral/Parasitic infections"
+    },
+    {
+      "confidence": 0.8,
+      "current_mapping": null,
+      "justification": "The symptoms of severe pain, redness, and blurred vision in a farmer suggest a fungal keratitis, common in agricultural workers.",
+      "mapped_subtopic": "Fungal infection",
+      "mapped_topic": "Musculoskeletal, Skin & Soft Tissue",
+      "question_num": "MCQ 16",
+      "question_text": "A 32 yr old farmer presents with severe pain redness & blurred vision in the right eye...",
+      "recommended_mapping": "Musculoskeletal, Skin & Soft Tissue / Fungal infection"
+    },
+    {
+      "confidence": 0.95,
+      "current_mapping": null,
+      "justification": "The question involves L. donovani, a parasitic organism, and its cultivation, which aligns with parasitic infections and laboratory diagnosis.",
+      "mapped_subtopic": "Parasitic infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 17",
+      "question_text": "Multiple Completion type: 1. NNN Medium is used to cultivate L.donovani...",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Parasitic infections"
+    },
+    {
+      "confidence": 0.85,
+      "current_mapping": null,
+      "justification": "The description of 'Watercan perineum' suggests a necrotizing soft tissue infection, likely anaerobic in nature, which fits under this subtopic.",
+      "mapped_subtopic": "Anaerobic infection (Gas gangrene)",
+      "mapped_topic": "Musculoskeletal, Skin & Soft Tissue",
+      "question_num": "MCQ 18",
+      "question_text": "A 25 year old male presented with features of Watercan perineum...",
+      "recommended_mapping": "Musculoskeletal, Skin & Soft Tissue / Anaerobic infection (Gas gangrene)"
+    },
+    {
+      "confidence": 0.9,
+      "current_mapping": null,
+      "justification": "Sterile pyuria with flank pain and haematuria is indicative of a bacterial infection like renal tuberculosis, fitting this subtopic.",
+      "mapped_subtopic": "Bacterial infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 19",
+      "question_text": "A 38 year old man presents with sterile pyuria flank pain and haematuria...",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial infections"
+    },
+    {
+      "confidence": 0.92,
+      "current_mapping": null,
+      "justification": "The presentation of fever, chills, and painful groin swelling in a rural setting suggests bubonic plague or similar bacterial infections, making this subtopic most relevant.",
+      "mapped_subtopic": "Bacterial infections",
+      "mapped_topic": "Infectious Diseases & Laboratory",
+      "question_num": "MCQ 20",
+      "question_text": "A 25 year old male from a rural area presented with sudden fever chills and painful swelling in the right groin...",
+      "recommended_mapping": "Infectious Diseases & Laboratory / Bacterial infections"
+    }
+  ]
+}

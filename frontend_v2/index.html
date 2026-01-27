@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inpods Curriculum Mapping V2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #1e293b;
+        }
+
+        .version-badge {
+            background: #00a8cc;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+        }
+
+        .main-layout.no-sidebar {
+            grid-template-columns: 1fr;
+        }
+
+        /* Sidebar / Library */
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .library-list {
+            list-style: none;
+        }
+
+        .library-item {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .library-item:hover {
+            background: #f1f5f9;
+        }
+
+        .library-item.active {
+            background: #e0f2fe;
+            border-color: #00a8cc;
+        }
+
+        .library-item-name {
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 14px;
+        }
+
+        .library-item-meta {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .library-item-mode {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .library-item-mode.mode-a { background: #e0f7fa; color: #006064; }
+        .library-item-mode.mode-b { background: #e8f5e9; color: #2e7d32; }
+
+        .library-empty {
+            text-align: center;
+            padding: 30px 10px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        /* Mode Selection Cards */
+        .mode-selection {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .mode-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            text-align: center;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .mode-card.active {
+            border-color: #00a8cc;
+        }
+
+        .mode-card.mode-a { border-top: 4px solid #00a8cc; }
+        .mode-card.mode-b { border-top: 4px solid #00d4aa; }
+        .mode-card.mode-c { border-top: 4px solid #ffa600; }
+
+        .mode-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .mode-card h3 {
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .mode-card p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .mode-label {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .mode-a .mode-label { background: #e0f7fa; color: #006064; }
+        .mode-b .mode-label { background: #e8f5e9; color: #2e7d32; }
+        .mode-c .mode-label { background: #fff3e0; color: #e65100; }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #475569;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+        }
+
+        button {
+            background: #00a8cc;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #007a99;
+        }
+
+        button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        button.secondary {
+            background: #64748b;
+        }
+
+        button.secondary:hover {
+            background: #475569;
+        }
+
+        button.success {
+            background: #10b981;
+        }
+
+        button.success:hover {
+            background: #059669;
+        }
+
+        button.danger {
+            background: #ef4444;
+        }
+
+        button.danger:hover {
+            background: #dc2626;
+        }
+
+        button.small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .status {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+            display: block;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            display: block;
+        }
+
+        .recommendations-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .recommendations-table th,
+        .recommendations-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        .recommendations-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+        }
+
+        .recommendations-table td {
+            font-size: 14px;
+        }
+
+        /* V2: Full question text display */
+        .question-text {
+            max-width: 400px;
+            font-size: 13px;
+            color: #334155;
+        }
+
+        .question-text-full {
+            display: block;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #334155;
+            max-height: 120px;
+            overflow-y: auto;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .confidence-badge, .rating-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .confidence-high, .rating-correct {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .confidence-medium, .rating-partial {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .confidence-low, .rating-incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .justification {
+            font-size: 13px;
+            color: #64748b;
+            max-width: 300px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .selection-info {
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        #loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #00a8cc;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Insights/Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .chart-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .chart-container.full-width {
+            grid-column: span 2;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .back-btn {
+            margin-bottom: 20px;
+        }
+
+        /* Rating summary */
+        .rating-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .rating-stat {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .rating-stat.correct { background: #d1fae5; }
+        .rating-stat.partial { background: #fef3c7; }
+        .rating-stat.incorrect { background: #fee2e2; }
+
+        /* Save Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Table wrapper for scrolling */
+        .table-wrapper {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+            .mode-selection {
+                grid-template-columns: 1fr;
+            }
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .chart-container.full-width {
+                grid-column: span 1;
+            }
+            .summary-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Inpods Curriculum Mapping</h1>
+            <span class="version-badge">V2</span>
+        </div>
+        <p class="subtitle">Analyze and improve question-to-curriculum mappings</p>
+
+        <div id="status" class="status"></div>
+
+        <!-- Mode Selection -->
+        <div id="modeSelection">
+            <div class="mode-selection">
+                <div class="mode-card mode-a" onclick="selectMode('A')">
+                    <div class="mode-label">MODE A</div>
+                    <div class="mode-icon">&#128269;</div>
+                    <h3>Map Unmapped Questions</h3>
+                    <p>Upload questions without mappings and get AI-recommended curriculum mappings with confidence scores.</p>
+                </div>
+
+                <div class="mode-card mode-b" onclick="selectMode('B')">
+                    <div class="mode-label">MODE B</div>
+                    <div class="mode-icon">&#9733;</div>
+                    <h3>Analyze & Improve Mappings</h3>
+                    <p>Upload pre-mapped questions to evaluate accuracy and get alternative recommendations where needed.</p>
+                </div>
+
+                <div class="mode-card mode-c" onclick="selectMode('C')">
+                    <div class="mode-label">MODE C</div>
+                    <div class="mode-icon">&#128202;</div>
+                    <h3>Generate Insights</h3>
+                    <p>Visualize mapping distribution, confidence scores, and curriculum coverage gaps.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Layout with Sidebar -->
+        <div id="mainContent" class="main-layout hidden">
+            <!-- Sidebar: Library -->
+            <div class="sidebar" id="librarySidebar">
+                <div class="sidebar-title">
+                    <span>&#128218;</span> Saved Mappings
+                </div>
+                <ul class="library-list" id="libraryList">
+                    <li class="library-empty">No saved mappings yet</li>
+                </ul>
+            </div>
+
+            <!-- Main Area -->
+            <div class="main-area">
+                <!-- ==================== MODE A: Map Unmapped ==================== -->
+                <div id="modeA" class="hidden">
+                    <button class="secondary back-btn" onclick="goBack()">&#8592; Back to Mode Selection</button>
+
+                    <!-- Step 1: Upload Files -->
+                    <div class="card" id="uploadSectionA">
+                        <div class="section-title">Mode A: Map Unmapped Questions</div>
+
+                        <div class="form-group">
+                            <label>Question Bank CSV (unmapped)</label>
+                            <input type="file" id="questionFileA" accept=".csv,.xlsx,.xls">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reference Sheet CSV</label>
+                            <input type="file" id="referenceFileA" accept=".csv,.xlsx,.xls">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Dimension</label>
+                            <select id="dimensionA">
+                                <option value="area_topics">Area Topics (Topic / Subtopic)</option>
+                                <option value="competency">Competency (C1-C6)</option>
+                                <option value="objective">Objective (O1-O6)</option>
+                                <option value="skill">Skill (S1-S5)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="background: #f0fdf4; padding: 15px; border-radius: 6px; border: 1px solid #bbf7d0;">
+                            <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                <input type="checkbox" id="efficientModeA" checked style="width: 18px; height: 18px;">
+                                <span>Use Efficient Mode (Recommended)</span>
+                            </label>
+                            <p style="font-size: 13px; color: #64748b; margin-bottom: 10px;">
+                                Processes questions in batches to reduce API costs by 60-70%.
+                            </p>
+                            <div id="batchSizeGroupA">
+                                <label style="font-size: 13px;">Batch Size:</label>
+                                <select id="batchSizeA" style="width: auto; padding: 6px 10px;">
+                                    <option value="3">3 questions per batch</option>
+                                    <option value="5" selected>5 questions per batch (Recommended)</option>
+                                    <option value="7">7 questions per batch</option>
+                                    <option value="10">10 questions per batch</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button onclick="uploadFilesA()">Upload & Run Audit</button>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div class="card hidden" id="loadingA">
+                        <div class="spinner"></div>
+                        <p>Running audit... This may take a few minutes depending on the number of questions.</p>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="card hidden" id="recommendationsSectionA">
+                        <div class="section-title">Review Recommendations</div>
+
+                        <div class="selection-info">
+                            <span id="selectionCountA">0</span> of <span id="totalCountA">0</span> recommendations selected
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <button class="small" onclick="selectAllA()">Select All</button>
+                            <button class="small secondary" onclick="selectNoneA()">Select None</button>
+                            <button class="small" onclick="selectHighConfidenceA()">Select High Confidence (&ge;0.85)</button>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="recommendations-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px;">
+                                            <input type="checkbox" class="checkbox" id="selectAllCheckboxA" onchange="toggleSelectAllA()">
+                                        </th>
+                                        <th style="width: 80px;">Q#</th>
+                                        <th style="width: 350px;">Question (Full Text)</th>
+                                        <th>Recommended Mapping</th>
+                                        <th style="width: 80px;">Confidence</th>
+                                        <th>Justification</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recommendationsBodyA"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="actions">
+                            <button class="success" onclick="saveAndDownloadA()">Save & Download</button>
+                            <button class="secondary" onclick="startOverA()">Start Over</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== MODE B: Rate Existing ==================== -->
+                <div id="modeB" class="hidden">
+                    <button class="secondary back-btn" onclick="goBack()">&#8592; Back to Mode Selection</button>
+
+                    <!-- Upload -->
+                    <div class="card" id="uploadSectionB">
+                        <div class="section-title">Mode B: Analyze & Improve Mappings</div>
+
+                        <div class="form-group">
+                            <label>Mapped Questions File (with existing mappings)</label>
+                            <input type="file" id="mappedFileB" accept=".csv,.xlsx,.xls,.ods">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reference Sheet CSV</label>
+                            <input type="file" id="referenceFileB" accept=".csv,.xlsx,.xls">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Dimension</label>
+                            <select id="dimensionB">
+                                <option value="area_topics">Area Topics (Topic / Subtopic)</option>
+                                <option value="competency">Competency (C1-C6)</option>
+                                <option value="objective">Objective (O1-O6)</option>
+                                <option value="skill">Skill (S1-S5)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Batch Size:</label>
+                            <select id="batchSizeB" style="width: auto; padding: 6px 10px;">
+                                <option value="3">3 questions per batch</option>
+                                <option value="5" selected>5 questions per batch</option>
+                                <option value="7">7 questions per batch</option>
+                            </select>
+                        </div>
+
+                        <button onclick="uploadAndRateB()">Upload & Analyze Mappings</button>
+                    </div>
+
+                    <!-- Loading -->
+                    <div class="card hidden" id="loadingB">
+                        <div class="spinner"></div>
+                        <p>Analyzing existing mappings... This may take a few minutes.</p>
+                    </div>
+
+                    <!-- Ratings Results -->
+                    <div class="card hidden" id="ratingsSectionB">
+                        <div class="section-title">Mapping Analysis Results</div>
+
+                        <!-- Summary -->
+                        <div class="rating-summary">
+                            <div class="rating-stat correct">
+                                <div class="stat-value" id="correctCountB">0</div>
+                                <div class="stat-label">Correct</div>
+                            </div>
+                            <div class="rating-stat partial">
+                                <div class="stat-value" id="partialCountB">0</div>
+                                <div class="stat-label">Partially Correct</div>
+                            </div>
+                            <div class="rating-stat incorrect">
+                                <div class="stat-value" id="incorrectCountB">0</div>
+                                <div class="stat-label">Incorrect</div>
+                            </div>
+                        </div>
+
+                        <div class="selection-info">
+                            Showing <span id="needsReviewCountB">0</span> mappings that need review.
+                            <span id="selectionCountB">0</span> selected for update.
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <button class="small" onclick="selectAllIncorrectB()">Select All Incorrect</button>
+                            <button class="small secondary" onclick="selectNoneB()">Select None</button>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="recommendations-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px;">
+                                            <input type="checkbox" class="checkbox" id="selectAllCheckboxB" onchange="toggleSelectAllB()">
+                                        </th>
+                                        <th style="width: 80px;">Q#</th>
+                                        <th style="width: 300px;">Question (Full Text)</th>
+                                        <th>Current Mapping</th>
+                                        <th style="width: 100px;">Rating</th>
+                                        <th>Suggested Mapping</th>
+                                        <th style="width: 80px;">Confidence</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ratingsBodyB"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="actions">
+                            <button class="success" onclick="saveAndDownloadB()">Save & Download Corrections</button>
+                            <button class="secondary" onclick="startOverB()">Start Over</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== MODE C: Insights ==================== -->
+                <div id="modeC" class="hidden">
+                    <button class="secondary back-btn" onclick="goBack()">&#8592; Back to Mode Selection</button>
+
+                    <!-- Upload -->
+                    <div class="card" id="uploadSectionC">
+                        <div class="section-title">Mode C: Generate Insights</div>
+
+                        <div class="form-group">
+                            <label>Mapped Questions File</label>
+                            <input type="file" id="mappedFileC" accept=".csv,.xlsx,.xls,.ods">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reference Sheet CSV (optional, for gap analysis)</label>
+                            <input type="file" id="referenceFileC" accept=".csv,.xlsx,.xls">
+                        </div>
+
+                        <button onclick="generateInsightsC()">Generate Insights</button>
+                    </div>
+
+                    <!-- Loading -->
+                    <div class="card hidden" id="loadingC">
+                        <div class="spinner"></div>
+                        <p>Generating visualizations...</p>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="card hidden" id="insightsSectionC">
+                        <div class="section-title">Curriculum Mapping Insights</div>
+
+                        <div class="summary-stats" id="summaryStatsC">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <div class="charts-grid" id="chartsGridC">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <div class="actions">
+                            <button class="secondary" onclick="startOverC()">Start Over</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== View from Library ==================== -->
+                <div id="libraryView" class="hidden">
+                    <button class="secondary back-btn" onclick="goBack()">&#8592; Back to Mode Selection</button>
+
+                    <div class="card">
+                        <div class="section-title" id="libraryViewTitle">Saved Mapping</div>
+
+                        <div class="selection-info">
+                            <span id="libraryViewCount">0</span> mappings |
+                            Created: <span id="libraryViewDate">-</span> |
+                            Dimension: <span id="libraryViewDimension">-</span> |
+                            Mode: <span id="libraryViewMode">-</span>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <table class="recommendations-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 80px;">Q#</th>
+                                        <th style="width: 350px;">Question (Full Text)</th>
+                                        <th>Mapping</th>
+                                        <th style="width: 80px;">Confidence</th>
+                                        <th>Justification</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="libraryViewBody"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="actions">
+                            <button onclick="exportLibraryItem()">Export to Excel</button>
+                            <button class="danger" onclick="deleteLibraryItem()">Delete</button>
+                            <button class="secondary" onclick="goBack()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Modal -->
+    <div id="saveModal" class="modal-overlay hidden">
+        <div class="modal">
+            <h3>Save & Download</h3>
+            <div class="form-group">
+                <label>Name for this mapping set</label>
+                <input type="text" id="saveName" placeholder="Enter a name for this mapping set">
+            </div>
+            <p style="font-size: 13px; color: #64748b; margin-top: 10px;">
+                This will save to your library AND download an Excel file.
+            </p>
+            <div class="modal-actions">
+                <button class="secondary" onclick="closeSaveModal()">Cancel</button>
+                <button onclick="confirmSaveAndDownload()">Save & Download</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5001/api';
+        const BASE_URL = 'http://localhost:5001';  // For direct file downloads
+
+        let currentMode = null;
+        let currentLibraryId = null;
+        let uploadedFilesA = { questionFile: null, referenceFile: null };
+        let uploadedFilesB = { mappedFile: null, referenceFile: null };
+        let uploadedFilesC = { mappedFile: null, referenceFile: null };
+        let recommendationsA = [];
+        let ratingsB = [];
+        let recommendationsB = [];
+        let selectedIndicesA = [];
+        let selectedIndicesB = [];
+        let pendingSaveData = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLibrary();
+        });
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            setTimeout(() => { status.className = 'status'; }, 5000);
+        }
+
+        function selectMode(mode) {
+            currentMode = mode;
+            document.getElementById('modeSelection').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('modeA').classList.add('hidden');
+            document.getElementById('modeB').classList.add('hidden');
+            document.getElementById('modeC').classList.add('hidden');
+            document.getElementById('libraryView').classList.add('hidden');
+            document.getElementById(`mode${mode}`).classList.remove('hidden');
+            loadLibrary();
+        }
+
+        function goBack() {
+            document.getElementById('modeSelection').classList.remove('hidden');
+            document.getElementById('mainContent').classList.add('hidden');
+            currentMode = null;
+            currentLibraryId = null;
+        }
+
+        // ==================== LIBRARY FUNCTIONS ====================
+        async function loadLibrary() {
+            try {
+                const response = await fetch(`${API_URL}/library`);
+                const data = await response.json();
+
+                const list = document.getElementById('libraryList');
+
+                if (data.mappings && data.mappings.length > 0) {
+                    list.innerHTML = data.mappings.map(m => `
+                        <li class="library-item ${currentLibraryId === m.id ? 'active' : ''}"
+                            onclick="openLibraryItem('${m.id}')">
+                            <div class="library-item-name">
+                                ${m.name}
+                                <span class="library-item-mode mode-${m.mode.toLowerCase()}">${m.mode}</span>
+                            </div>
+                            <div class="library-item-meta">
+                                ${m.question_count} questions | ${new Date(m.created_at).toLocaleDateString()}
+                            </div>
+                        </li>
+                    `).join('');
+                } else {
+                    list.innerHTML = '<li class="library-empty">No saved mappings yet</li>';
+                }
+            } catch (error) {
+                console.error('Failed to load library:', error);
+            }
+        }
+
+        async function openLibraryItem(id) {
+            try {
+                const response = await fetch(`${API_URL}/library/${id}`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    currentLibraryId = id;
+                    const mapping = data.mapping;
+
+                    document.getElementById('modeA').classList.add('hidden');
+                    document.getElementById('modeB').classList.add('hidden');
+                    document.getElementById('modeC').classList.add('hidden');
+                    document.getElementById('libraryView').classList.remove('hidden');
+
+                    document.getElementById('libraryViewTitle').textContent = mapping.name;
+                    document.getElementById('libraryViewCount').textContent = mapping.question_count;
+                    document.getElementById('libraryViewDate').textContent = new Date(mapping.created_at).toLocaleString();
+                    document.getElementById('libraryViewDimension').textContent = mapping.dimension;
+                    document.getElementById('libraryViewMode').textContent = mapping.mode === 'A' ? 'New Mappings' : 'Corrections';
+
+                    const tbody = document.getElementById('libraryViewBody');
+                    tbody.innerHTML = '';
+
+                    mapping.recommendations.forEach(rec => {
+                        const row = document.createElement('tr');
+                        const confidence = rec.confidence || 0;
+                        let confidenceClass = 'confidence-low';
+                        if (confidence >= 0.85) confidenceClass = 'confidence-high';
+                        else if (confidence >= 0.70) confidenceClass = 'confidence-medium';
+
+                        row.innerHTML = `
+                            <td>${rec.question_num}</td>
+                            <td class="question-text">
+                                <div class="question-text-full">${rec.question_text || ''}</div>
+                            </td>
+                            <td>${rec.recommended_mapping || rec.mapped_topic || ''}</td>
+                            <td><span class="confidence-badge ${confidenceClass}">${Math.round(confidence * 100)}%</span></td>
+                            <td class="justification">${rec.justification || ''}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    loadLibrary();
+                }
+            } catch (error) {
+                showStatus(`Error loading mapping: ${error.message}`, 'error');
+            }
+        }
+
+        async function exportLibraryItem() {
+            if (!currentLibraryId) return;
+
+            try {
+                const response = await fetch(`${API_URL}/library/${currentLibraryId}/export`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    window.location.href = `${BASE_URL}${data.download_url}`;
+                    showStatus('Exporting...', 'success');
+                } else {
+                    showStatus(`Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function deleteLibraryItem() {
+            if (!currentLibraryId) return;
+            if (!confirm('Are you sure you want to delete this mapping?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/library/${currentLibraryId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showStatus('Mapping deleted', 'success');
+                    currentLibraryId = null;
+                    goBack();
+                } else {
+                    showStatus(`Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function openSaveModal(recommendations, mode, sourceFile) {
+            pendingSaveData = {
+                recommendations,
+                mode,
+                sourceFile,
+                dimension: document.getElementById(`dimension${mode}`).value
+            };
+            document.getElementById('saveName').value = `Mapping_${new Date().toISOString().slice(0, 10)}`;
+            document.getElementById('saveModal').classList.remove('hidden');
+        }
+
+        function closeSaveModal() {
+            document.getElementById('saveModal').classList.add('hidden');
+            pendingSaveData = null;
+        }
+
+        async function confirmSaveAndDownload() {
+            if (!pendingSaveData) return;
+
+            const name = document.getElementById('saveName').value.trim() || 'Unnamed Mapping';
+            const mode = pendingSaveData.mode;
+
+            try {
+                let endpoint, body;
+
+                if (mode === 'A') {
+                    endpoint = '/apply-and-save';
+                    body = {
+                        question_file: uploadedFilesA.questionFile,
+                        recommendations: pendingSaveData.recommendations,
+                        selected_indices: selectedIndicesA,
+                        dimension: pendingSaveData.dimension,
+                        name: name
+                    };
+                } else {
+                    endpoint = '/apply-corrections-and-save';
+                    body = {
+                        mapped_file: uploadedFilesB.mappedFile,
+                        recommendations: pendingSaveData.recommendations,
+                        selected_indices: selectedIndicesB,
+                        dimension: pendingSaveData.dimension,
+                        name: name
+                    };
+                }
+
+                const response = await fetch(`${API_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(body)
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    showStatus(`Saved "${name}" to library and downloading...`, 'success');
+                    closeSaveModal();
+                    loadLibrary();
+                    // Trigger download
+                    window.location.href = `${BASE_URL}${data.download_url}`;
+                } else {
+                    showStatus(`Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        // ==================== MODE A FUNCTIONS ====================
+        async function uploadFilesA() {
+            const questionFile = document.getElementById('questionFileA').files[0];
+            const referenceFile = document.getElementById('referenceFileA').files[0];
+
+            if (!questionFile || !referenceFile) {
+                showStatus('Please select both files', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('question_file', questionFile);
+            formData.append('reference_file', referenceFile);
+
+            try {
+                const uploadResponse = await fetch(`${API_URL}/upload`, { method: 'POST', body: formData });
+                const uploadData = await uploadResponse.json();
+
+                if (!uploadResponse.ok) {
+                    showStatus(`Error: ${uploadData.error}`, 'error');
+                    return;
+                }
+
+                uploadedFilesA.questionFile = uploadData.question_file;
+                uploadedFilesA.referenceFile = uploadData.reference_file;
+
+                showStatus(`Files uploaded: ${uploadData.question_count} questions`, 'success');
+
+                // Run audit
+                document.getElementById('uploadSectionA').classList.add('hidden');
+                document.getElementById('loadingA').classList.remove('hidden');
+
+                const useEfficient = document.getElementById('efficientModeA').checked;
+                const batchSize = parseInt(document.getElementById('batchSizeA').value);
+                const dimension = document.getElementById('dimensionA').value;
+                const endpoint = useEfficient ? '/run-audit-efficient' : '/run-audit';
+
+                const auditResponse = await fetch(`${API_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        question_file: uploadedFilesA.questionFile,
+                        reference_file: uploadedFilesA.referenceFile,
+                        dimension: dimension,
+                        batch_size: batchSize
+                    })
+                });
+
+                const auditData = await auditResponse.json();
+
+                if (auditResponse.ok) {
+                    recommendationsA = auditData.recommendations;
+                    displayRecommendationsA(recommendationsA);
+                    document.getElementById('loadingA').classList.add('hidden');
+                    document.getElementById('recommendationsSectionA').classList.remove('hidden');
+                    showStatus(`Audit complete: ${auditData.mapped_questions} questions mapped`, 'success');
+                } else {
+                    document.getElementById('loadingA').classList.add('hidden');
+                    document.getElementById('uploadSectionA').classList.remove('hidden');
+                    showStatus(`Error: ${auditData.error}`, 'error');
+                }
+            } catch (error) {
+                document.getElementById('loadingA').classList.add('hidden');
+                document.getElementById('uploadSectionA').classList.remove('hidden');
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function displayRecommendationsA(recs) {
+            const tbody = document.getElementById('recommendationsBodyA');
+            tbody.innerHTML = '';
+            document.getElementById('totalCountA').textContent = recs.length;
+
+            recs.forEach((rec, index) => {
+                const row = document.createElement('tr');
+                const confidence = rec.confidence;
+                let confidenceClass = 'confidence-low';
+                if (confidence >= 0.85) confidenceClass = 'confidence-high';
+                else if (confidence >= 0.70) confidenceClass = 'confidence-medium';
+
+                // V2: Full question text
+                row.innerHTML = `
+                    <td><input type="checkbox" class="checkbox" data-index="${index}" onchange="updateSelectionA()"></td>
+                    <td>${rec.question_num}</td>
+                    <td class="question-text">
+                        <div class="question-text-full">${rec.question_text || ''}</div>
+                    </td>
+                    <td>${rec.recommended_mapping}</td>
+                    <td><span class="confidence-badge ${confidenceClass}">${Math.round(confidence * 100)}%</span></td>
+                    <td class="justification">${rec.justification}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateSelectionA() {
+            const checkboxes = document.querySelectorAll('#recommendationsBodyA input[type="checkbox"]');
+            selectedIndicesA = [];
+            checkboxes.forEach(cb => { if (cb.checked) selectedIndicesA.push(parseInt(cb.dataset.index)); });
+            document.getElementById('selectionCountA').textContent = selectedIndicesA.length;
+        }
+
+        function toggleSelectAllA() {
+            const selectAll = document.getElementById('selectAllCheckboxA').checked;
+            document.querySelectorAll('#recommendationsBodyA input[type="checkbox"]').forEach(cb => cb.checked = selectAll);
+            updateSelectionA();
+        }
+
+        function selectAllA() { document.getElementById('selectAllCheckboxA').checked = true; toggleSelectAllA(); }
+        function selectNoneA() { document.getElementById('selectAllCheckboxA').checked = false; toggleSelectAllA(); }
+        function selectHighConfidenceA() {
+            document.querySelectorAll('#recommendationsBodyA input[type="checkbox"]').forEach((cb, i) => {
+                cb.checked = recommendationsA[i].confidence >= 0.85;
+            });
+            updateSelectionA();
+        }
+
+        function saveAndDownloadA() {
+            if (selectedIndicesA.length === 0) {
+                showStatus('Please select at least one recommendation', 'error');
+                return;
+            }
+            openSaveModal(recommendationsA, 'A', uploadedFilesA.questionFile);
+        }
+
+        function startOverA() {
+            // V2: Reset within mode - clears form and results, stays in Mode A
+            recommendationsA = [];
+            selectedIndicesA = [];
+            uploadedFilesA = { questionFile: null, referenceFile: null };
+            document.getElementById('questionFileA').value = '';
+            document.getElementById('referenceFileA').value = '';
+            document.getElementById('recommendationsSectionA').classList.add('hidden');
+            document.getElementById('loadingA').classList.add('hidden');
+            document.getElementById('uploadSectionA').classList.remove('hidden');
+            document.getElementById('selectionCountA').textContent = '0';
+            document.getElementById('totalCountA').textContent = '0';
+            document.getElementById('recommendationsBodyA').innerHTML = '';
+            document.getElementById('selectAllCheckboxA').checked = false;
+        }
+
+        // ==================== MODE B FUNCTIONS ====================
+        async function uploadAndRateB() {
+            const mappedFile = document.getElementById('mappedFileB').files[0];
+            const referenceFile = document.getElementById('referenceFileB').files[0];
+
+            if (!mappedFile || !referenceFile) {
+                showStatus('Please select both files', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('mapped_file', mappedFile);
+            formData.append('reference_file', referenceFile);
+
+            try {
+                const uploadResponse = await fetch(`${API_URL}/upload-mapped`, { method: 'POST', body: formData });
+                const uploadData = await uploadResponse.json();
+
+                if (!uploadResponse.ok) {
+                    showStatus(`Error: ${uploadData.error}`, 'error');
+                    return;
+                }
+
+                uploadedFilesB.mappedFile = uploadData.mapped_file;
+                uploadedFilesB.referenceFile = uploadData.reference_file;
+
+                document.getElementById('uploadSectionB').classList.add('hidden');
+                document.getElementById('loadingB').classList.remove('hidden');
+
+                const rateResponse = await fetch(`${API_URL}/rate-mappings`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        mapped_file: uploadedFilesB.mappedFile,
+                        reference_file: uploadedFilesB.referenceFile,
+                        dimension: document.getElementById('dimensionB').value,
+                        batch_size: parseInt(document.getElementById('batchSizeB').value)
+                    })
+                });
+
+                const rateData = await rateResponse.json();
+
+                if (rateResponse.ok) {
+                    ratingsB = rateData.ratings;
+                    recommendationsB = rateData.recommendations;
+                    displayRatingsB(rateData);
+                    document.getElementById('loadingB').classList.add('hidden');
+                    document.getElementById('ratingsSectionB').classList.remove('hidden');
+                    showStatus(`Analysis complete: ${rateData.summary.correct} correct, ${rateData.summary.incorrect} need review`, 'success');
+                } else {
+                    document.getElementById('loadingB').classList.add('hidden');
+                    document.getElementById('uploadSectionB').classList.remove('hidden');
+                    showStatus(`Error: ${rateData.error}`, 'error');
+                }
+            } catch (error) {
+                document.getElementById('loadingB').classList.add('hidden');
+                document.getElementById('uploadSectionB').classList.remove('hidden');
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function displayRatingsB(data) {
+            document.getElementById('correctCountB').textContent = data.summary.correct;
+            document.getElementById('partialCountB').textContent = data.summary.partially_correct;
+            document.getElementById('incorrectCountB').textContent = data.summary.incorrect;
+            document.getElementById('needsReviewCountB').textContent = recommendationsB.length;
+
+            const tbody = document.getElementById('ratingsBodyB');
+            tbody.innerHTML = '';
+
+            recommendationsB.forEach((rec, index) => {
+                const row = document.createElement('tr');
+                let ratingClass = 'rating-incorrect';
+                if (rec.rating === 'correct') ratingClass = 'rating-correct';
+                else if (rec.rating === 'partially_correct') ratingClass = 'rating-partial';
+
+                const currentMapping = rec.current_mapping ?
+                    `${rec.current_mapping.topic || ''} / ${rec.current_mapping.subtopic || ''}` : 'N/A';
+
+                // V2: Full question text
+                row.innerHTML = `
+                    <td><input type="checkbox" class="checkbox" data-index="${index}" onchange="updateSelectionB()"></td>
+                    <td>${rec.question_num}</td>
+                    <td class="question-text">
+                        <div class="question-text-full">${rec.question_text || ''}</div>
+                    </td>
+                    <td>${currentMapping}</td>
+                    <td><span class="rating-badge ${ratingClass}">${rec.rating.replace('_', ' ')}</span></td>
+                    <td>${rec.recommended_mapping}</td>
+                    <td><span class="confidence-badge confidence-high">${Math.round(rec.confidence * 100)}%</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateSelectionB() {
+            const checkboxes = document.querySelectorAll('#ratingsBodyB input[type="checkbox"]');
+            selectedIndicesB = [];
+            checkboxes.forEach(cb => { if (cb.checked) selectedIndicesB.push(parseInt(cb.dataset.index)); });
+            document.getElementById('selectionCountB').textContent = selectedIndicesB.length;
+        }
+
+        function toggleSelectAllB() {
+            const selectAll = document.getElementById('selectAllCheckboxB').checked;
+            document.querySelectorAll('#ratingsBodyB input[type="checkbox"]').forEach(cb => cb.checked = selectAll);
+            updateSelectionB();
+        }
+
+        function selectAllIncorrectB() {
+            document.querySelectorAll('#ratingsBodyB input[type="checkbox"]').forEach((cb, i) => {
+                cb.checked = recommendationsB[i].rating === 'incorrect';
+            });
+            updateSelectionB();
+        }
+
+        function selectNoneB() {
+            document.querySelectorAll('#ratingsBodyB input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('selectAllCheckboxB').checked = false;
+            updateSelectionB();
+        }
+
+        function saveAndDownloadB() {
+            if (selectedIndicesB.length === 0) {
+                showStatus('Please select at least one correction', 'error');
+                return;
+            }
+            openSaveModal(recommendationsB, 'B', uploadedFilesB.mappedFile);
+        }
+
+        function startOverB() {
+            // V2: Reset within mode - clears form and results, stays in Mode B
+            ratingsB = [];
+            recommendationsB = [];
+            selectedIndicesB = [];
+            uploadedFilesB = { mappedFile: null, referenceFile: null };
+            document.getElementById('mappedFileB').value = '';
+            document.getElementById('referenceFileB').value = '';
+            document.getElementById('ratingsSectionB').classList.add('hidden');
+            document.getElementById('loadingB').classList.add('hidden');
+            document.getElementById('uploadSectionB').classList.remove('hidden');
+            document.getElementById('selectionCountB').textContent = '0';
+            document.getElementById('ratingsBodyB').innerHTML = '';
+            document.getElementById('selectAllCheckboxB').checked = false;
+        }
+
+        // ==================== MODE C FUNCTIONS ====================
+        async function generateInsightsC() {
+            const mappedFile = document.getElementById('mappedFileC').files[0];
+
+            if (!mappedFile) {
+                showStatus('Please select a mapped file', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('mapped_file', mappedFile);
+
+            const referenceFile = document.getElementById('referenceFileC').files[0];
+            if (referenceFile) {
+                formData.append('reference_file', referenceFile);
+            }
+
+            try {
+                const uploadResponse = await fetch(`${API_URL}/upload-mapped`, { method: 'POST', body: formData });
+                const uploadData = await uploadResponse.json();
+
+                if (!uploadResponse.ok) {
+                    showStatus(`Error: ${uploadData.error}`, 'error');
+                    return;
+                }
+
+                uploadedFilesC.mappedFile = uploadData.mapped_file;
+                uploadedFilesC.referenceFile = uploadData.reference_file;
+
+                document.getElementById('uploadSectionC').classList.add('hidden');
+                document.getElementById('loadingC').classList.remove('hidden');
+
+                const insightsResponse = await fetch(`${API_URL}/generate-insights`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        mapped_file: uploadedFilesC.mappedFile,
+                        reference_file: uploadedFilesC.referenceFile
+                    })
+                });
+
+                const insightsData = await insightsResponse.json();
+
+                if (insightsResponse.ok) {
+                    displayInsightsC(insightsData);
+                    document.getElementById('loadingC').classList.add('hidden');
+                    document.getElementById('insightsSectionC').classList.remove('hidden');
+                    showStatus('Insights generated successfully', 'success');
+                } else {
+                    document.getElementById('loadingC').classList.add('hidden');
+                    document.getElementById('uploadSectionC').classList.remove('hidden');
+                    showStatus(`Error: ${insightsData.error}`, 'error');
+                }
+            } catch (error) {
+                document.getElementById('loadingC').classList.add('hidden');
+                document.getElementById('uploadSectionC').classList.remove('hidden');
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function displayInsightsC(data) {
+            // Summary stats
+            const statsDiv = document.getElementById('summaryStatsC');
+            statsDiv.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${data.summary.total_questions}</div>
+                    <div class="stat-label">Total Questions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.summary.topics_covered}</div>
+                    <div class="stat-label">Topics Covered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${Math.round(data.summary.average_confidence * 100)}%</div>
+                    <div class="stat-label">Avg Confidence</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${Object.keys(data.charts).length}</div>
+                    <div class="stat-label">Charts Generated</div>
+                </div>
+            `;
+
+            // Charts
+            const chartsDiv = document.getElementById('chartsGridC');
+            chartsDiv.innerHTML = '';
+
+            const chartOrder = ['summary_dashboard', 'topic_bar_chart', 'topic_pie_chart', 'confidence_histogram', 'gap_analysis'];
+
+            chartOrder.forEach(chartName => {
+                if (data.charts[chartName]) {
+                    const container = document.createElement('div');
+                    container.className = chartName === 'summary_dashboard' ? 'chart-container full-width' : 'chart-container';
+                    container.innerHTML = `<img src="${BASE_URL}${data.charts[chartName]}" alt="${chartName}">`;
+                    chartsDiv.appendChild(container);
+                }
+            });
+        }
+
+        function startOverC() {
+            // V2: Reset within mode - clears form and results, stays in Mode C
+            uploadedFilesC = { mappedFile: null, referenceFile: null };
+            document.getElementById('mappedFileC').value = '';
+            document.getElementById('referenceFileC').value = '';
+            document.getElementById('insightsSectionC').classList.add('hidden');
+            document.getElementById('loadingC').classList.add('hidden');
+            document.getElementById('uploadSectionC').classList.remove('hidden');
+            document.getElementById('summaryStatsC').innerHTML = '';
+            document.getElementById('chartsGridC').innerHTML = '';
+        }
+    </script>
+</body>
+</html>

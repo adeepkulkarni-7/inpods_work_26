@@ -1,0 +1,431 @@
+{
+  "id": "439237ac",
+  "name": "Mapping_2026-01-27_incorrect_nmc",
+  "created_at": "2026-01-26T21:16:22.673027",
+  "dimension": "nmc_competency",
+  "mode": "B",
+  "source_file": "audit_output_nmc_competency_20260126_210739.xlsx",
+  "question_count": 28,
+  "recommendations": [
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "MI3.1"
+      },
+      "justification": "MI1.2 covers microbial growth and physiology, which aligns better with explaining the general sequence of events in infection pathogenesis.",
+      "mapped_id": "MI1.2",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "1.A",
+      "question_text": "Explain the sequence of events involved in the pathogenesis of Infection.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.2"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "MI2.1"
+      },
+      "justification": "MI2.2 covers antigens and antibodies, which are central to immunoprophylactic measures, making it a better fit.",
+      "mapped_id": "MI2.2",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "1.C",
+      "question_text": "Discuss the Immunoprophylactic measures available to combat this condition.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI2.2"
+    },
+    {
+      "agreement_score": 0.65,
+      "confidence": 0.75,
+      "current_mapping": {
+        "id": "MI3.1"
+      },
+      "justification": "MI1.4 covers drug resistance and its clinical importance, which could be relevant in explaining secondary bacterial infections like pneumonia.",
+      "mapped_id": "MI1.4",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "1.D",
+      "question_text": "The patient develops bacterial pneumonia during recovery. Give reason.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.4"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "MI3.4"
+      },
+      "justification": "MI1.1 covers taxonomy and classification of microorganisms, which is more appropriate for listing bacterial agents causing STIs.",
+      "mapped_id": "MI1.1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "2.A",
+      "question_text": "Mention the bacterial agents causing Sexually transmitted infections.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.1"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "MI3.5"
+      },
+      "justification": "MI1.5 covers the laboratory diagnosis of infectious diseases, which aligns better with the general discussion of pathogenesis and clinical sequelae.",
+      "mapped_id": "MI1.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "2.B",
+      "question_text": "Discuss the pathogenesis & the clinical sequelae if the infection is associated with the pathogen shown in the picture.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.5"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "MI2.2"
+      },
+      "justification": "MI1.5 includes laboratory diagnosis, which would encompass serological tests and their explanation.",
+      "mapped_id": "MI1.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "2.C",
+      "question_text": "Mention the Specific Serological tests for the diagnosis & Explain any one in detail.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.5"
+    },
+    {
+      "agreement_score": 0.4,
+      "confidence": 0.9,
+      "current_mapping": {
+        "id": "MI2.1"
+      },
+      "justification": "MI1.5 is more appropriate as it covers the laboratory diagnosis of infectious diseases, which would include congenital syphilis and its clinical reasoning.",
+      "mapped_id": "MI1.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "2.D",
+      "question_text": "Neonates with Congenital syphilis may be asymptomatic at birth. Give reason.",
+      "rating": "incorrect",
+      "recommended_mapping": "MI1.5"
+    },
+    {
+      "agreement_score": 0.65,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "MI3.3"
+      },
+      "justification": "MI1.5 is more appropriate as it broadly covers the laboratory diagnosis of infectious diseases, including sexually transmitted infections like trichomoniasis.",
+      "mapped_id": "MI1.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "4",
+      "question_text": "Clinical features and laboratory diagnosis of Trichomoniasis.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.5"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.7,
+      "current_mapping": {
+        "id": "MI1.4"
+      },
+      "justification": "MI1.4 is partially relevant as it addresses drug resistance mechanisms, but the question might also require a specific competency on tuberculosis or respiratory infections, which is not explicitly listed.",
+      "mapped_id": "MI1.4",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "7",
+      "question_text": "Discuss detection of Drug resistant Pulmonary Tuberculosis & its implications.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.4"
+    },
+    {
+      "agreement_score": 0.65,
+      "confidence": 0.65,
+      "current_mapping": {
+        "id": "MI1.6"
+      },
+      "justification": "MI1.6 is somewhat relevant as it deals with infection control, but the care-bundle approach may require a more specific competency related to respiratory or ICU infections, which is not explicitly listed.",
+      "mapped_id": "MI1.6",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "9",
+      "question_text": "Care-bundle approach in prevention of VAP.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.6"
+    },
+    {
+      "agreement_score": 0.2,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "MI3.3"
+      },
+      "justification": "Group B Streptococci should be mapped to MI1.1 as it involves taxonomy and classification of microorganisms, which is a better fit.",
+      "mapped_id": "MI1.1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "10",
+      "question_text": "Group B Streptococci.",
+      "rating": "incorrect",
+      "recommended_mapping": "MI1.1"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.75,
+      "current_mapping": {
+        "id": "MI1.2"
+      },
+      "justification": "Hydatid cysts are better mapped to MI1.5, which includes laboratory diagnosis of infectious diseases, as this competency aligns with understanding parasitic infections.",
+      "mapped_id": "MI1.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "11",
+      "question_text": "Draw a neatly labelled diagram of the Hydatid cyst",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.5"
+    },
+    {
+      "agreement_score": 0.3,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "MI3.3"
+      },
+      "justification": "Endemic haematuria is better mapped to MI1.5 as it involves laboratory diagnosis of parasitic diseases, which is more appropriate.",
+      "mapped_id": "MI1.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "12",
+      "question_text": "Endemic Haematuria.",
+      "rating": "incorrect",
+      "recommended_mapping": "MI1.5"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "MI2.2"
+      },
+      "justification": "DPT vaccine is better mapped to MI2.1 as it involves mechanisms of innate and adaptive immunity, which are directly relevant to understanding vaccine action.",
+      "mapped_id": "MI2.1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "13",
+      "question_text": "DPT Vaccine.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI2.1"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.9,
+      "current_mapping": {
+        "id": "MI1.5"
+      },
+      "justification": "MI3.5 is more specific to CNS infections, including bacterial meningitis, and would be a better fit for this question.",
+      "mapped_id": "MI3.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "17",
+      "question_text": "Specimen collection & storage in bacterial meningitis.",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI3.5"
+    },
+    {
+      "agreement_score": 0.3,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "MI1.6"
+      },
+      "justification": "Informed consent is not explicitly covered under the available NMC microbiology competencies. It may belong to a different domain, such as medical ethics or clinical skills.",
+      "mapped_id": "Not Applicable",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "18",
+      "question_text": "Informed consent",
+      "rating": "incorrect",
+      "recommended_mapping": "Not Applicable"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.7,
+      "current_mapping": {
+        "id": "MI1.6"
+      },
+      "justification": "While MI1.6 is somewhat relevant, a more specific competency related to infection surveillance or epidemiology would be ideal, but it is not available in the current list.",
+      "mapped_id": "MI1.6",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 1",
+      "question_text": "The infection surveillance officer had to calculate the CAUTI rates...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.6"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "MI3.1"
+      },
+      "justification": "MI3.1 is the best fit as it covers respiratory infections, but the mapping could be enriched by ensuring clinical aspects are integrated.",
+      "mapped_id": "MI3.1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 3",
+      "question_text": "Assertion and Reasoning: A 55 yr old alcoholic develops pneumonia with copious “Currant jelly sputum”...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI3.1"
+    },
+    {
+      "agreement_score": 0.65,
+      "confidence": 0.75,
+      "current_mapping": {
+        "id": "MI3.4"
+      },
+      "justification": "MI3.4 is a reasonable fit, but the mapping could be improved by considering systemic infection competencies if available.",
+      "mapped_id": "MI3.4",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 5",
+      "question_text": "A 40 year old male presented to the medical OPD with high grade fever with petechial rashes...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI3.4"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "MI2.2"
+      },
+      "justification": "MI2.1, which covers mechanisms of innate and adaptive immunity, is more appropriate as it encompasses the immunological basis of viral vector vaccines.",
+      "mapped_id": "MI2.1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 7",
+      "question_text": "The component of Covishield vaccine which serves as a vector...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI2.1"
+    },
+    {
+      "agreement_score": 0.5,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "MI1.1"
+      },
+      "justification": "MI1.5, which covers laboratory diagnosis of infectious diseases, is better suited as it includes practical aspects of strain evaluation.",
+      "mapped_id": "MI1.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 8",
+      "question_text": "A Virologist is evaluating the strains used in OPV...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.5"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.75,
+      "current_mapping": {
+        "id": "MI3.4"
+      },
+      "justification": "MI1.5 is a better fit as it includes laboratory diagnosis of infectious diseases, which is crucial for identifying Haemophilus ducreyi.",
+      "mapped_id": "MI1.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 10",
+      "question_text": "Assertion and Reasoning: Assertion(A): Haemophilus ducreyi causes painful genital ulcers...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.5"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "MI1.1"
+      },
+      "justification": "MI1.2 is more appropriate as it explicitly addresses microbial morphology, growth, and physiology, which are key to understanding adenovirus characteristics.",
+      "mapped_id": "MI1.2",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 12",
+      "question_text": "Multiple Completion type: Which of the following are characteristics of Adenoviruses?",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.2"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "MI3.1"
+      },
+      "justification": "MI1.6 could be a better fit as it includes infection control measures, which are critical in understanding the infectious nature of the catarrhal stage of pertussis.",
+      "mapped_id": "MI1.6",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 15",
+      "question_text": "Assertion and Reasoning: Assertion (A): The Catarrhal stage of pertussis is the most infectious...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.6"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.75,
+      "current_mapping": {
+        "id": "MI3.4"
+      },
+      "justification": "MI1.5 may be more appropriate as it covers laboratory diagnosis of infectious diseases, which is relevant for diagnosing ocular infections.",
+      "mapped_id": "MI1.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 16",
+      "question_text": "A 32 yr old farmer presents with severe pain redness & blurred vision in the right eye...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.5"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "MI1.5"
+      },
+      "justification": "MI1.2 explicitly covers microbial growth and physiology, which is more relevant to the question about the medium used for cultivation.",
+      "mapped_id": "MI1.2",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 17",
+      "question_text": "Multiple Completion type: 1. NNN Medium is used to cultivate L.donovani...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.2"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.75,
+      "current_mapping": {
+        "id": "MI3.4"
+      },
+      "justification": "While MI3.4 is likely the best fit, a more specific competency addressing systemic or immunological aspects (if available) might be better. No alternative is suggested due to lack of a better match.",
+      "mapped_id": "MI3.4",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 18",
+      "question_text": "A 25 year old male presented with features of Watercan perineum...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI3.4"
+    },
+    {
+      "agreement_score": 0.65,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "MI3.4"
+      },
+      "justification": "MI1.5, focusing on laboratory diagnosis of infectious diseases, might be a better fit given the systemic nature of the presentation. MI3.4 is still partially relevant but not comprehensive.",
+      "mapped_id": "MI1.5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 20",
+      "question_text": "A 25 year old male from a rural area presented with sudden fever chills and painful swelling in the right groin...",
+      "rating": "partially_correct",
+      "recommended_mapping": "MI1.5"
+    }
+  ]
+}

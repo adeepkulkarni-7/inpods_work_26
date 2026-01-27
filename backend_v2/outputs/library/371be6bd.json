@@ -1,0 +1,251 @@
+{
+  "id": "371be6bd",
+  "name": "Mapping_2026-01-26_ic1comp",
+  "created_at": "2026-01-26T16:47:11.940325",
+  "dimension": "competency",
+  "mode": "B",
+  "source_file": "audit_output_competency_20260126_164421.xlsx",
+  "question_count": 16,
+  "recommendations": [
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "C2"
+      },
+      "justification": "C4 may be a better fit as it includes principles and application of infection control measures, which are closely related to immunoprophylaxis.",
+      "mapped_id": "C4",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "1.C",
+      "question_text": "Discuss the Immunoprophylactic measures available to combat this condition.",
+      "rating": "partially_correct",
+      "recommended_mapping": "C4"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.9,
+      "current_mapping": {
+        "id": "C5"
+      },
+      "justification": "C5 is the most appropriate as it emphasizes understanding and interpretation of laboratory diagnostic tests, which is the focus of the question.",
+      "mapped_id": "C5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "2.C",
+      "question_text": "Mention the Specific Serological tests for the diagnosis & Explain any one in detail.",
+      "rating": "partially_correct",
+      "recommended_mapping": "C5"
+    },
+    {
+      "agreement_score": 0.75,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "C3"
+      },
+      "justification": "C5 could be more appropriate as the laboratory diagnosis component is a significant part of the question, requiring understanding of diagnostic tests.",
+      "mapped_id": "C5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "4",
+      "question_text": "Clinical features and laboratory diagnosis of Trichomoniasis.",
+      "rating": "partially_correct",
+      "recommended_mapping": "C5"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "C3"
+      },
+      "justification": "C5 is more appropriate as it encompasses laboratory diagnostic tests and antimicrobial therapy, which are critical for detecting drug-resistant tuberculosis.",
+      "mapped_id": "C5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "7",
+      "question_text": "Discuss detection of Drug resistant Pulmonary Tuberculosis & its implications.",
+      "rating": "partially_correct",
+      "recommended_mapping": "C5"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "C5"
+      },
+      "justification": "C3 is a better fit as it involves correlating natural history and clinical manifestations, which aligns with understanding the structure and implications of a hydatid cyst.",
+      "mapped_id": "C3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "11",
+      "question_text": "Draw a neatly labelled diagram of the Hydatid cyst",
+      "rating": "partially_correct",
+      "recommended_mapping": "C3"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "C2"
+      },
+      "justification": "C4 is a better fit as it includes the principles and application of infection control measures, which are directly relevant to vaccination strategies like the DPT vaccine.",
+      "mapped_id": "C4",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "13",
+      "question_text": "DPT Vaccine.",
+      "rating": "partially_correct",
+      "recommended_mapping": "C4"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.9,
+      "current_mapping": {
+        "id": "C5"
+      },
+      "justification": "The current mapping is acceptable but could be refined to ensure it focuses on the diagnostic aspect of NS1 Antigen.",
+      "mapped_id": "C5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "16",
+      "question_text": "NS1 Antigen.",
+      "rating": "partially_correct",
+      "recommended_mapping": "C5"
+    },
+    {
+      "agreement_score": 0.4,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "C4"
+      },
+      "justification": "This question does not fit within the provided competencies. Consider adding a new competency related to ethics or patient communication.",
+      "mapped_id": "N/A",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "18",
+      "question_text": "Informed consent",
+      "rating": "incorrect",
+      "recommended_mapping": "N/A"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "C2"
+      },
+      "justification": "C5 is more appropriate as it pertains to understanding and interpreting laboratory diagnostic tests.",
+      "mapped_id": "C5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 4",
+      "question_text": "Multiple Completion type: Which of the following are key antigens used in IGRA Test?",
+      "rating": "partially_correct",
+      "recommended_mapping": "C5"
+    },
+    {
+      "agreement_score": 0.75,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "C2"
+      },
+      "justification": "C4 is more appropriate as it includes the principles and application of infection control measures, including vaccination.",
+      "mapped_id": "C4",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 6",
+      "question_text": "Multiple completion type: 1. BCG is a Live Attenuated vaccine...",
+      "rating": "partially_correct",
+      "recommended_mapping": "C4"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "C6"
+      },
+      "justification": "C1 is a better fit as it involves understanding the role of microbial agents (e.g., viruses in OPV) in health and disease.",
+      "mapped_id": "C1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 8",
+      "question_text": "A Virologist is evaluating the strains used in OPV...",
+      "rating": "partially_correct",
+      "recommended_mapping": "C1"
+    },
+    {
+      "agreement_score": 0.65,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "C1"
+      },
+      "justification": "C3 is a better fit as it covers the correlation of natural history, mechanisms, and clinical manifestations of infectious diseases, which is relevant to this case.",
+      "mapped_id": "C3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 11",
+      "question_text": "A 35 year old diabetic presented to the neurosurgery OPD with symptoms of focal seizures...",
+      "rating": "partially_correct",
+      "recommended_mapping": "C3"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "C3"
+      },
+      "justification": "C4 may be more appropriate as the question highlights the infectious stage, which ties into infection control measures.",
+      "mapped_id": "C4",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 15",
+      "question_text": "Assertion and Reasoning: Assertion (A): The Catarrhal stage of pertussis is the most infectious...",
+      "rating": "partially_correct",
+      "recommended_mapping": "C4"
+    },
+    {
+      "agreement_score": 0.75,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "C5"
+      },
+      "justification": "C5 is the better fit as the question focuses on laboratory diagnostics and antimicrobial therapy.",
+      "mapped_id": "C5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 16",
+      "question_text": "A 32 yr old farmer presents with severe pain redness & blurred vision in the right eye...",
+      "rating": "partially_correct",
+      "recommended_mapping": "C5"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "C5"
+      },
+      "justification": "C5 remains the best fit as it covers laboratory diagnostic tests, though the mapping could be refined to emphasize the diagnostic aspect rather than antimicrobial therapy.",
+      "mapped_id": "C5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 17",
+      "question_text": "Multiple Completion type: 1. NNN Medium is used to cultivate L.donovani...",
+      "rating": "partially_correct",
+      "recommended_mapping": "C5"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "C6"
+      },
+      "justification": "C3 is a better fit as the question focuses on clinical manifestations rather than outbreak investigation or control.",
+      "mapped_id": "C3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 20",
+      "question_text": "A 25 year old male from a rural area presented with sudden fever chills and painful swelling in the right groin...",
+      "rating": "partially_correct",
+      "recommended_mapping": "C3"
+    }
+  ]
+}

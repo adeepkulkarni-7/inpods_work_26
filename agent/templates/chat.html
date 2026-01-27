@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Mapping Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #00a8cc, #00d4aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .chat-container {
+            flex: 1;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .message.assistant .avatar {
+            background: linear-gradient(135deg, #00a8cc, #00d4aa);
+        }
+
+        .message.user .avatar {
+            background: #6c757d;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            line-height: 1.5;
+        }
+
+        .message.assistant .message-content {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 16px 16px 16px 4px;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #00a8cc, #00d4aa);
+            color: white;
+            border-radius: 16px 16px 4px 16px;
+        }
+
+        .message-content h1, .message-content h2, .message-content h3 {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .message-content p {
+            margin: 8px 0;
+        }
+
+        .message-content ul, .message-content ol {
+            margin: 8px 0 8px 20px;
+        }
+
+        .message-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
+        .message-content th, .message-content td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .message-content th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .message-content code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .message-content blockquote {
+            border-left: 3px solid #00a8cc;
+            padding-left: 12px;
+            margin: 10px 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, #00a8cc, #00d4aa);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 168, 204, 0.4);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .chart-item img {
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .chart-item img:hover {
+            transform: scale(1.02);
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        #messageInput:focus {
+            border-color: #00a8cc;
+        }
+
+        #sendBtn {
+            background: linear-gradient(135deg, #00a8cc, #00d4aa);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        #sendBtn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 168, 204, 0.4);
+        }
+
+        #sendBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .file-upload {
+            margin-top: 12px;
+            display: none;
+        }
+
+        .file-upload.active {
+            display: block;
+        }
+
+        .file-drop-zone {
+            border: 2px dashed #00a8cc;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f8f9fa;
+        }
+
+        .file-drop-zone:hover, .file-drop-zone.dragover {
+            background: #e8f8f5;
+            border-color: #00d4aa;
+        }
+
+        .file-drop-zone input {
+            display: none;
+        }
+
+        .file-drop-zone .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .file-list {
+            margin-top: 12px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: #e8f8f5;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .file-item .name {
+            flex: 1;
+        }
+
+        .file-item .remove {
+            color: #dc3545;
+            cursor: pointer;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #00a8cc;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .reset-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Modal for image preview */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button class="reset-btn" onclick="resetAgent()">🔄 New Session</button>
+
+    <div class="container">
+        <header>
+            <h1>🎓 Curriculum Mapping Assistant</h1>
+            <p>AI-powered curriculum mapping for medical education</p>
+        </header>
+
+        <div class="chat-container">
+            <div class="messages" id="messages">
+                <!-- Messages will be inserted here -->
+            </div>
+
+            <div class="input-area">
+                <div class="file-upload" id="fileUpload">
+                    <div class="file-drop-zone" id="dropZone">
+                        <div class="icon">📁</div>
+                        <div>Drop files here or click to upload</div>
+                        <div style="color: #888; font-size: 0.85rem; margin-top: 5px;">CSV, Excel (.xlsx, .xls), ODS</div>
+                        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.ods" multiple>
+                    </div>
+                    <div class="file-list" id="fileList"></div>
+                </div>
+
+                <div class="input-row">
+                    <input type="text" id="messageInput" placeholder="Type your message..." autocomplete="off">
+                    <button id="sendBtn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="imageModal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="Chart">
+    </div>
+
+    <!-- Markdown parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        const messagesEl = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const fileUpload = document.getElementById('fileUpload');
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
+        const fileList = document.getElementById('fileList');
+
+        let pendingFiles = [];
+        let expectingFileUpload = false;
+
+        // Initialize - send empty message to get greeting
+        window.onload = () => {
+            sendMessage('');
+        };
+
+        // Handle Enter key
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // File upload handling
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            for (let file of files) {
+                pendingFiles.push(file);
+                addFileToList(file);
+            }
+        }
+
+        function addFileToList(file) {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.innerHTML = `
+                <span>📄</span>
+                <span class="name">${file.name}</span>
+                <span class="remove" onclick="removeFile('${file.name}', this)">✕</span>
+            `;
+            fileList.appendChild(div);
+        }
+
+        function removeFile(filename, el) {
+            pendingFiles = pendingFiles.filter(f => f.name !== filename);
+            el.parentElement.remove();
+        }
+
+        async function uploadFiles() {
+            const uploaded = [];
+
+            for (let file of pendingFiles) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Determine file type based on context
+                let fileType = 'question';
+                if (file.name.toLowerCase().includes('curriculum') ||
+                    file.name.toLowerCase().includes('reference') ||
+                    file.name.toLowerCase().includes('nmc')) {
+                    fileType = 'reference';
+                } else if (file.name.toLowerCase().includes('mapped') ||
+                           file.name.toLowerCase().includes('output') ||
+                           file.name.toLowerCase().includes('audit')) {
+                    fileType = 'mapped';
+                }
+                formData.append('type', fileType);
+
+                try {
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        uploaded.push({
+                            filename: data.filename,
+                            path: data.path,
+                            type: fileType
+                        });
+                    }
+                } catch (err) {
+                    console.error('Upload failed:', err);
+                }
+            }
+
+            pendingFiles = [];
+            fileList.innerHTML = '';
+
+            return uploaded;
+        }
+
+        async function sendMessage(text = null) {
+            const message = text !== null ? text : messageInput.value.trim();
+
+            if (!message && pendingFiles.length === 0) return;
+
+            // Show user message (if not empty)
+            if (message) {
+                addMessage('user', message);
+            }
+
+            messageInput.value = '';
+            sendBtn.disabled = true;
+
+            // Upload any pending files first
+            let files = [];
+            if (pendingFiles.length > 0) {
+                addMessage('assistant', '📤 Uploading files...');
+                files = await uploadFiles();
+                // Remove upload message
+                messagesEl.lastChild.remove();
+            }
+
+            // Show typing indicator
+            const typingEl = document.createElement('div');
+            typingEl.className = 'message assistant';
+            typingEl.innerHTML = `
+                <div class="avatar">🤖</div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            `;
+            messagesEl.appendChild(typingEl);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, files })
+                });
+
+                const data = await response.json();
+
+                // Remove typing indicator
+                typingEl.remove();
+
+                if (data.success) {
+                    addMessage('assistant', data.message, {
+                        options: data.options,
+                        charts: data.charts,
+                        download_url: data.download_url
+                    });
+
+                    // Show/hide file upload based on input type
+                    if (data.input_type === 'file') {
+                        fileUpload.classList.add('active');
+                        expectingFileUpload = true;
+                    } else {
+                        fileUpload.classList.remove('active');
+                        expectingFileUpload = false;
+                    }
+                } else {
+                    addMessage('assistant', `❌ Error: ${data.error}`);
+                }
+
+            } catch (err) {
+                typingEl.remove();
+                addMessage('assistant', `❌ Connection error: ${err.message}`);
+            }
+
+            sendBtn.disabled = false;
+            messageInput.focus();
+        }
+
+        function addMessage(role, content, extras = {}) {
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+
+            const avatar = role === 'assistant' ? '🤖' : '👤';
+            let html = `<div class="avatar">${avatar}</div>`;
+
+            // Parse markdown
+            let parsedContent = marked.parse(content);
+
+            html += `<div class="message-content">${parsedContent}`;
+
+            // Add options buttons
+            if (extras.options && extras.options.length > 0) {
+                html += '<div class="options">';
+                for (let opt of extras.options) {
+                    html += `<button class="option-btn" onclick="selectOption('${opt.replace(/'/g, "\\'")}')">${opt}</button>`;
+                }
+                html += '</div>';
+            }
+
+            // Add charts
+            if (extras.charts && Object.keys(extras.charts).length > 0) {
+                html += '<div class="charts-grid">';
+                for (let [name, url] of Object.entries(extras.charts)) {
+                    html += `<div class="chart-item"><img src="${url}" alt="${name}" onclick="showImage('${url}')"></div>`;
+                }
+                html += '</div>';
+            }
+
+            // Add download button
+            if (extras.download_url) {
+                html += `<a href="${extras.download_url}" class="download-btn" download>📥 Download File</a>`;
+            }
+
+            html += '</div>';
+            div.innerHTML = html;
+
+            messagesEl.appendChild(div);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        function selectOption(option) {
+            messageInput.value = option;
+            sendMessage();
+        }
+
+        function showImage(url) {
+            document.getElementById('modalImage').src = url;
+            document.getElementById('imageModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        async function resetAgent() {
+            if (confirm('Start a new session? This will clear the current conversation.')) {
+                await fetch('/api/reset', { method: 'POST' });
+                messagesEl.innerHTML = '';
+                pendingFiles = [];
+                fileList.innerHTML = '';
+                fileUpload.classList.remove('active');
+                sendMessage('');
+            }
+        }
+
+        // Close modal on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

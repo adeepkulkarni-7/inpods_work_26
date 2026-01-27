@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Objectives Mapping System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #1e293b;
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        /* Tool Cards */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .tool-card.active {
+            border-color: #00a8cc;
+        }
+
+        .tool-card.tool-1 { border-top: 5px solid #00a8cc; }
+        .tool-card.tool-2 { border-top: 5px solid #00d4aa; }
+        .tool-card.tool-3 { border-top: 5px solid #ffa600; }
+
+        .tool-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+        }
+
+        .tool-label {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tool-1 .tool-label { background: #e0f7fa; color: #006064; }
+        .tool-2 .tool-label { background: #e8f5e9; color: #2e7d32; }
+        .tool-3 .tool-label { background: #fff3e0; color: #e65100; }
+
+        .tool-card h3 {
+            color: #1e293b;
+            margin-bottom: 12px;
+            font-size: 20px;
+        }
+
+        .tool-card p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* Objectives Reference */
+        .objectives-ref {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .objectives-ref h4 {
+            color: #475569;
+            margin-bottom: 12px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .obj-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .obj-item {
+            background: #f8fafc;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            border-left: 4px solid #00a8cc;
+        }
+
+        .obj-item strong {
+            color: #00a8cc;
+        }
+
+        /* Main Content Panel */
+        .panel {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .panel-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .back-btn {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #475569;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #475569;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            background: #f8fafc;
+            cursor: pointer;
+        }
+
+        input[type="file"]:hover {
+            border-color: #00a8cc;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        button {
+            background: #00a8cc;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #007a99;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.success { background: #10b981; }
+        button.success:hover { background: #059669; }
+
+        button.secondary { background: #64748b; }
+        button.secondary:hover { background: #475569; }
+
+        /* Status Messages */
+        .status {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+            display: block;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            display: block;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #00a8cc;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Results Table */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .results-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .results-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .question-text {
+            max-width: 300px;
+            font-size: 13px;
+            color: #334155;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-high { background: #d1fae5; color: #065f46; }
+        .badge-medium { background: #fef3c7; color: #92400e; }
+        .badge-low { background: #fee2e2; color: #991b1b; }
+
+        .badge-correct { background: #d1fae5; color: #065f46; }
+        .badge-partial { background: #fef3c7; color: #92400e; }
+        .badge-incorrect { background: #fee2e2; color: #991b1b; }
+
+        .objective-badge {
+            background: #e0f7fa;
+            color: #006064;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* Selection Info */
+        .selection-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .selection-count {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .selection-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .selection-actions button {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        /* Rating Summary */
+        .rating-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .rating-stat {
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .rating-stat.correct { background: #d1fae5; }
+        .rating-stat.partial { background: #fef3c7; }
+        .rating-stat.incorrect { background: #fee2e2; }
+
+        .rating-stat .value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .rating-stat .label {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .chart-card.full-width {
+            grid-column: span 2;
+        }
+
+        .chart-card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .chart-card h5 {
+            margin-bottom: 12px;
+            color: #475569;
+        }
+
+        /* Summary Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #00a8cc;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .reason-text {
+            font-size: 13px;
+            color: #64748b;
+            max-width: 250px;
+        }
+
+        @media (max-width: 900px) {
+            .tools-grid { grid-template-columns: 1fr; }
+            .obj-list { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-grid { grid-template-columns: 1fr; }
+            .chart-card.full-width { grid-column: span 1; }
+            .rating-summary { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Objectives Mapping System</h1>
+            <p class="subtitle">Map medical education questions to Learning Objectives (O1-O6)</p>
+        </header>
+
+        <div id="statusMessage" class="status"></div>
+
+        <!-- Tool Selection -->
+        <div id="toolSelection">
+            <div class="tools-grid">
+                <div class="tool-card tool-1" onclick="selectTool(1)">
+                    <span class="tool-label">Tool 1</span>
+                    <div class="tool-icon">&#128269;</div>
+                    <h3>Map Questions</h3>
+                    <p>Upload unmapped questions and get AI-recommended objective mappings with confidence scores.</p>
+                </div>
+
+                <div class="tool-card tool-2" onclick="selectTool(2)">
+                    <span class="tool-label">Tool 2</span>
+                    <div class="tool-icon">&#9733;</div>
+                    <h3>Rate Mappings</h3>
+                    <p>Evaluate existing objective mappings and get corrections where needed.</p>
+                </div>
+
+                <div class="tool-card tool-3" onclick="selectTool(3)">
+                    <span class="tool-label">Tool 3</span>
+                    <div class="tool-icon">&#128202;</div>
+                    <h3>Generate Insights</h3>
+                    <p>Visualize mapping distribution, confidence levels, and gap analysis.</p>
+                </div>
+            </div>
+
+            <!-- Objectives Reference -->
+            <div class="objectives-ref">
+                <h4>Learning Objectives Reference</h4>
+                <div class="obj-list">
+                    <div class="obj-item"><strong>O1:</strong> Explain how microorganisms cause infection</div>
+                    <div class="obj-item"><strong>O2:</strong> Commensal, opportunistic & pathogenic organisms</div>
+                    <div class="obj-item"><strong>O3:</strong> Characteristics (morphology, resistance, virulence)</div>
+                    <div class="obj-item"><strong>O4:</strong> Host defense mechanisms</div>
+                    <div class="obj-item"><strong>O5:</strong> Laboratory diagnosis</div>
+                    <div class="obj-item"><strong>O6:</strong> Prophylaxis for infections</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tool 1: Map Questions -->
+        <div id="tool1Panel" class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Tool 1: Map Unmapped Questions</span>
+                <button class="back-btn" onclick="goBack()">&#8592; Back</button>
+            </div>
+
+            <!-- Upload Section -->
+            <div id="tool1Upload">
+                <div class="form-group">
+                    <label>Question Bank File (CSV/Excel)</label>
+                    <input type="file" id="tool1File" accept=".csv,.xlsx,.xls">
+                </div>
+
+                <div class="form-group">
+                    <label>Batch Size</label>
+                    <select id="tool1BatchSize">
+                        <option value="3">3 questions per batch</option>
+                        <option value="5" selected>5 questions per batch (Recommended)</option>
+                        <option value="7">7 questions per batch</option>
+                    </select>
+                </div>
+
+                <button onclick="runTool1()">Upload & Map Questions</button>
+            </div>
+
+            <!-- Loading -->
+            <div id="tool1Loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Mapping questions to objectives... This may take a few minutes.</p>
+            </div>
+
+            <!-- Results -->
+            <div id="tool1Results" style="display: none;">
+                <div class="selection-bar">
+                    <span class="selection-count"><span id="tool1Selected">0</span> of <span id="tool1Total">0</span> selected</span>
+                    <div class="selection-actions">
+                        <button class="secondary" onclick="tool1SelectAll()">Select All</button>
+                        <button class="secondary" onclick="tool1SelectNone()">Select None</button>
+                        <button class="secondary" onclick="tool1SelectHighConf()">High Confidence Only</button>
+                    </div>
+                </div>
+
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;"><input type="checkbox" class="checkbox" id="tool1CheckAll" onchange="tool1ToggleAll()"></th>
+                            <th>Q#</th>
+                            <th>Question</th>
+                            <th>Objective</th>
+                            <th>Confidence</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tool1Body"></tbody>
+                </table>
+
+                <div class="actions">
+                    <button class="success" onclick="tool1Export()">Export to Excel</button>
+                    <button class="secondary" onclick="tool1Reset()">Start Over</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tool 2: Rate Mappings -->
+        <div id="tool2Panel" class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Tool 2: Rate Existing Mappings</span>
+                <button class="back-btn" onclick="goBack()">&#8592; Back</button>
+            </div>
+
+            <!-- Upload Section -->
+            <div id="tool2Upload">
+                <div class="form-group">
+                    <label>Mapped Questions File (with existing objective mappings)</label>
+                    <input type="file" id="tool2File" accept=".csv,.xlsx,.xls,.ods">
+                </div>
+
+                <div class="form-group">
+                    <label>Batch Size</label>
+                    <select id="tool2BatchSize">
+                        <option value="3">3 questions per batch</option>
+                        <option value="5" selected>5 questions per batch</option>
+                    </select>
+                </div>
+
+                <button onclick="runTool2()">Upload & Rate Mappings</button>
+            </div>
+
+            <!-- Loading -->
+            <div id="tool2Loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Rating existing mappings... This may take a few minutes.</p>
+            </div>
+
+            <!-- Results -->
+            <div id="tool2Results" style="display: none;">
+                <div class="rating-summary">
+                    <div class="rating-stat correct">
+                        <div class="value" id="tool2Correct">0</div>
+                        <div class="label">Correct</div>
+                    </div>
+                    <div class="rating-stat partial">
+                        <div class="value" id="tool2Partial">0</div>
+                        <div class="label">Partially Correct</div>
+                    </div>
+                    <div class="rating-stat incorrect">
+                        <div class="value" id="tool2Incorrect">0</div>
+                        <div class="label">Incorrect</div>
+                    </div>
+                </div>
+
+                <div class="selection-bar">
+                    <span class="selection-count">Showing <span id="tool2NeedsReview">0</span> mappings that need review. <span id="tool2Selected">0</span> selected.</span>
+                    <div class="selection-actions">
+                        <button class="secondary" onclick="tool2SelectIncorrect()">Select Incorrect</button>
+                        <button class="secondary" onclick="tool2SelectNone()">Select None</button>
+                    </div>
+                </div>
+
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;"><input type="checkbox" class="checkbox" id="tool2CheckAll" onchange="tool2ToggleAll()"></th>
+                            <th>Q#</th>
+                            <th>Question</th>
+                            <th>Current</th>
+                            <th>Rating</th>
+                            <th>Suggested</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tool2Body"></tbody>
+                </table>
+
+                <div class="actions">
+                    <button class="success" onclick="tool2Export()">Export Corrections</button>
+                    <button class="secondary" onclick="tool2Reset()">Start Over</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tool 3: Insights -->
+        <div id="tool3Panel" class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Tool 3: Generate Insights</span>
+                <button class="back-btn" onclick="goBack()">&#8592; Back</button>
+            </div>
+
+            <!-- Upload Section -->
+            <div id="tool3Upload">
+                <div class="form-group">
+                    <label>Mapped Questions File</label>
+                    <input type="file" id="tool3File" accept=".csv,.xlsx,.xls,.ods">
+                </div>
+
+                <button onclick="runTool3()">Generate Insights</button>
+            </div>
+
+            <!-- Loading -->
+            <div id="tool3Loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Generating visualizations...</p>
+            </div>
+
+            <!-- Results -->
+            <div id="tool3Results" style="display: none;">
+                <div class="stats-grid" id="tool3Stats"></div>
+
+                <div class="charts-grid" id="tool3Charts"></div>
+
+                <div class="actions">
+                    <button class="secondary" onclick="tool3Reset()">Start Over</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5001/api';
+
+        let currentTool = null;
+        let uploadedFile = null;
+        let tool1Recommendations = [];
+        let tool1SelectedIndices = [];
+        let tool2Recommendations = [];
+        let tool2SelectedIndices = [];
+
+        // ============================================
+        // Utility Functions
+        // ============================================
+
+        function showStatus(message, type) {
+            const el = document.getElementById('statusMessage');
+            el.textContent = message;
+            el.className = `status ${type}`;
+            setTimeout(() => { el.className = 'status'; }, 5000);
+        }
+
+        function selectTool(tool) {
+            currentTool = tool;
+            document.getElementById('toolSelection').style.display = 'none';
+            document.getElementById(`tool${tool}Panel`).classList.add('active');
+        }
+
+        function goBack() {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('toolSelection').style.display = 'block';
+            currentTool = null;
+        }
+
+        function getConfidenceBadge(conf) {
+            if (conf >= 0.85) return `<span class="badge badge-high">${Math.round(conf * 100)}%</span>`;
+            if (conf >= 0.70) return `<span class="badge badge-medium">${Math.round(conf * 100)}%</span>`;
+            return `<span class="badge badge-low">${Math.round(conf * 100)}%</span>`;
+        }
+
+        function getRatingBadge(rating) {
+            if (rating === 'correct') return '<span class="badge badge-correct">Correct</span>';
+            if (rating === 'partially_correct') return '<span class="badge badge-partial">Partial</span>';
+            return '<span class="badge badge-incorrect">Incorrect</span>';
+        }
+
+        // ============================================
+        // TOOL 1: Map Questions
+        // ============================================
+
+        async function runTool1() {
+            const fileInput = document.getElementById('tool1File');
+            if (!fileInput.files[0]) {
+                showStatus('Please select a file', 'error');
+                return;
+            }
+
+            // Upload file
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const uploadRes = await fetch(`${API_URL}/upload`, { method: 'POST', body: formData });
+                const uploadData = await uploadRes.json();
+
+                if (!uploadRes.ok) {
+                    showStatus(`Error: ${uploadData.error}`, 'error');
+                    return;
+                }
+
+                uploadedFile = uploadData.filename;
+                showStatus(`Uploaded: ${uploadData.question_count} questions`, 'success');
+
+                // Show loading
+                document.getElementById('tool1Upload').style.display = 'none';
+                document.getElementById('tool1Loading').style.display = 'block';
+
+                // Run mapping
+                const batchSize = parseInt(document.getElementById('tool1BatchSize').value);
+                const mapRes = await fetch(`${API_URL}/tool1/map`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: uploadedFile, batch_size: batchSize })
+                });
+
+                const mapData = await mapRes.json();
+
+                if (mapRes.ok) {
+                    tool1Recommendations = mapData.recommendations;
+                    displayTool1Results(mapData);
+                    document.getElementById('tool1Loading').style.display = 'none';
+                    document.getElementById('tool1Results').style.display = 'block';
+                    showStatus(`Mapped ${mapData.mapped_questions} questions`, 'success');
+                } else {
+                    showStatus(`Error: ${mapData.error}`, 'error');
+                    tool1Reset();
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                tool1Reset();
+            }
+        }
+
+        function displayTool1Results(data) {
+            document.getElementById('tool1Total').textContent = data.recommendations.length;
+            const tbody = document.getElementById('tool1Body');
+            tbody.innerHTML = '';
+
+            data.recommendations.forEach((rec, idx) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="checkbox" class="checkbox" data-index="${idx}" onchange="updateTool1Selection()"></td>
+                    <td>${rec.question_num}</td>
+                    <td class="question-text">${rec.question_text}</td>
+                    <td><span class="objective-badge">${rec.objective_id}</span></td>
+                    <td>${getConfidenceBadge(rec.confidence)}</td>
+                    <td class="reason-text">${rec.reason}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateTool1Selection() {
+            const checkboxes = document.querySelectorAll('#tool1Body input[type="checkbox"]');
+            tool1SelectedIndices = [];
+            checkboxes.forEach(cb => { if (cb.checked) tool1SelectedIndices.push(parseInt(cb.dataset.index)); });
+            document.getElementById('tool1Selected').textContent = tool1SelectedIndices.length;
+        }
+
+        function tool1ToggleAll() {
+            const checked = document.getElementById('tool1CheckAll').checked;
+            document.querySelectorAll('#tool1Body input[type="checkbox"]').forEach(cb => cb.checked = checked);
+            updateTool1Selection();
+        }
+
+        function tool1SelectAll() { document.getElementById('tool1CheckAll').checked = true; tool1ToggleAll(); }
+        function tool1SelectNone() { document.getElementById('tool1CheckAll').checked = false; tool1ToggleAll(); }
+
+        function tool1SelectHighConf() {
+            document.querySelectorAll('#tool1Body input[type="checkbox"]').forEach((cb, i) => {
+                cb.checked = tool1Recommendations[i].confidence >= 0.85;
+            });
+            updateTool1Selection();
+        }
+
+        async function tool1Export() {
+            if (tool1SelectedIndices.length === 0) {
+                showStatus('Please select at least one mapping', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/tool1/export`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        filename: uploadedFile,
+                        recommendations: tool1Recommendations,
+                        selected_indices: tool1SelectedIndices
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    window.location.href = `${API_URL}${data.download_url}`;
+                    showStatus('Downloading Excel...', 'success');
+                } else {
+                    showStatus(`Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function tool1Reset() {
+            tool1Recommendations = [];
+            tool1SelectedIndices = [];
+            uploadedFile = null;
+            document.getElementById('tool1File').value = '';
+            document.getElementById('tool1Loading').style.display = 'none';
+            document.getElementById('tool1Results').style.display = 'none';
+            document.getElementById('tool1Upload').style.display = 'block';
+            document.getElementById('tool1Body').innerHTML = '';
+            document.getElementById('tool1Selected').textContent = '0';
+        }
+
+        // ============================================
+        // TOOL 2: Rate Mappings
+        // ============================================
+
+        async function runTool2() {
+            const fileInput = document.getElementById('tool2File');
+            if (!fileInput.files[0]) {
+                showStatus('Please select a file', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const uploadRes = await fetch(`${API_URL}/upload`, { method: 'POST', body: formData });
+                const uploadData = await uploadRes.json();
+
+                if (!uploadRes.ok) {
+                    showStatus(`Error: ${uploadData.error}`, 'error');
+                    return;
+                }
+
+                uploadedFile = uploadData.filename;
+
+                document.getElementById('tool2Upload').style.display = 'none';
+                document.getElementById('tool2Loading').style.display = 'block';
+
+                const batchSize = parseInt(document.getElementById('tool2BatchSize').value);
+                const rateRes = await fetch(`${API_URL}/tool2/rate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: uploadedFile, batch_size: batchSize })
+                });
+
+                const rateData = await rateRes.json();
+
+                if (rateRes.ok) {
+                    tool2Recommendations = rateData.recommendations;
+                    displayTool2Results(rateData);
+                    document.getElementById('tool2Loading').style.display = 'none';
+                    document.getElementById('tool2Results').style.display = 'block';
+                    showStatus(`Rated ${rateData.summary.total_rated} mappings`, 'success');
+                } else {
+                    showStatus(`Error: ${rateData.error}`, 'error');
+                    tool2Reset();
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                tool2Reset();
+            }
+        }
+
+        function displayTool2Results(data) {
+            document.getElementById('tool2Correct').textContent = data.summary.correct;
+            document.getElementById('tool2Partial').textContent = data.summary.partially_correct;
+            document.getElementById('tool2Incorrect').textContent = data.summary.incorrect;
+            document.getElementById('tool2NeedsReview').textContent = data.recommendations.length;
+
+            const tbody = document.getElementById('tool2Body');
+            tbody.innerHTML = '';
+
+            data.recommendations.forEach((rec, idx) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="checkbox" class="checkbox" data-index="${idx}" onchange="updateTool2Selection()"></td>
+                    <td>${rec.question_num}</td>
+                    <td class="question-text">${rec.question_text}</td>
+                    <td><span class="objective-badge">${rec.current_objective || 'N/A'}</span></td>
+                    <td>${getRatingBadge(rec.rating)}</td>
+                    <td><span class="objective-badge">${rec.suggested_objective}</span></td>
+                    <td>${getConfidenceBadge(rec.suggestion_confidence)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateTool2Selection() {
+            const checkboxes = document.querySelectorAll('#tool2Body input[type="checkbox"]');
+            tool2SelectedIndices = [];
+            checkboxes.forEach(cb => { if (cb.checked) tool2SelectedIndices.push(parseInt(cb.dataset.index)); });
+            document.getElementById('tool2Selected').textContent = tool2SelectedIndices.length;
+        }
+
+        function tool2ToggleAll() {
+            const checked = document.getElementById('tool2CheckAll').checked;
+            document.querySelectorAll('#tool2Body input[type="checkbox"]').forEach(cb => cb.checked = checked);
+            updateTool2Selection();
+        }
+
+        function tool2SelectIncorrect() {
+            document.querySelectorAll('#tool2Body input[type="checkbox"]').forEach((cb, i) => {
+                cb.checked = tool2Recommendations[i].rating === 'incorrect';
+            });
+            updateTool2Selection();
+        }
+
+        function tool2SelectNone() {
+            document.querySelectorAll('#tool2Body input[type="checkbox"]').forEach(cb => cb.checked = false);
+            updateTool2Selection();
+        }
+
+        async function tool2Export() {
+            if (tool2SelectedIndices.length === 0) {
+                showStatus('Please select at least one mapping', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/tool2/export`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        filename: uploadedFile,
+                        recommendations: tool2Recommendations,
+                        selected_indices: tool2SelectedIndices
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    window.location.href = `${API_URL}${data.download_url}`;
+                    showStatus('Downloading Excel...', 'success');
+                } else {
+                    showStatus(`Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function tool2Reset() {
+            tool2Recommendations = [];
+            tool2SelectedIndices = [];
+            uploadedFile = null;
+            document.getElementById('tool2File').value = '';
+            document.getElementById('tool2Loading').style.display = 'none';
+            document.getElementById('tool2Results').style.display = 'none';
+            document.getElementById('tool2Upload').style.display = 'block';
+            document.getElementById('tool2Body').innerHTML = '';
+            document.getElementById('tool2Selected').textContent = '0';
+        }
+
+        // ============================================
+        // TOOL 3: Insights
+        // ============================================
+
+        async function runTool3() {
+            const fileInput = document.getElementById('tool3File');
+            if (!fileInput.files[0]) {
+                showStatus('Please select a file', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const uploadRes = await fetch(`${API_URL}/upload`, { method: 'POST', body: formData });
+                const uploadData = await uploadRes.json();
+
+                if (!uploadRes.ok) {
+                    showStatus(`Error: ${uploadData.error}`, 'error');
+                    return;
+                }
+
+                uploadedFile = uploadData.filename;
+
+                document.getElementById('tool3Upload').style.display = 'none';
+                document.getElementById('tool3Loading').style.display = 'block';
+
+                const insightsRes = await fetch(`${API_URL}/tool3/insights`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: uploadedFile })
+                });
+
+                const insightsData = await insightsRes.json();
+
+                if (insightsRes.ok) {
+                    displayTool3Results(insightsData);
+                    document.getElementById('tool3Loading').style.display = 'none';
+                    document.getElementById('tool3Results').style.display = 'block';
+                    showStatus('Insights generated', 'success');
+                } else {
+                    showStatus(`Error: ${insightsData.error}`, 'error');
+                    tool3Reset();
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                tool3Reset();
+            }
+        }
+
+        function displayTool3Results(data) {
+            // Stats
+            const statsDiv = document.getElementById('tool3Stats');
+            statsDiv.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${data.summary.total_questions}</div>
+                    <div class="stat-label">Total Questions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.summary.objectives_covered}/6</div>
+                    <div class="stat-label">Objectives Covered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${Math.round(data.summary.average_confidence * 100)}%</div>
+                    <div class="stat-label">Avg Confidence</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.summary.gaps.length}</div>
+                    <div class="stat-label">Gaps</div>
+                </div>
+            `;
+
+            // Charts
+            const chartsDiv = document.getElementById('tool3Charts');
+            chartsDiv.innerHTML = '';
+
+            const chartOrder = ['summary_dashboard', 'coverage_bar', 'distribution_pie', 'confidence_histogram', 'gap_analysis'];
+            const chartTitles = {
+                'summary_dashboard': 'Summary Dashboard',
+                'coverage_bar': 'Questions per Objective',
+                'distribution_pie': 'Distribution',
+                'confidence_histogram': 'Confidence Levels',
+                'gap_analysis': 'Gap Analysis'
+            };
+
+            chartOrder.forEach(name => {
+                if (data.charts[name]) {
+                    const card = document.createElement('div');
+                    card.className = name === 'summary_dashboard' ? 'chart-card full-width' : 'chart-card';
+                    card.innerHTML = `
+                        <h5>${chartTitles[name]}</h5>
+                        <img src="${API_URL}${data.charts[name]}" alt="${name}">
+                    `;
+                    chartsDiv.appendChild(card);
+                }
+            });
+        }
+
+        function tool3Reset() {
+            uploadedFile = null;
+            document.getElementById('tool3File').value = '';
+            document.getElementById('tool3Loading').style.display = 'none';
+            document.getElementById('tool3Results').style.display = 'none';
+            document.getElementById('tool3Upload').style.display = 'block';
+            document.getElementById('tool3Stats').innerHTML = '';
+            document.getElementById('tool3Charts').innerHTML = '';
+        }
+    </script>
+</body>
+</html>

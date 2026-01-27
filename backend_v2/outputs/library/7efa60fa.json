@@ -1,0 +1,56 @@
+{
+  "id": "7efa60fa",
+  "name": "Mapping_2026-01-26_OIC1",
+  "created_at": "2026-01-26T15:57:30.975119",
+  "dimension": "objective",
+  "mode": "B",
+  "source_file": "audit_output_objective_20260126_150852.xlsx",
+  "question_count": 3,
+  "recommendations": [
+    {
+      "agreement_score": 0.4,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "O4"
+      },
+      "justification": "O1 is a better fit as it involves explaining how microorganisms cause infections, which can include asymptomatic presentations.",
+      "mapped_id": "O1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "2.D",
+      "question_text": "Neonates with Congenital syphilis may be asymptomatic at birth. Give reason.",
+      "rating": "incorrect",
+      "recommended_mapping": "O1"
+    },
+    {
+      "agreement_score": 0.4,
+      "confidence": 0.9,
+      "current_mapping": {
+        "id": "O3"
+      },
+      "justification": "O3 is still the best fit as it explicitly involves morphology, which includes diagrams of structures like the Hydatid cyst.",
+      "mapped_id": "O3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "11",
+      "question_text": "Draw a neatly labelled diagram of the Hydatid cyst",
+      "rating": "incorrect",
+      "recommended_mapping": "O3"
+    },
+    {
+      "agreement_score": 0.4,
+      "confidence": 0.95,
+      "current_mapping": {
+        "id": "O1"
+      },
+      "justification": "None of the listed objectives (O1-O6) cover informed consent. This question may need to be mapped to a different domain or set of objectives.",
+      "mapped_id": "N/A",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "18",
+      "question_text": "Informed consent",
+      "rating": "incorrect",
+      "recommended_mapping": "N/A"
+    }
+  ]
+}

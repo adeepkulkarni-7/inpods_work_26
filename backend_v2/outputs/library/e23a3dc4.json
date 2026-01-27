@@ -1,0 +1,356 @@
+{
+  "id": "e23a3dc4",
+  "name": "Mapping_2026-01-26_ch1",
+  "created_at": "2026-01-26T16:32:32.300284",
+  "dimension": "objective",
+  "mode": "B",
+  "source_file": "audit_output_objective_20260126_163022.xlsx",
+  "question_count": 23,
+  "recommendations": [
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "O4"
+      },
+      "justification": "O1 covers the explanation of how microorganisms cause infections, which could include secondary infections like bacterial pneumonia.",
+      "mapped_id": "O1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "1.D",
+      "question_text": "The patient develops bacterial pneumonia during recovery. Give reason.",
+      "rating": "partially_correct",
+      "recommended_mapping": "O1"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "O1"
+      },
+      "justification": "O3 is more appropriate as it includes characteristics such as virulence, which ties directly to pathogenesis and clinical sequelae.",
+      "mapped_id": "O3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "2.B",
+      "question_text": "Discuss the pathogenesis & the clinical sequelae if the infection is associated with the pathogen shown in the picture.",
+      "rating": "partially_correct",
+      "recommended_mapping": "O3"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.75,
+      "current_mapping": {
+        "id": "O5"
+      },
+      "justification": "O5 remains the best fit as it broadly covers laboratory diagnosis, but the objective could be expanded to explicitly include detailed explanations of specific tests.",
+      "mapped_id": "O5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "2.C",
+      "question_text": "Mention the Specific Serological tests for the diagnosis & Explain any one in detail.",
+      "rating": "partially_correct",
+      "recommended_mapping": "O5"
+    },
+    {
+      "agreement_score": 0.4,
+      "confidence": 0.9,
+      "current_mapping": {
+        "id": "O1"
+      },
+      "justification": "O4 is a better fit as it addresses host defense mechanisms, which can explain why neonates may be asymptomatic at birth due to immune factors.",
+      "mapped_id": "O4",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "2.D",
+      "question_text": "Neonates with Congenital syphilis may be asymptomatic at birth. Give reason.",
+      "rating": "incorrect",
+      "recommended_mapping": "O4"
+    },
+    {
+      "agreement_score": 0.75,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "O5"
+      },
+      "justification": "O1 is more appropriate as it encompasses how microorganisms cause human infections, which aligns with clinical features, while also indirectly supporting laboratory diagnosis.",
+      "mapped_id": "O1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "5",
+      "question_text": "Clinical features and Laboratory diagnosis of Human Anthrax.",
+      "rating": "partially_correct",
+      "recommended_mapping": "O1"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "O3"
+      },
+      "justification": "O1 is broader and can cover the implications of drug-resistant infections better than O3, which is more specific to microorganism characteristics.",
+      "mapped_id": "O1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "7",
+      "question_text": "Discuss detection of Drug resistant Pulmonary Tuberculosis & its implications.",
+      "rating": "partially_correct",
+      "recommended_mapping": "O1"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "O5"
+      },
+      "justification": "O1 is more comprehensive and aligns with the clinical features aspect, while still supporting laboratory diagnosis indirectly.",
+      "mapped_id": "O1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "8",
+      "question_text": "Discuss the Clinical features and laboratory diagnosis of Cryptococcal Meningitis.",
+      "rating": "partially_correct",
+      "recommended_mapping": "O1"
+    },
+    {
+      "agreement_score": 0.4,
+      "confidence": 0.9,
+      "current_mapping": {
+        "id": "O6"
+      },
+      "justification": "O6 is the most appropriate as it directly addresses prophylaxis for infections, including VAP prevention strategies.",
+      "mapped_id": "O6",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "9",
+      "question_text": "Care-bundle approach in prevention of VAP.",
+      "rating": "incorrect",
+      "recommended_mapping": "O6"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.7,
+      "current_mapping": {
+        "id": "O3"
+      },
+      "justification": "O3 is the closest match, but the curriculum might benefit from a more explicit objective addressing diagrammatic skills.",
+      "mapped_id": "O3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "11",
+      "question_text": "Draw a neatly labelled diagram of the Hydatid cyst",
+      "rating": "partially_correct",
+      "recommended_mapping": "O3"
+    },
+    {
+      "agreement_score": 0.3,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "O5"
+      },
+      "justification": "NS1 Antigen is better mapped to explaining how microorganisms (e.g., viruses like dengue) cause infection, as it is a key pathogenic factor.",
+      "mapped_id": "O1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "16",
+      "question_text": "NS1 Antigen.",
+      "rating": "incorrect",
+      "recommended_mapping": "O1"
+    },
+    {
+      "agreement_score": 0.2,
+      "confidence": 0.95,
+      "current_mapping": {
+        "id": "O4"
+      },
+      "justification": "Informed consent does not align with any of the listed objectives. It likely belongs to a different domain such as medical ethics or communication skills.",
+      "mapped_id": "None",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "18",
+      "question_text": "Informed consent",
+      "rating": "incorrect",
+      "recommended_mapping": "None"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.7,
+      "current_mapping": {
+        "id": "O1"
+      },
+      "justification": "O1 is partially relevant as it involves understanding how microorganisms cause infection, but the question may require additional objectives related to epidemiology or infection control.",
+      "mapped_id": "O1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 1",
+      "question_text": "The infection surveillance officer had to calculate the CAUTI rates...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O1"
+    },
+    {
+      "agreement_score": 0.65,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "O1"
+      },
+      "justification": "O3 is more appropriate as it emphasizes the characteristics (e.g., virulence) of microorganisms, which align with the clinical scenario presented in the question.",
+      "mapped_id": "O3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 2",
+      "question_text": "A 45 old diabetic with end stage renal disease presented with complaints of eye & facial pain...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O3"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.75,
+      "current_mapping": {
+        "id": "O5"
+      },
+      "justification": "O5 can still be retained, but the mapping could be improved by specifying a more detailed objective if available, as the question is narrowly focused on IGRA test antigens.",
+      "mapped_id": "O5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 4",
+      "question_text": "Multiple Completion type: Which of the following are key antigens used in IGRA Test?",
+      "rating": "partially_correct",
+      "recommended_mapping": "O5"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "O4"
+      },
+      "justification": "O1 is more appropriate as it focuses on how microorganisms cause infections, which aligns better with the clinical scenario described in the question.",
+      "mapped_id": "O1",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 5",
+      "question_text": "A 40 year old male presented to the medical OPD with high grade fever with petechial rashes...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O1"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "O6"
+      },
+      "justification": "The question better aligns with O3 as it involves describing the characteristics of the vector used in the vaccine.",
+      "mapped_id": "O3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 7",
+      "question_text": "The component of Covishield vaccine which serves as a vector...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O3"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.75,
+      "current_mapping": {
+        "id": "O5"
+      },
+      "justification": "The question better aligns with O2 as it involves understanding the pathogenic organisms involved in VAP, in addition to laboratory diagnosis.",
+      "mapped_id": "O2",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 9",
+      "question_text": "A 24 year old male was admitted to the Critical care unit following a RTA... Suspected VAP...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O2"
+    },
+    {
+      "agreement_score": 0.65,
+      "confidence": 0.7,
+      "current_mapping": {
+        "id": "O2"
+      },
+      "justification": "The question better aligns with O5 as it involves laboratory diagnosis in addition to understanding the pathogenic organisms.",
+      "mapped_id": "O5",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 11",
+      "question_text": "A 35 year old diabetic presented to the neurosurgery OPD with symptoms of focal seizures...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O5"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.85,
+      "current_mapping": {
+        "id": "O1"
+      },
+      "justification": "O4 is a better fit because the question involves understanding the host's response to infection, which is central to the scenario.",
+      "mapped_id": "O4",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 13",
+      "question_text": "A 30 year old veterinarian presented with fever night sweats arthralgia...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O4"
+    },
+    {
+      "agreement_score": 0.65,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "O4"
+      },
+      "justification": "O3 is a better fit as the question focuses on the microorganism's characteristics, including virulence, which are central to the syndrome.",
+      "mapped_id": "O3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 14",
+      "question_text": "A 21 year old army recruit develops features suggestive of Waterhouse Friederichsen syndrome...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O3"
+    },
+    {
+      "agreement_score": 0.6,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "O1"
+      },
+      "justification": "O3 is more appropriate as it involves describing characteristics of microorganisms, which could include their pathogenic effects leading to the described presentation.",
+      "mapped_id": "O3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 18",
+      "question_text": "A 25 year old male presented with features of Watercan perineum...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O3"
+    },
+    {
+      "agreement_score": 0.7,
+      "confidence": 0.75,
+      "current_mapping": {
+        "id": "O1"
+      },
+      "justification": "O3 is a better match as it focuses on describing the characteristics of microorganisms, which could include their role in causing sterile pyuria and related symptoms.",
+      "mapped_id": "O3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 19",
+      "question_text": "A 38 year old man presents with sterile pyuria flank pain and haematuria...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O3"
+    },
+    {
+      "agreement_score": 0.65,
+      "confidence": 0.8,
+      "current_mapping": {
+        "id": "O1"
+      },
+      "justification": "O3 is more appropriate as it focuses on describing the characteristics of microorganisms, which could include their pathogenic effects leading to the described clinical presentation.",
+      "mapped_id": "O3",
+      "mapped_subtopic": "",
+      "mapped_topic": "",
+      "question_num": "MCQ 20",
+      "question_text": "A 25 year old male from a rural area presented with sudden fever chills and painful swelling in the right groin...",
+      "rating": "partially_correct",
+      "recommended_mapping": "O3"
+    }
+  ]
+}

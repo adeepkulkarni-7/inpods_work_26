@@ -1,0 +1,39 @@
+# ===========================================
+# Curriculum Mapping Service - Requirements
+# ===========================================
+# pip install -r requirements.txt
+
+# Core Framework
+flask>=3.0.0
+flask-cors>=4.0.0
+werkzeug>=3.0.0
+
+# Azure OpenAI
+openai>=1.0.0
+
+# Data Processing
+pandas>=1.5.0
+openpyxl>=3.0.0
+odfpy>=1.4.0
+
+# Visualization
+matplotlib>=3.5.0
+numpy<2
+
+# Configuration
+python-dotenv>=1.0.0
+
+# Authentication (optional)
+PyJWT>=2.0.0
+
+# Database (optional - install as needed)
+# SQLAlchemy>=2.0.0
+# psycopg2-binary>=2.9.0  # PostgreSQL
+# pymysql>=1.0.0          # MySQL
+
+# Testing
+pytest>=8.0.0
+
+# Production Server (optional)
+# gunicorn>=21.0.0        # Linux/Mac
+# waitress>=2.1.0         # Windows

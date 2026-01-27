@@ -1,0 +1,132 @@
+# Curriculum Mapping Service - Docker Compose Configuration
+#
+# Usage:
+#   docker-compose up -d        # Start services
+#   docker-compose down         # Stop services
+#   docker-compose logs -f      # View logs
+#
+# For production, use:
+#   docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  # Main Curriculum Mapping API Service
+  curriculum-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: curriculum-mapping-api
+    ports:
+      - "${PORT:-5001}:5001"
+    environment:
+      # Azure OpenAI Configuration
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION:-2024-02-15-preview}
+      - AZURE_OPENAI_DEPLOYMENT=${AZURE_OPENAI_DEPLOYMENT:-gpt-4}
+
+      # Service Configuration
+      - HOST=0.0.0.0
+      - PORT=5001
+      - DEBUG=${DEBUG:-false}
+
+      # Storage
+      - UPLOAD_FOLDER=/app/uploads
+      - OUTPUT_FOLDER=/app/outputs
+      - INSIGHTS_FOLDER=/app/outputs/insights
+      - LIBRARY_FOLDER=/app/outputs/library
+
+      # Authentication (optional)
+      - AUTH_ENABLED=${AUTH_ENABLED:-false}
+      - AUTH_PROVIDER=${AUTH_PROVIDER:-jwt}
+      - AUTH_SECRET_KEY=${AUTH_SECRET_KEY:-}
+
+      # Database (optional)
+      - DATABASE_ENABLED=${DATABASE_ENABLED:-false}
+      - DATABASE_URL=${DATABASE_URL:-}
+
+      # Rate Limiting
+      - MAX_QUESTIONS_PER_REQUEST=${MAX_QUESTIONS_PER_REQUEST:-100}
+      - BATCH_SIZE_DEFAULT=${BATCH_SIZE_DEFAULT:-5}
+
+      # CORS
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+    volumes:
+      # Persistent storage for uploads and outputs
+      - curriculum-uploads:/app/uploads
+      - curriculum-outputs:/app/outputs
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5001/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - curriculum-network
+
+  # Optional: PostgreSQL Database (uncomment to enable)
+  # curriculum-db:
+  #   image: postgres:15-alpine
+  #   container_name: curriculum-mapping-db
+  #   environment:
+  #     - POSTGRES_USER=curriculum
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+  #     - POSTGRES_DB=curriculum_mapping
+  #   volumes:
+  #     - curriculum-db-data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U curriculum"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   restart: unless-stopped
+  #   networks:
+  #     - curriculum-network
+
+  # Optional: Redis Cache (uncomment to enable)
+  # curriculum-redis:
+  #   image: redis:7-alpine
+  #   container_name: curriculum-mapping-redis
+  #   command: redis-server --appendonly yes
+  #   volumes:
+  #     - curriculum-redis-data:/data
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   restart: unless-stopped
+  #   networks:
+  #     - curriculum-network
+
+  # Optional: Nginx Reverse Proxy (uncomment for production)
+  # curriculum-nginx:
+  #   image: nginx:alpine
+  #   container_name: curriculum-mapping-nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - curriculum-api
+  #   restart: unless-stopped
+  #   networks:
+  #     - curriculum-network
+
+volumes:
+  curriculum-uploads:
+    driver: local
+  curriculum-outputs:
+    driver: local
+  # curriculum-db-data:
+  #   driver: local
+  # curriculum-redis-data:
+  #   driver: local
+
+networks:
+  curriculum-network:
+    driver: bridge

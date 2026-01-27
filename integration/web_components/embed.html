@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Mapper - Embedded Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .demo-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .config-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .config-section h2 {
+            margin-top: 0;
+            color: #00a8cc;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+
+        .form-row label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-row input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-row select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        button {
+            background: #00a8cc;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0090b0;
+        }
+
+        .embed-code {
+            background: #1a1a2e;
+            color: #00d4aa;
+            padding: 20px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .component-container {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>Curriculum Mapper Web Component</h1>
+        <p>
+            This demonstrates how to embed the Curriculum Mapper as a web component
+            in any HTML page. Configure the options below and see the component in action.
+        </p>
+
+        <div class="config-section">
+            <h2>Configuration</h2>
+
+            <div class="form-row">
+                <label for="apiBase">API Base URL</label>
+                <input type="text" id="apiBase" value="http://localhost:5001" placeholder="https://api.example.com">
+            </div>
+
+            <div class="form-row">
+                <label for="defaultDimension">Default Dimension</label>
+                <select id="defaultDimension">
+                    <option value="nmc_competency">NMC Competency</option>
+                    <option value="area_topics">Area Topics</option>
+                    <option value="competency">Competency (C1-C9)</option>
+                    <option value="objective">Objective (O1-O9)</option>
+                    <option value="skill">Skill (S1-S5)</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="theme">Theme</label>
+                <select id="theme">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="authToken">Auth Token (optional)</label>
+                <input type="text" id="authToken" placeholder="Bearer token for authenticated API calls">
+            </div>
+
+            <button onclick="updateComponent()">Update Component</button>
+
+            <div class="embed-code" id="embedCode">
+&lt;!-- Include the web component script --&gt;
+&lt;script src="curriculum-mapper.js"&gt;&lt;/script&gt;
+
+&lt;!-- Use the component --&gt;
+&lt;curriculum-mapper
+    api-base="http://localhost:5001"
+    dimension="nmc_competency"
+    theme="light"&gt;
+&lt;/curriculum-mapper&gt;
+            </div>
+        </div>
+
+        <div class="component-container" id="componentContainer">
+            <!-- Component will be inserted here -->
+        </div>
+    </div>
+
+    <script src="curriculum-mapper.js"></script>
+    <script>
+        function updateComponent() {
+            const apiBase = document.getElementById('apiBase').value;
+            const dimension = document.getElementById('defaultDimension').value;
+            const theme = document.getElementById('theme').value;
+            const authToken = document.getElementById('authToken').value;
+
+            // Update embed code display
+            let embedCode = `&lt;!-- Include the web component script --&gt;
+&lt;script src="curriculum-mapper.js"&gt;&lt;/script&gt;
+
+&lt;!-- Use the component --&gt;
+&lt;curriculum-mapper
+    api-base="${apiBase}"
+    dimension="${dimension}"
+    theme="${theme}"`;
+
+            if (authToken) {
+                embedCode += `
+    auth-token="${authToken}"`;
+            }
+
+            embedCode += `&gt;
+&lt;/curriculum-mapper&gt;`;
+
+            document.getElementById('embedCode').textContent = embedCode;
+
+            // Update actual component
+            const container = document.getElementById('componentContainer');
+            container.innerHTML = '';
+
+            const component = document.createElement('curriculum-mapper');
+            component.setAttribute('api-base', apiBase);
+            component.setAttribute('dimension', dimension);
+            component.setAttribute('theme', theme);
+            if (authToken) {
+                component.setAttribute('auth-token', authToken);
+            }
+
+            container.appendChild(component);
+        }
+
+        // Initialize on load
+        updateComponent();
+    </script>
+</body>
+</html>
