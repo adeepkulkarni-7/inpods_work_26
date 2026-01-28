@@ -1,0 +1,25 @@
+CLIENT SETUP - Connect to Remote Server
+=======================================
+
+1. Open: frontend_v2/index.html
+
+2. Find line ~1390 (search for "localhost"):
+
+   const API_URL = 'http://localhost:5001/api';
+   const BASE_URL = 'http://localhost:5001';
+
+3. Replace "localhost" with server IP:
+
+   const API_URL = 'http://10.0.0.212:5001/api';
+   const BASE_URL = 'http://10.0.0.212:5001';
+
+4. Save the file
+
+5. Open index.html in browser
+
+Done! You're connected to the server.
+
+---
+To find server IP, run on server machine:
+  Windows: ipconfig
+  Mac/Linux: ifconfig
