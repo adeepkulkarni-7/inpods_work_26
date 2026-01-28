@@ -113,6 +113,7 @@ def extract_reference_metadata(file_path):
     """
     Extract curriculum metadata from a reference file.
     Returns competencies, objectives, skills, and topics found in the file.
+    V2.1: Fixed to skip type column and get actual description.
     """
     try:
         if file_path.endswith('.csv'):
@@ -153,8 +154,15 @@ def extract_reference_metadata(file_path):
                 # Competency codes (C1, C2, etc.)
                 elif len(cell_str) == 2 and cell_str[0] == 'C' and cell_str[1].isdigit():
                     desc = ''
+                    # Check col+1, but skip if it's just a type label
                     if col_idx + 1 < len(row) and pd.notna(row.iloc[col_idx + 1]):
-                        desc = str(row.iloc[col_idx + 1]).strip()
+                        next_val = str(row.iloc[col_idx + 1]).strip().lower()
+                        if next_val in ['competency', 'objective', 'skill', 'type']:
+                            # Skip type column, use col+2 for description
+                            if col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
+                                desc = str(row.iloc[col_idx + 2]).strip()
+                        else:
+                            desc = str(row.iloc[col_idx + 1]).strip()
                     elif col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
                         desc = str(row.iloc[col_idx + 2]).strip()
                     metadata['competencies'].append({
@@ -168,7 +176,12 @@ def extract_reference_metadata(file_path):
                 elif len(cell_str) == 2 and cell_str[0] == 'O' and cell_str[1].isdigit():
                     desc = ''
                     if col_idx + 1 < len(row) and pd.notna(row.iloc[col_idx + 1]):
-                        desc = str(row.iloc[col_idx + 1]).strip()
+                        next_val = str(row.iloc[col_idx + 1]).strip().lower()
+                        if next_val in ['competency', 'objective', 'skill', 'type']:
+                            if col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
+                                desc = str(row.iloc[col_idx + 2]).strip()
+                        else:
+                            desc = str(row.iloc[col_idx + 1]).strip()
                     elif col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
                         desc = str(row.iloc[col_idx + 2]).strip()
                     metadata['objectives'].append({
@@ -182,7 +195,12 @@ def extract_reference_metadata(file_path):
                 elif len(cell_str) == 2 and cell_str[0] == 'S' and cell_str[1].isdigit():
                     desc = ''
                     if col_idx + 1 < len(row) and pd.notna(row.iloc[col_idx + 1]):
-                        desc = str(row.iloc[col_idx + 1]).strip()
+                        next_val = str(row.iloc[col_idx + 1]).strip().lower()
+                        if next_val in ['competency', 'objective', 'skill', 'type']:
+                            if col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
+                                desc = str(row.iloc[col_idx + 2]).strip()
+                        else:
+                            desc = str(row.iloc[col_idx + 1]).strip()
                     elif col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
                         desc = str(row.iloc[col_idx + 2]).strip()
                     metadata['skills'].append({
