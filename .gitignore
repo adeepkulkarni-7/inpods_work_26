@@ -1,0 +1,49 @@
+# Environment variables (IMPORTANT - contains API keys)
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+.venv/
+
+# Uploads and outputs (user data)
+uploads/
+**/uploads/
+**/outputs/
+backend_v2/uploads/
+backend_v2/outputs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+nul
+
+# Test/debug files
+*.png
+*.xlsx
+*.ods
+*.csv
+
+# Keep example and documentation
+!.env.example
+!DEPLOYMENT_GUIDE.md
+!TECHNICAL_DOCUMENTATION_V2.md
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp

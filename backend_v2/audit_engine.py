@@ -43,6 +43,31 @@ class AuditEngine:
         self.client = None
         self._initialize_client()
 
+    def _get_full_question_text(self, row):
+        """
+        Get full question text including MCQ options if present.
+        Combines question text with options A, B, C, D for MCQ questions.
+        """
+        question_text = row.get('Question Text', '')
+        if pd.isna(question_text):
+            question_text = ''
+        question_text = str(question_text).strip()
+
+        # Check for MCQ options and append them
+        options = []
+        for opt_label in ['option a', 'option b', 'option c', 'option d', 'Option A', 'Option B', 'Option C', 'Option D', 'A', 'B', 'C', 'D']:
+            opt_value = row.get(opt_label, None)
+            if opt_value is not None and pd.notna(opt_value) and str(opt_value).strip():
+                # Normalize option label
+                label = opt_label.upper().replace('OPTION ', '').strip()
+                if len(label) == 1:
+                    options.append(f"{label}. {str(opt_value).strip()}")
+
+        if options:
+            question_text = question_text + "\n" + "\n".join(options)
+
+        return question_text
+
     def _initialize_client(self):
         """Initialize Azure OpenAI client"""
         try:
@@ -311,7 +336,7 @@ Rules:
             prompt (str): The prompt text
             max_tokens (int): Maximum response tokens
         Outputs:
-            dict: Parsed JSON response or None on error
+            tuple: (Parsed JSON response or None, token_usage dict)
         """
         try:
             response = self.client.chat.completions.create(
@@ -332,11 +357,19 @@ Rules:
             )
 
             content = response.choices[0].message.content.strip()
-            return json.loads(content)
+
+            # Extract token usage
+            token_usage = {
+                'prompt_tokens': response.usage.prompt_tokens if response.usage else 0,
+                'completion_tokens': response.usage.completion_tokens if response.usage else 0,
+                'total_tokens': response.usage.total_tokens if response.usage else 0
+            }
+
+            return json.loads(content), token_usage
 
         except Exception as e:
             print(f"LLM call failed: {e}")
-            return None
+            return None, {'prompt_tokens': 0, 'completion_tokens': 0, 'total_tokens': 0}
 
     def run_audit(self, question_csv, reference_csv, dimension):
         """
@@ -354,7 +387,8 @@ Rules:
                 'gaps': list of topics/codes with no coverage,
                 'dimension': str,
                 'total_questions': int,
-                'mapped_questions': int
+                'mapped_questions': int,
+                'token_usage': dict with prompt_tokens, completion_tokens, total_tokens
             }
         """
         import time
@@ -365,19 +399,33 @@ Rules:
         recommendations = []
         coverage_counts = {}
 
+        # Track total token usage
+        total_token_usage = {
+            'prompt_tokens': 0,
+            'completion_tokens': 0,
+            'total_tokens': 0,
+            'api_calls': 0
+        }
+
         for idx, row in questions_df.iterrows():
             question_num = row.get('Question Number', f"Q{idx+1}")
-            question_text = row.get('Question Text', '')
+            question_text = self._get_full_question_text(row)
 
             # Skip stem questions
             if '(Stem)' in str(question_num):
                 continue
 
-            if not question_text or pd.isna(question_text):
+            if not question_text.strip():
                 continue
 
             prompt = self._build_mapping_prompt(question_text, reference_data, dimension)
-            llm_response = self._call_llm(prompt)
+            llm_response, token_usage = self._call_llm(prompt)
+
+            # Accumulate token usage
+            total_token_usage['prompt_tokens'] += token_usage['prompt_tokens']
+            total_token_usage['completion_tokens'] += token_usage['completion_tokens']
+            total_token_usage['total_tokens'] += token_usage['total_tokens']
+            total_token_usage['api_calls'] += 1
 
             if llm_response:
                 if dimension == 'area_topics':
@@ -416,13 +464,25 @@ Rules:
 
         gaps = [key for key in reference_data.keys() if key not in coverage_counts]
 
+        # Convert reference_data to a serializable format with definitions
+        reference_definitions = {}
+        for key, value in reference_data.items():
+            if isinstance(value, dict):
+                reference_definitions[key] = value.get('description', str(value))
+            else:
+                reference_definitions[key] = str(value) if value else ''
+
+        print(f"[TOKEN] Total: {total_token_usage['total_tokens']} (Prompt: {total_token_usage['prompt_tokens']}, Completion: {total_token_usage['completion_tokens']}, API Calls: {total_token_usage['api_calls']})")
+
         return {
             'recommendations': recommendations,
             'coverage': coverage_counts,
             'gaps': gaps,
             'dimension': dimension,
             'total_questions': len(questions_df),
-            'mapped_questions': len(recommendations)
+            'mapped_questions': len(recommendations),
+            'reference_definitions': reference_definitions,
+            'token_usage': total_token_usage
         }
 
     def run_audit_batched(self, question_csv, reference_csv, dimension, batch_size=5):
@@ -436,7 +496,7 @@ Rules:
             dimension (str): 'area_topics', 'competency', 'objective', 'skill'
             batch_size (int): Questions per API call (1-10, default 5)
         Outputs:
-            dict: Same as run_audit() plus batch_mode and batch_size fields
+            dict: Same as run_audit() plus batch_mode, batch_size, and token_usage fields
         """
         import time
 
@@ -446,15 +506,23 @@ Rules:
         recommendations = []
         coverage_counts = {}
 
+        # Track total token usage
+        total_token_usage = {
+            'prompt_tokens': 0,
+            'completion_tokens': 0,
+            'total_tokens': 0,
+            'api_calls': 0
+        }
+
         # Prepare questions list (skip stem questions)
         questions_list = []
         for idx, row in questions_df.iterrows():
             question_num = row.get('Question Number', f"Q{idx+1}")
-            question_text = row.get('Question Text', '')
+            question_text = self._get_full_question_text(row)
             if '(Stem)' in str(question_num):
                 continue
-            if question_text and pd.notna(question_text):
-                questions_list.append((str(question_num), str(question_text)))
+            if question_text.strip():
+                questions_list.append((str(question_num), question_text))
 
         total_batches = (len(questions_list) + batch_size - 1) // batch_size
         print(f"[BATCH] Processing {len(questions_list)} questions in {total_batches} batches (batch_size={batch_size})")
@@ -483,6 +551,13 @@ Rules:
                     max_tokens=2000,
                     response_format={"type": "json_object"}
                 )
+
+                # Track token usage for this batch
+                if response.usage:
+                    total_token_usage['prompt_tokens'] += response.usage.prompt_tokens
+                    total_token_usage['completion_tokens'] += response.usage.completion_tokens
+                    total_token_usage['total_tokens'] += response.usage.total_tokens
+                total_token_usage['api_calls'] += 1
 
                 content = response.choices[0].message.content.strip()
                 batch_response = json.loads(content)
@@ -528,7 +603,13 @@ Rules:
                 # Fallback: process this batch one by one
                 for q_num, q_text in batch:
                     prompt = self._build_mapping_prompt(q_text, reference_data, dimension)
-                    llm_response = self._call_llm(prompt)
+                    llm_response, token_usage = self._call_llm(prompt)
+                    # Track fallback token usage
+                    total_token_usage['prompt_tokens'] += token_usage['prompt_tokens']
+                    total_token_usage['completion_tokens'] += token_usage['completion_tokens']
+                    total_token_usage['total_tokens'] += token_usage['total_tokens']
+                    total_token_usage['api_calls'] += 1
+
                     if llm_response:
                         if dimension == 'area_topics':
                             mapped_topic = llm_response.get('mapped_topic', '')
@@ -564,6 +645,15 @@ Rules:
         gaps = [key for key in reference_data.keys() if key not in coverage_counts]
 
         print(f"[OK] Completed: {len(recommendations)} questions mapped")
+        print(f"[TOKEN] Total: {total_token_usage['total_tokens']} (Prompt: {total_token_usage['prompt_tokens']}, Completion: {total_token_usage['completion_tokens']}, API Calls: {total_token_usage['api_calls']})")
+
+        # Convert reference_data to a serializable format with definitions
+        reference_definitions = {}
+        for key, value in reference_data.items():
+            if isinstance(value, dict):
+                reference_definitions[key] = value.get('description', str(value))
+            else:
+                reference_definitions[key] = str(value) if value else ''
 
         return {
             'recommendations': recommendations,
@@ -573,7 +663,9 @@ Rules:
             'total_questions': len(questions_df),
             'mapped_questions': len(recommendations),
             'batch_mode': True,
-            'batch_size': batch_size
+            'batch_size': batch_size,
+            'reference_definitions': reference_definitions,
+            'token_usage': total_token_usage
         }
 
     def apply_and_export(self, question_csv, recommendations, selected_indices, dimension, output_folder):
@@ -731,7 +823,8 @@ Respond in JSON format:
                 'summary': {correct, partially_correct, incorrect counts},
                 'recommendations': list of non-correct mappings with suggestions,
                 'dimension': str,
-                'total_questions': int
+                'total_questions': int,
+                'token_usage': dict with prompt_tokens, completion_tokens, total_tokens
             }
         """
         import time
@@ -745,6 +838,14 @@ Respond in JSON format:
                 mapped_df = pd.read_excel(mapped_file, engine='odf')
 
         reference_data = self._load_reference_data(reference_csv, dimension)
+
+        # Track total token usage
+        total_token_usage = {
+            'prompt_tokens': 0,
+            'completion_tokens': 0,
+            'total_tokens': 0,
+            'api_calls': 0
+        }
 
         questions_list = []
         for idx, row in mapped_df.iterrows():
@@ -798,6 +899,13 @@ Respond in JSON format:
                     max_tokens=2500,
                     response_format={"type": "json_object"}
                 )
+
+                # Track token usage for this batch
+                if response.usage:
+                    total_token_usage['prompt_tokens'] += response.usage.prompt_tokens
+                    total_token_usage['completion_tokens'] += response.usage.completion_tokens
+                    total_token_usage['total_tokens'] += response.usage.total_tokens
+                total_token_usage['api_calls'] += 1
 
                 content = response.choices[0].message.content.strip()
                 batch_response = json.loads(content)
@@ -866,13 +974,24 @@ Respond in JSON format:
         ]
 
         print(f"[OK] Rating complete: {correct_count} correct, {partial_count} partial, {incorrect_count} incorrect")
+        print(f"[TOKEN] Total: {total_token_usage['total_tokens']} (Prompt: {total_token_usage['prompt_tokens']}, Completion: {total_token_usage['completion_tokens']}, API Calls: {total_token_usage['api_calls']})")
+
+        # Convert reference_data to a serializable format with definitions
+        reference_definitions = {}
+        for key, value in reference_data.items():
+            if isinstance(value, dict):
+                reference_definitions[key] = value.get('description', str(value))
+            else:
+                reference_definitions[key] = str(value) if value else ''
 
         return {
             'ratings': all_ratings,
             'summary': summary,
             'recommendations': recommendations,
             'dimension': dimension,
-            'total_questions': len(all_ratings)
+            'total_questions': len(all_ratings),
+            'token_usage': total_token_usage,
+            'reference_definitions': reference_definitions
         }
 
 

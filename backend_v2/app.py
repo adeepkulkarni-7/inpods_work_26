@@ -109,13 +109,162 @@ def health_check():
 # MODE A: Map Unmapped Questions
 # ============================================
 
+def extract_reference_metadata(file_path):
+    """
+    Extract curriculum metadata from a reference file.
+    Returns competencies, objectives, skills, and topics found in the file.
+    """
+    try:
+        if file_path.endswith('.csv'):
+            df = pd.read_csv(file_path, header=None)
+        else:
+            df = pd.read_excel(file_path, header=None, engine='openpyxl')
+
+        metadata = {
+            'competencies': [],
+            'objectives': [],
+            'skills': [],
+            'topics': [],
+            'nmc_competencies': [],
+            'raw_columns': [],
+            'detected_type': None
+        }
+
+        # Try to detect the file type and extract data
+        # Check all cells for curriculum codes
+        for row_idx, row in df.iterrows():
+            for col_idx, cell in enumerate(row):
+                if pd.isna(cell):
+                    continue
+                cell_str = str(cell).strip()
+
+                # NMC Competency codes (MI1.1, MI1.2, etc.)
+                if len(cell_str) >= 4 and cell_str[:2] == 'MI' and '.' in cell_str:
+                    # Get description from next column if available
+                    desc = ''
+                    if col_idx + 1 < len(row) and pd.notna(row.iloc[col_idx + 1]):
+                        desc = str(row.iloc[col_idx + 1]).strip()
+                    metadata['nmc_competencies'].append({
+                        'id': cell_str,
+                        'description': desc
+                    })
+                    metadata['detected_type'] = 'nmc_competency'
+
+                # Competency codes (C1, C2, etc.)
+                elif len(cell_str) == 2 and cell_str[0] == 'C' and cell_str[1].isdigit():
+                    desc = ''
+                    if col_idx + 1 < len(row) and pd.notna(row.iloc[col_idx + 1]):
+                        desc = str(row.iloc[col_idx + 1]).strip()
+                    elif col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
+                        desc = str(row.iloc[col_idx + 2]).strip()
+                    metadata['competencies'].append({
+                        'id': cell_str,
+                        'description': desc
+                    })
+                    if not metadata['detected_type']:
+                        metadata['detected_type'] = 'competency'
+
+                # Objective codes (O1, O2, etc.)
+                elif len(cell_str) == 2 and cell_str[0] == 'O' and cell_str[1].isdigit():
+                    desc = ''
+                    if col_idx + 1 < len(row) and pd.notna(row.iloc[col_idx + 1]):
+                        desc = str(row.iloc[col_idx + 1]).strip()
+                    elif col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
+                        desc = str(row.iloc[col_idx + 2]).strip()
+                    metadata['objectives'].append({
+                        'id': cell_str,
+                        'description': desc
+                    })
+                    if not metadata['detected_type']:
+                        metadata['detected_type'] = 'objective'
+
+                # Skill codes (S1, S2, etc.)
+                elif len(cell_str) == 2 and cell_str[0] == 'S' and cell_str[1].isdigit():
+                    desc = ''
+                    if col_idx + 1 < len(row) and pd.notna(row.iloc[col_idx + 1]):
+                        desc = str(row.iloc[col_idx + 1]).strip()
+                    elif col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
+                        desc = str(row.iloc[col_idx + 2]).strip()
+                    metadata['skills'].append({
+                        'id': cell_str,
+                        'description': desc
+                    })
+                    if not metadata['detected_type']:
+                        metadata['detected_type'] = 'skill'
+
+        # Check for Topic Area format
+        if df.shape[1] >= 2:
+            # Look for "Topic Area" header
+            for row_idx in range(min(5, len(df))):
+                for col_idx in range(len(df.columns)):
+                    cell = df.iloc[row_idx, col_idx]
+                    if pd.notna(cell) and 'topic' in str(cell).lower():
+                        # Found topic header, extract topics from subsequent rows
+                        for data_row in range(row_idx + 1, len(df)):
+                            topic = df.iloc[data_row, col_idx] if col_idx < len(df.columns) else None
+                            subtopics = df.iloc[data_row, col_idx + 1] if col_idx + 1 < len(df.columns) else None
+                            if pd.notna(topic) and str(topic).strip():
+                                metadata['topics'].append({
+                                    'topic': str(topic).strip(),
+                                    'subtopics': str(subtopics).strip() if pd.notna(subtopics) else ''
+                                })
+                        if metadata['topics']:
+                            metadata['detected_type'] = 'area_topics'
+                        break
+
+        return metadata
+    except Exception as e:
+        return {'error': str(e)}
+
+
+def extract_question_metadata(file_path):
+    """
+    Extract metadata from a question file.
+    Returns course info, question count, and sample questions.
+    """
+    try:
+        if file_path.endswith('.csv'):
+            df = pd.read_csv(file_path)
+        else:
+            df = pd.read_excel(file_path, engine='openpyxl')
+
+        metadata = {
+            'total_questions': len(df),
+            'columns': list(df.columns),
+            'sample_questions': []
+        }
+
+        # Find question text column
+        question_col = None
+        for col in df.columns:
+            if 'question' in col.lower() and 'text' in col.lower():
+                question_col = col
+                break
+            elif 'question' in col.lower():
+                question_col = col
+
+        # Get sample questions
+        if question_col:
+            for idx, row in df.head(5).iterrows():
+                q_text = str(row[question_col])[:200] if pd.notna(row[question_col]) else ''
+                q_num = row.get('Question Number', row.get('Q#', idx + 1))
+                metadata['sample_questions'].append({
+                    'number': str(q_num),
+                    'text': q_text + ('...' if len(str(row.get(question_col, ''))) > 200 else '')
+                })
+
+        return metadata
+    except Exception as e:
+        return {'error': str(e)}
+
+
 @app.route('/api/upload', methods=['POST'])
 def upload_files():
     """
     Tool: upload_question_files
     Description: Upload question bank and reference curriculum files
     Inputs: question_file (file), reference_file (file)
-    Outputs: {status, question_file, reference_file, question_count, reference_count}
+    Outputs: {status, question_file, reference_file, question_count, reference_count, question_metadata, reference_metadata}
     """
     try:
         if 'question_file' not in request.files or 'reference_file' not in request.files:
@@ -144,12 +293,18 @@ def upload_files():
         question_df = pd.read_csv(question_path) if question_path.endswith('.csv') else pd.read_excel(question_path)
         reference_df = pd.read_csv(reference_path) if reference_path.endswith('.csv') else pd.read_excel(reference_path)
 
+        # Extract metadata
+        question_metadata = extract_question_metadata(question_path)
+        reference_metadata = extract_reference_metadata(reference_path)
+
         return jsonify({
             'status': 'success',
             'question_file': question_filename,
             'reference_file': reference_filename,
             'question_count': len(question_df),
-            'reference_count': len(reference_df)
+            'reference_count': len(reference_df),
+            'question_metadata': question_metadata,
+            'reference_metadata': reference_metadata
         })
 
     except Exception as e:
@@ -344,7 +499,7 @@ def upload_mapped_file():
     Tool: upload_mapped_file
     Description: Upload a file with existing mappings (for Mode B and C)
     Inputs: mapped_file (file), reference_file (file, optional)
-    Outputs: {status, mapped_file, question_count, columns, reference_file, reference_count}
+    Outputs: {status, mapped_file, question_count, columns, reference_file, reference_count, mapped_metadata, reference_metadata}
     """
     try:
         if 'mapped_file' not in request.files:
@@ -369,11 +524,15 @@ def upload_mapped_file():
         else:
             mapped_df = pd.read_excel(mapped_path, engine='openpyxl')
 
+        # Extract metadata from mapped file
+        mapped_metadata = extract_question_metadata(mapped_path)
+
         response = {
             'status': 'success',
             'mapped_file': mapped_filename,
             'question_count': len(mapped_df),
-            'columns': mapped_df.columns.tolist()
+            'columns': mapped_df.columns.tolist(),
+            'mapped_metadata': mapped_metadata
         }
 
         # Save reference file if provided
@@ -384,6 +543,7 @@ def upload_mapped_file():
             reference_df = pd.read_csv(reference_path) if reference_path.endswith('.csv') else pd.read_excel(reference_path)
             response['reference_file'] = reference_filename
             response['reference_count'] = len(reference_df)
+            response['reference_metadata'] = extract_reference_metadata(reference_path)
 
         return jsonify(response)
 
@@ -546,19 +706,38 @@ def generate_insights():
             'recommendations': recommendations
         }
 
-        # Get reference topics
+        # Get reference topics and definitions
         reference_topics = list(coverage.keys())
+        reference_definitions = {}
         if reference_file:
             reference_path = os.path.join(app.config['UPLOAD_FOLDER'], reference_file)
             if os.path.exists(reference_path):
+                ref_metadata = extract_reference_metadata(reference_path)
+                # Build definitions from metadata
+                for item in ref_metadata.get('competencies', []):
+                    reference_definitions[item['id']] = item['description']
+                for item in ref_metadata.get('objectives', []):
+                    reference_definitions[item['id']] = item['description']
+                for item in ref_metadata.get('skills', []):
+                    reference_definitions[item['id']] = item['description']
+                for item in ref_metadata.get('nmc_competencies', []):
+                    reference_definitions[item['id']] = item['description']
+                for item in ref_metadata.get('topics', []):
+                    reference_definitions[item['topic']] = item.get('subtopics', '')
+                    reference_topics.append(item['topic'])
+
+                # Also check for standard columns
                 ref_df = pd.read_csv(reference_path) if reference_path.endswith('.csv') else pd.read_excel(reference_path)
                 if 'Topic Area (CBME)' in ref_df.columns:
                     reference_topics = ref_df['Topic Area (CBME)'].dropna().tolist()
                 elif 'Topic Area' in ref_df.columns:
                     reference_topics = ref_df['Topic Area'].dropna().tolist()
 
-        # Generate all charts
-        charts = viz_engine.generate_all_insights(mapping_data, reference_topics)
+        # Generate all charts (including coverage_table)
+        charts = viz_engine.generate_all_insights(mapping_data, reference_topics, reference_definitions)
+
+        # Separate coverage_table from charts (it's data, not a file path)
+        coverage_table = charts.pop('coverage_table', [])
 
         # Return chart URLs
         chart_urls = {}
@@ -569,6 +748,7 @@ def generate_insights():
         return jsonify({
             'status': 'success',
             'charts': chart_urls,
+            'coverage_table': coverage_table,
             'summary': {
                 'total_questions': len(recommendations),
                 'topics_covered': len(coverage),

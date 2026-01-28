@@ -14,12 +14,14 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f5f7fa;
-            padding: 20px;
-            line-height: 1.6;
+            padding: 30px;
+            line-height: 1.7;
+            font-size: 20px;
+            zoom: 1.3;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
@@ -27,25 +29,27 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         h1 {
             color: #1e293b;
+            font-size: 32px;
         }
 
         .version-badge {
             background: #00a8cc;
             color: white;
-            padding: 4px 12px;
+            padding: 6px 16px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 600;
         }
 
         .subtitle {
             color: #64748b;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            font-size: 18px;
         }
 
         .main-layout {
@@ -136,18 +140,18 @@
 
         .card {
             background: white;
-            border-radius: 8px;
-            padding: 30px;
+            border-radius: 12px;
+            padding: 35px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .section-title {
-            font-size: 18px;
+            font-size: 22px;
             font-weight: 600;
             color: #1e293b;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
             border-bottom: 2px solid #e2e8f0;
         }
 
@@ -155,14 +159,14 @@
         .mode-selection {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 25px;
+            margin-bottom: 35px;
         }
 
         .mode-card {
             background: white;
-            border-radius: 12px;
-            padding: 30px;
+            border-radius: 16px;
+            padding: 40px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -184,28 +188,28 @@
         .mode-card.mode-c { border-top: 4px solid #ffa600; }
 
         .mode-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+            font-size: 56px;
+            margin-bottom: 18px;
         }
 
         .mode-card h3 {
             color: #1e293b;
-            margin-bottom: 10px;
-            font-size: 20px;
+            margin-bottom: 12px;
+            font-size: 24px;
         }
 
         .mode-card p {
             color: #64748b;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .mode-label {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .mode-a .mode-label { background: #e0f7fa; color: #006064; }
@@ -213,37 +217,38 @@
         .mode-c .mode-label { background: #fff3e0; color: #e65100; }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #475569;
+            font-size: 16px;
         }
 
         input[type="file"],
         input[type="text"],
         select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 14px 16px;
             border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 16px;
         }
 
         input[type="file"] {
-            padding: 8px;
+            padding: 12px;
         }
 
         button {
             background: #00a8cc;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-size: 14px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 16px;
             font-weight: 500;
             cursor: pointer;
             transition: background 0.3s;
@@ -311,12 +316,12 @@
         .recommendations-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         .recommendations-table th,
         .recommendations-table td {
-            padding: 12px;
+            padding: 16px;
             text-align: left;
             border-bottom: 1px solid #e2e8f0;
             vertical-align: top;
@@ -326,42 +331,50 @@
             background: #f8fafc;
             font-weight: 600;
             color: #475569;
-            font-size: 12px;
+            font-size: 14px;
             text-transform: uppercase;
             position: sticky;
             top: 0;
         }
 
         .recommendations-table td {
-            font-size: 14px;
+            font-size: 15px;
         }
 
         /* V2: Full question text display */
         .question-text {
-            max-width: 400px;
-            font-size: 13px;
+            max-width: 450px;
+            font-size: 15px;
             color: #334155;
         }
 
         .question-text-full {
             display: block;
-            padding: 10px;
+            padding: 12px;
             background: #f8fafc;
-            border-radius: 4px;
-            font-size: 13px;
+            border-radius: 6px;
+            font-size: 14px;
             color: #334155;
-            max-height: 120px;
+            max-height: 150px;
             overflow-y: auto;
-            line-height: 1.5;
+            line-height: 1.6;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
 
+        /* Definition column styling */
+        .definition-text {
+            max-width: 300px;
+            font-size: 14px;
+            color: #64748b;
+            font-style: italic;
+        }
+
         .confidence-badge, .rating-badge {
             display: inline-block;
-            padding: 4px 12px;
+            padding: 6px 14px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 600;
         }
 
@@ -388,6 +401,123 @@
 
         .hidden {
             display: none !important;
+        }
+
+        /* File Overview Section */
+        .overview-section {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .overview-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .overview-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .overview-stat {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .overview-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00a8cc;
+        }
+
+        .overview-stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .curriculum-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .curriculum-item {
+            padding: 12px 15px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid #00a8cc;
+        }
+
+        .curriculum-item.competency { border-left-color: #00a8cc; }
+        .curriculum-item.objective { border-left-color: #00d4aa; }
+        .curriculum-item.skill { border-left-color: #ffa600; }
+        .curriculum-item.topic { border-left-color: #9333ea; }
+        .curriculum-item.nmc { border-left-color: #ef4444; }
+
+        .curriculum-id {
+            font-weight: 700;
+            color: #1e293b;
+            margin-right: 10px;
+        }
+
+        .curriculum-desc {
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .curriculum-type-header {
+            font-weight: 600;
+            color: #1e293b;
+            margin: 15px 0 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .curriculum-type-header:first-child {
+            margin-top: 0;
+        }
+
+        .curriculum-count {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .sample-questions {
+            margin-top: 15px;
+        }
+
+        .sample-question {
+            padding: 10px 15px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 3px solid #64748b;
+        }
+
+        .sample-question-num {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .sample-question-text {
+            color: #334155;
+            font-size: 13px;
         }
 
         .selection-info {
@@ -485,6 +615,143 @@
 
         .back-btn {
             margin-bottom: 20px;
+        }
+
+        /* Coverage Table Styling */
+        .coverage-table-section {
+            margin-top: 30px;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .coverage-table-section h4 {
+            color: #1e293b;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .coverage-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .coverage-table th,
+        .coverage-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .coverage-table th {
+            background: #1e293b;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .coverage-table td {
+            font-size: 14px;
+        }
+
+        .coverage-table tr:hover {
+            background: #f1f5f9;
+        }
+
+        .coverage-table .code-cell {
+            font-weight: 700;
+            color: #00a8cc;
+        }
+
+        .coverage-table .definition-cell {
+            color: #64748b;
+            max-width: 400px;
+        }
+
+        .coverage-table .count-cell {
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .coverage-table .percentage-cell {
+            text-align: center;
+        }
+
+        .coverage-table .gap-row {
+            background: #fee2e2;
+        }
+
+        .coverage-table .low-row {
+            background: #fef3c7;
+        }
+
+        .percentage-bar {
+            display: inline-block;
+            height: 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .percentage-bar.high { background: #10b981; }
+        .percentage-bar.medium { background: #f59e0b; }
+        .percentage-bar.low { background: #ef4444; }
+
+        /* Token Usage Display */
+        .token-usage {
+            display: flex;
+            gap: 20px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .token-usage-title {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .token-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 15px;
+            border-left: 1px solid #475569;
+        }
+
+        .token-stat:first-of-type {
+            border-left: none;
+        }
+
+        .token-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00d4aa;
+        }
+
+        .token-stat-label {
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .token-stat.total .token-stat-value {
+            color: #ffa600;
+        }
+
+        .token-stat.api-calls .token-stat-value {
+            color: #00a8cc;
         }
 
         /* Rating summary */
@@ -640,6 +907,7 @@
                         <div class="form-group">
                             <label>Dimension</label>
                             <select id="dimensionA">
+                                <option value="nmc_competency">NMC Competency (MI1.1, MI1.2, etc.)</option>
                                 <option value="area_topics">Area Topics (Topic / Subtopic)</option>
                                 <option value="competency">Competency (C1-C6)</option>
                                 <option value="objective">Objective (O1-O6)</option>
@@ -666,7 +934,38 @@
                             </div>
                         </div>
 
-                        <button onclick="uploadFilesA()">Upload & Run Audit</button>
+                        <button onclick="uploadAndPreviewA()">Upload & Preview</button>
+                    </div>
+
+                    <!-- File Overview (Metadata Preview) -->
+                    <div class="card hidden" id="fileOverviewA">
+                        <div class="section-title">File Overview</div>
+                        <p style="color: #64748b; margin-bottom: 20px;">Review the uploaded files before running the audit.</p>
+
+                        <!-- Question File Overview -->
+                        <div class="overview-section">
+                            <h4 style="color: #1e293b; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 20px;">&#128196;</span> Question Bank
+                            </h4>
+                            <div id="questionOverviewA" class="overview-content">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Reference File Overview -->
+                        <div class="overview-section" style="margin-top: 25px;">
+                            <h4 style="color: #1e293b; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 20px;">&#128218;</span> Curriculum Reference
+                            </h4>
+                            <div id="referenceOverviewA" class="overview-content">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <div class="actions" style="margin-top: 25px;">
+                            <button onclick="runAuditA()">Run Audit</button>
+                            <button class="secondary" onclick="backToUploadA()">Change Files</button>
+                        </div>
                     </div>
 
                     <!-- Loading State -->
@@ -678,6 +977,27 @@
                     <!-- Recommendations -->
                     <div class="card hidden" id="recommendationsSectionA">
                         <div class="section-title">Review Recommendations</div>
+
+                        <!-- Token Usage Display -->
+                        <div class="token-usage" id="tokenUsageA">
+                            <span class="token-usage-title">API Token Usage</span>
+                            <div class="token-stat">
+                                <span class="token-stat-value" id="promptTokensA">0</span>
+                                <span class="token-stat-label">Prompt</span>
+                            </div>
+                            <div class="token-stat">
+                                <span class="token-stat-value" id="completionTokensA">0</span>
+                                <span class="token-stat-label">Completion</span>
+                            </div>
+                            <div class="token-stat total">
+                                <span class="token-stat-value" id="totalTokensA">0</span>
+                                <span class="token-stat-label">Total</span>
+                            </div>
+                            <div class="token-stat api-calls">
+                                <span class="token-stat-value" id="apiCallsA">0</span>
+                                <span class="token-stat-label">API Calls</span>
+                            </div>
+                        </div>
 
                         <div class="selection-info">
                             <span id="selectionCountA">0</span> of <span id="totalCountA">0</span> recommendations selected
@@ -698,8 +1018,9 @@
                                         </th>
                                         <th style="width: 80px;">Q#</th>
                                         <th style="width: 350px;">Question (Full Text)</th>
-                                        <th>Recommended Mapping</th>
-                                        <th style="width: 80px;">Confidence</th>
+                                        <th style="width: 120px;">Mapping Code</th>
+                                        <th style="width: 280px;">Definition</th>
+                                        <th style="width: 100px;">Confidence</th>
                                         <th>Justification</th>
                                     </tr>
                                 </thead>
@@ -735,6 +1056,7 @@
                         <div class="form-group">
                             <label>Dimension</label>
                             <select id="dimensionB">
+                                <option value="nmc_competency">NMC Competency (MI1.1, MI1.2, etc.)</option>
                                 <option value="area_topics">Area Topics (Topic / Subtopic)</option>
                                 <option value="competency">Competency (C1-C6)</option>
                                 <option value="objective">Objective (O1-O6)</option>
@@ -751,7 +1073,7 @@
                             </select>
                         </div>
 
-                        <button onclick="uploadAndRateB()">Upload & Analyze Mappings</button>
+                        <button onclick="uploadAndRateB()">Upload & Analyze</button>
                     </div>
 
                     <!-- Loading -->
@@ -763,6 +1085,27 @@
                     <!-- Ratings Results -->
                     <div class="card hidden" id="ratingsSectionB">
                         <div class="section-title">Mapping Analysis Results</div>
+
+                        <!-- Token Usage Display -->
+                        <div class="token-usage" id="tokenUsageB">
+                            <span class="token-usage-title">API Token Usage</span>
+                            <div class="token-stat">
+                                <span class="token-stat-value" id="promptTokensB">0</span>
+                                <span class="token-stat-label">Prompt</span>
+                            </div>
+                            <div class="token-stat">
+                                <span class="token-stat-value" id="completionTokensB">0</span>
+                                <span class="token-stat-label">Completion</span>
+                            </div>
+                            <div class="token-stat total">
+                                <span class="token-stat-value" id="totalTokensB">0</span>
+                                <span class="token-stat-label">Total</span>
+                            </div>
+                            <div class="token-stat api-calls">
+                                <span class="token-stat-value" id="apiCallsB">0</span>
+                                <span class="token-stat-label">API Calls</span>
+                            </div>
+                        </div>
 
                         <!-- Summary -->
                         <div class="rating-summary">
@@ -797,12 +1140,14 @@
                                         <th style="width: 40px;">
                                             <input type="checkbox" class="checkbox" id="selectAllCheckboxB" onchange="toggleSelectAllB()">
                                         </th>
-                                        <th style="width: 80px;">Q#</th>
-                                        <th style="width: 300px;">Question (Full Text)</th>
-                                        <th>Current Mapping</th>
-                                        <th style="width: 100px;">Rating</th>
-                                        <th>Suggested Mapping</th>
+                                        <th style="width: 70px;">Q#</th>
+                                        <th style="width: 250px;">Question</th>
+                                        <th style="width: 100px;">Original Code</th>
+                                        <th style="width: 90px;">Rating</th>
+                                        <th style="width: 100px;">Suggested Code</th>
+                                        <th style="width: 200px;">Definition</th>
                                         <th style="width: 80px;">Confidence</th>
+                                        <th style="width: 200px;">Justification</th>
                                     </tr>
                                 </thead>
                                 <tbody id="ratingsBodyB"></tbody>
@@ -853,6 +1198,26 @@
 
                         <div class="charts-grid" id="chartsGridC">
                             <!-- Populated by JS -->
+                        </div>
+
+                        <!-- Coverage Table -->
+                        <div class="coverage-table-section" id="coverageTableSectionC">
+                            <h4>Coverage Analysis: Code - Definition - Questions - Percentage</h4>
+                            <div class="table-wrapper">
+                                <table class="coverage-table" id="coverageTableC">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 100px;">Code</th>
+                                            <th>Definition</th>
+                                            <th style="width: 100px; text-align: center;">Questions</th>
+                                            <th style="width: 120px; text-align: center;">Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="coverageTableBodyC">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                         <div class="actions">
@@ -929,6 +1294,7 @@
         let uploadedFilesB = { mappedFile: null, referenceFile: null };
         let uploadedFilesC = { mappedFile: null, referenceFile: null };
         let recommendationsA = [];
+        let referenceDefinitionsA = {};
         let ratingsB = [];
         let recommendationsB = [];
         let selectedIndicesA = [];
@@ -1152,7 +1518,9 @@
         }
 
         // ==================== MODE A FUNCTIONS ====================
-        async function uploadFilesA() {
+        let uploadMetadataA = null;  // Store metadata from upload
+
+        async function uploadAndPreviewA() {
             const questionFile = document.getElementById('questionFileA').files[0];
             const referenceFile = document.getElementById('referenceFileA').files[0];
 
@@ -1176,13 +1544,169 @@
 
                 uploadedFilesA.questionFile = uploadData.question_file;
                 uploadedFilesA.referenceFile = uploadData.reference_file;
+                uploadMetadataA = {
+                    question: uploadData.question_metadata,
+                    reference: uploadData.reference_metadata
+                };
 
-                showStatus(`Files uploaded: ${uploadData.question_count} questions`, 'success');
+                // Display file overview
+                displayFileOverviewA(uploadData);
 
-                // Run audit
                 document.getElementById('uploadSectionA').classList.add('hidden');
-                document.getElementById('loadingA').classList.remove('hidden');
+                document.getElementById('fileOverviewA').classList.remove('hidden');
 
+                showStatus(`Files uploaded successfully`, 'success');
+
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function displayFileOverviewA(data) {
+            // Question Overview
+            const qMeta = data.question_metadata || {};
+            let qHtml = `
+                <div class="overview-stats">
+                    <div class="overview-stat">
+                        <div class="overview-stat-value">${qMeta.total_questions || data.question_count || 0}</div>
+                        <div class="overview-stat-label">Questions</div>
+                    </div>
+                    <div class="overview-stat">
+                        <div class="overview-stat-value">${(qMeta.columns || []).length}</div>
+                        <div class="overview-stat-label">Columns</div>
+                    </div>
+                </div>
+            `;
+
+            if (qMeta.sample_questions && qMeta.sample_questions.length > 0) {
+                qHtml += `<div class="sample-questions"><strong>Sample Questions:</strong>`;
+                qMeta.sample_questions.forEach(q => {
+                    qHtml += `
+                        <div class="sample-question">
+                            <div class="sample-question-num">Q${q.number}</div>
+                            <div class="sample-question-text">${q.text}</div>
+                        </div>
+                    `;
+                });
+                qHtml += `</div>`;
+            }
+
+            document.getElementById('questionOverviewA').innerHTML = qHtml;
+
+            // Reference Overview
+            const rMeta = data.reference_metadata || {};
+            let rHtml = `<div class="overview-stats">`;
+
+            const totalItems =
+                (rMeta.competencies || []).length +
+                (rMeta.objectives || []).length +
+                (rMeta.skills || []).length +
+                (rMeta.topics || []).length +
+                (rMeta.nmc_competencies || []).length;
+
+            rHtml += `
+                <div class="overview-stat">
+                    <div class="overview-stat-value">${totalItems}</div>
+                    <div class="overview-stat-label">Total Items</div>
+                </div>
+            `;
+
+            if (rMeta.detected_type) {
+                rHtml += `
+                    <div class="overview-stat">
+                        <div class="overview-stat-value" style="font-size: 16px;">${rMeta.detected_type.replace('_', ' ').toUpperCase()}</div>
+                        <div class="overview-stat-label">Detected Type</div>
+                    </div>
+                `;
+            }
+            rHtml += `</div>`;
+
+            rHtml += `<ul class="curriculum-list">`;
+
+            // NMC Competencies
+            if (rMeta.nmc_competencies && rMeta.nmc_competencies.length > 0) {
+                rHtml += `<div class="curriculum-type-header">NMC Competencies <span class="curriculum-count">${rMeta.nmc_competencies.length}</span></div>`;
+                rMeta.nmc_competencies.forEach(item => {
+                    rHtml += `
+                        <li class="curriculum-item nmc">
+                            <span class="curriculum-id">${item.id}</span>
+                            <span class="curriculum-desc">${item.description}</span>
+                        </li>
+                    `;
+                });
+            }
+
+            // Competencies
+            if (rMeta.competencies && rMeta.competencies.length > 0) {
+                rHtml += `<div class="curriculum-type-header">Competencies <span class="curriculum-count">${rMeta.competencies.length}</span></div>`;
+                rMeta.competencies.forEach(item => {
+                    rHtml += `
+                        <li class="curriculum-item competency">
+                            <span class="curriculum-id">${item.id}</span>
+                            <span class="curriculum-desc">${item.description}</span>
+                        </li>
+                    `;
+                });
+            }
+
+            // Objectives
+            if (rMeta.objectives && rMeta.objectives.length > 0) {
+                rHtml += `<div class="curriculum-type-header">Objectives <span class="curriculum-count">${rMeta.objectives.length}</span></div>`;
+                rMeta.objectives.forEach(item => {
+                    rHtml += `
+                        <li class="curriculum-item objective">
+                            <span class="curriculum-id">${item.id}</span>
+                            <span class="curriculum-desc">${item.description}</span>
+                        </li>
+                    `;
+                });
+            }
+
+            // Skills
+            if (rMeta.skills && rMeta.skills.length > 0) {
+                rHtml += `<div class="curriculum-type-header">Skills <span class="curriculum-count">${rMeta.skills.length}</span></div>`;
+                rMeta.skills.forEach(item => {
+                    rHtml += `
+                        <li class="curriculum-item skill">
+                            <span class="curriculum-id">${item.id}</span>
+                            <span class="curriculum-desc">${item.description}</span>
+                        </li>
+                    `;
+                });
+            }
+
+            // Topics
+            if (rMeta.topics && rMeta.topics.length > 0) {
+                rHtml += `<div class="curriculum-type-header">Topic Areas <span class="curriculum-count">${rMeta.topics.length}</span></div>`;
+                rMeta.topics.forEach(item => {
+                    rHtml += `
+                        <li class="curriculum-item topic">
+                            <span class="curriculum-id">${item.topic}</span>
+                            ${item.subtopics ? `<span class="curriculum-desc">${item.subtopics}</span>` : ''}
+                        </li>
+                    `;
+                });
+            }
+
+            rHtml += `</ul>`;
+
+            if (totalItems === 0) {
+                rHtml = `<p style="color: #64748b; text-align: center; padding: 20px;">No curriculum items detected in reference file. Please ensure the file contains competencies (C1-C6), objectives (O1-O6), skills (S1-S5), or NMC codes (MI1.1, etc.).</p>`;
+            }
+
+            document.getElementById('referenceOverviewA').innerHTML = rHtml;
+        }
+
+        function backToUploadA() {
+            document.getElementById('fileOverviewA').classList.add('hidden');
+            document.getElementById('uploadSectionA').classList.remove('hidden');
+        }
+
+        async function runAuditA() {
+            document.getElementById('fileOverviewA').classList.add('hidden');
+            document.getElementById('loadingA').classList.remove('hidden');
+
+            try {
                 const useEfficient = document.getElementById('efficientModeA').checked;
                 const batchSize = parseInt(document.getElementById('batchSizeA').value);
                 const dimension = document.getElementById('dimensionA').value;
@@ -1203,23 +1727,30 @@
 
                 if (auditResponse.ok) {
                     recommendationsA = auditData.recommendations;
-                    displayRecommendationsA(recommendationsA);
+                    referenceDefinitionsA = auditData.reference_definitions || {};
+                    displayRecommendationsA(recommendationsA, referenceDefinitionsA);
+
+                    // Display token usage
+                    if (auditData.token_usage) {
+                        displayTokenUsageA(auditData.token_usage);
+                    }
+
                     document.getElementById('loadingA').classList.add('hidden');
                     document.getElementById('recommendationsSectionA').classList.remove('hidden');
                     showStatus(`Audit complete: ${auditData.mapped_questions} questions mapped`, 'success');
                 } else {
                     document.getElementById('loadingA').classList.add('hidden');
-                    document.getElementById('uploadSectionA').classList.remove('hidden');
+                    document.getElementById('fileOverviewA').classList.remove('hidden');
                     showStatus(`Error: ${auditData.error}`, 'error');
                 }
             } catch (error) {
                 document.getElementById('loadingA').classList.add('hidden');
-                document.getElementById('uploadSectionA').classList.remove('hidden');
+                document.getElementById('fileOverviewA').classList.remove('hidden');
                 showStatus(`Error: ${error.message}`, 'error');
             }
         }
 
-        function displayRecommendationsA(recs) {
+        function displayRecommendationsA(recs, definitions = {}) {
             const tbody = document.getElementById('recommendationsBodyA');
             tbody.innerHTML = '';
             document.getElementById('totalCountA').textContent = recs.length;
@@ -1231,19 +1762,31 @@
                 if (confidence >= 0.85) confidenceClass = 'confidence-high';
                 else if (confidence >= 0.70) confidenceClass = 'confidence-medium';
 
-                // V2: Full question text
+                // Get definition for the mapping code
+                const mappingCode = rec.recommended_mapping || rec.mapped_id || '';
+                const definition = definitions[mappingCode] || definitions[rec.mapped_id] || '';
+
+                // V2: Full question text + definition
                 row.innerHTML = `
                     <td><input type="checkbox" class="checkbox" data-index="${index}" onchange="updateSelectionA()"></td>
                     <td>${rec.question_num}</td>
                     <td class="question-text">
                         <div class="question-text-full">${rec.question_text || ''}</div>
                     </td>
-                    <td>${rec.recommended_mapping}</td>
+                    <td><strong>${mappingCode}</strong></td>
+                    <td class="definition-text">${definition}</td>
                     <td><span class="confidence-badge ${confidenceClass}">${Math.round(confidence * 100)}%</span></td>
                     <td class="justification">${rec.justification}</td>
                 `;
                 tbody.appendChild(row);
             });
+        }
+
+        function displayTokenUsageA(tokenUsage) {
+            document.getElementById('promptTokensA').textContent = tokenUsage.prompt_tokens.toLocaleString();
+            document.getElementById('completionTokensA').textContent = tokenUsage.completion_tokens.toLocaleString();
+            document.getElementById('totalTokensA').textContent = tokenUsage.total_tokens.toLocaleString();
+            document.getElementById('apiCallsA').textContent = tokenUsage.api_calls || 0;
         }
 
         function updateSelectionA() {
@@ -1281,10 +1824,12 @@
             recommendationsA = [];
             selectedIndicesA = [];
             uploadedFilesA = { questionFile: null, referenceFile: null };
+            uploadMetadataA = null;
             document.getElementById('questionFileA').value = '';
             document.getElementById('referenceFileA').value = '';
             document.getElementById('recommendationsSectionA').classList.add('hidden');
             document.getElementById('loadingA').classList.add('hidden');
+            document.getElementById('fileOverviewA').classList.add('hidden');
             document.getElementById('uploadSectionA').classList.remove('hidden');
             document.getElementById('selectionCountA').textContent = '0';
             document.getElementById('totalCountA').textContent = '0';
@@ -1337,7 +1882,14 @@
                 if (rateResponse.ok) {
                     ratingsB = rateData.ratings;
                     recommendationsB = rateData.recommendations;
-                    displayRatingsB(rateData);
+                    referenceDefinitionsB = rateData.reference_definitions || {};
+                    displayRatingsB(rateData, referenceDefinitionsB);
+
+                    // Display token usage
+                    if (rateData.token_usage) {
+                        displayTokenUsageB(rateData.token_usage);
+                    }
+
                     document.getElementById('loadingB').classList.add('hidden');
                     document.getElementById('ratingsSectionB').classList.remove('hidden');
                     showStatus(`Analysis complete: ${rateData.summary.correct} correct, ${rateData.summary.incorrect} need review`, 'success');
@@ -1353,11 +1905,22 @@
             }
         }
 
-        function displayRatingsB(data) {
+        function displayTokenUsageB(tokenUsage) {
+            document.getElementById('promptTokensB').textContent = tokenUsage.prompt_tokens.toLocaleString();
+            document.getElementById('completionTokensB').textContent = tokenUsage.completion_tokens.toLocaleString();
+            document.getElementById('totalTokensB').textContent = tokenUsage.total_tokens.toLocaleString();
+            document.getElementById('apiCallsB').textContent = tokenUsage.api_calls || 0;
+        }
+
+        let referenceDefinitionsB = {};  // Store reference definitions for Mode B
+
+        function displayRatingsB(data, definitions = {}) {
             document.getElementById('correctCountB').textContent = data.summary.correct;
             document.getElementById('partialCountB').textContent = data.summary.partially_correct;
             document.getElementById('incorrectCountB').textContent = data.summary.incorrect;
             document.getElementById('needsReviewCountB').textContent = recommendationsB.length;
+
+            referenceDefinitionsB = definitions;
 
             const tbody = document.getElementById('ratingsBodyB');
             tbody.innerHTML = '';
@@ -1368,20 +1931,43 @@
                 if (rec.rating === 'correct') ratingClass = 'rating-correct';
                 else if (rec.rating === 'partially_correct') ratingClass = 'rating-partial';
 
-                const currentMapping = rec.current_mapping ?
-                    `${rec.current_mapping.topic || ''} / ${rec.current_mapping.subtopic || ''}` : 'N/A';
+                // Get original mapping - handle different formats
+                let originalCode = 'N/A';
+                if (rec.current_mapping) {
+                    if (rec.current_mapping.id) {
+                        originalCode = rec.current_mapping.id;
+                    } else if (rec.current_mapping.topic) {
+                        originalCode = rec.current_mapping.topic;
+                        if (rec.current_mapping.subtopic) {
+                            originalCode += ' / ' + rec.current_mapping.subtopic;
+                        }
+                    }
+                }
 
-                // V2: Full question text
+                // Get suggested code
+                const suggestedCode = rec.mapped_id || rec.mapped_topic || rec.recommended_mapping || '';
+
+                // Get definition for the suggested mapping
+                const definition = definitions[suggestedCode] || definitions[rec.mapped_id] || definitions[rec.mapped_topic] || '';
+
+                // Confidence styling
+                const confidence = rec.confidence || 0;
+                let confClass = 'confidence-low';
+                if (confidence >= 0.85) confClass = 'confidence-high';
+                else if (confidence >= 0.70) confClass = 'confidence-medium';
+
                 row.innerHTML = `
                     <td><input type="checkbox" class="checkbox" data-index="${index}" onchange="updateSelectionB()"></td>
                     <td>${rec.question_num}</td>
                     <td class="question-text">
                         <div class="question-text-full">${rec.question_text || ''}</div>
                     </td>
-                    <td>${currentMapping}</td>
+                    <td><strong>${originalCode}</strong></td>
                     <td><span class="rating-badge ${ratingClass}">${rec.rating.replace('_', ' ')}</span></td>
-                    <td>${rec.recommended_mapping}</td>
-                    <td><span class="confidence-badge confidence-high">${Math.round(rec.confidence * 100)}%</span></td>
+                    <td><strong>${suggestedCode}</strong></td>
+                    <td class="definition-text">${definition}</td>
+                    <td><span class="confidence-badge ${confClass}">${Math.round(confidence * 100)}%</span></td>
+                    <td class="justification">${rec.justification || rec.suggestion_justification || ''}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -1533,6 +2119,45 @@
                     chartsDiv.appendChild(container);
                 }
             });
+
+            // Coverage Table
+            const coverageTable = data.coverage_table || [];
+            const tableBody = document.getElementById('coverageTableBodyC');
+            tableBody.innerHTML = '';
+
+            if (coverageTable.length > 0) {
+                coverageTable.forEach(item => {
+                    const row = document.createElement('tr');
+
+                    // Determine row class based on coverage
+                    let rowClass = '';
+                    if (item.count === 0) rowClass = 'gap-row';
+                    else if (item.count <= 2) rowClass = 'low-row';
+                    row.className = rowClass;
+
+                    // Determine bar class based on percentage
+                    let barClass = 'high';
+                    if (item.percentage < 5) barClass = 'low';
+                    else if (item.percentage < 15) barClass = 'medium';
+
+                    // Calculate bar width (max 60px)
+                    const barWidth = Math.min(item.percentage * 2, 60);
+
+                    row.innerHTML = `
+                        <td class="code-cell">${item.code}</td>
+                        <td class="definition-cell">${item.definition || '-'}</td>
+                        <td class="count-cell">${item.count}</td>
+                        <td class="percentage-cell">
+                            ${item.percentage}%
+                            <span class="percentage-bar ${barClass}" style="width: ${barWidth}px;"></span>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                document.getElementById('coverageTableSectionC').classList.remove('hidden');
+            } else {
+                document.getElementById('coverageTableSectionC').classList.add('hidden');
+            }
         }
 
         function startOverC() {
@@ -1545,6 +2170,7 @@
             document.getElementById('uploadSectionC').classList.remove('hidden');
             document.getElementById('summaryStatsC').innerHTML = '';
             document.getElementById('chartsGridC').innerHTML = '';
+            document.getElementById('coverageTableBodyC').innerHTML = '';
         }
     </script>
 </body>

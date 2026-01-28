@@ -322,7 +322,50 @@ class VisualizationEngine:
 
         return filepath
 
-    def generate_all_insights(self, mapping_data, reference_topics):
+    def generate_coverage_table(self, coverage_data, reference_data, total_questions):
+        """
+        Generate coverage table data: Code → Definition → Mapped Questions → %
+
+        Args:
+            coverage_data (dict): {code: count, ...}
+            reference_data (dict or list): Reference definitions
+            total_questions (int): Total number of questions mapped
+
+        Returns:
+            list: [{code, definition, count, percentage}, ...]
+        """
+        table_data = []
+
+        # Handle different reference_data formats
+        if isinstance(reference_data, dict):
+            all_codes = set(reference_data.keys()) | set(coverage_data.keys())
+        else:
+            all_codes = set(coverage_data.keys())
+            reference_data = {code: '' for code in all_codes}
+
+        for code in sorted(all_codes):
+            count = coverage_data.get(code, 0)
+            definition = reference_data.get(code, '')
+
+            # Handle nested dict (for area_topics which may have subtopics)
+            if isinstance(definition, dict):
+                definition = definition.get('description', str(definition))
+
+            percentage = round((count / total_questions * 100), 1) if total_questions > 0 else 0
+
+            table_data.append({
+                'code': code,
+                'definition': str(definition)[:200] if definition else '',  # Truncate long definitions
+                'count': count,
+                'percentage': percentage
+            })
+
+        # Sort by count descending, gaps at the end
+        table_data.sort(key=lambda x: (-x['count'], x['code']))
+
+        return table_data
+
+    def generate_all_insights(self, mapping_data, reference_topics, reference_definitions=None):
         """
         Generate all insight charts from mapping data
 
@@ -331,13 +374,15 @@ class VisualizationEngine:
                 - recommendations: list of mapping recommendations
                 - coverage: dict of topic counts
             reference_topics (list): All possible topics from reference
+            reference_definitions (dict): Optional - {code: definition, ...}
 
         Returns:
-            dict: {chart_name: filepath, ...}
+            dict: {chart_name: filepath, ..., coverage_table: [...]}
         """
         coverage = mapping_data.get('coverage', {})
         recommendations = mapping_data.get('recommendations', [])
         confidence_scores = [r.get('confidence', 0) for r in recommendations]
+        total_questions = len(recommendations)
 
         charts = {}
 
@@ -349,5 +394,13 @@ class VisualizationEngine:
         charts['summary_dashboard'] = self.generate_summary_dashboard(
             coverage, confidence_scores, reference_topics
         )
+
+        # Generate coverage table data
+        ref_defs = reference_definitions or mapping_data.get('reference_definitions', {})
+        if not ref_defs:
+            # Create simple reference dict from topics list
+            ref_defs = {topic: '' for topic in reference_topics}
+
+        charts['coverage_table'] = self.generate_coverage_table(coverage, ref_defs, total_questions)
 
         return charts
