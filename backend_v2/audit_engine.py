@@ -140,10 +140,10 @@ class AuditEngine:
                 type_val = None
                 desc_val = None
 
-                if 'ID' in df.columns:
-                    id_val = row.get('ID')
+                if 'ID' in df.columns or 'Code' in df.columns:
+                    id_val = row.get('ID', row.get('Code'))
                     type_val = row.get('Type', row.get('Category', ''))  # Support both Type and Category columns
-                    desc_val = row.get('Description')
+                    desc_val = row.get('Description', row.get('Definition', ''))
                 else:
                     for i, val in enumerate(row):
                         if pd.notna(val) and isinstance(val, str):
@@ -165,6 +165,10 @@ class AuditEngine:
                     elif dimension == 'skill' and id_str.startswith('S'):
                         reference[id_str] = {'type': type_val, 'description': desc_val}
                     elif dimension == 'nmc_competency' and id_str.startswith('MI'):
+                        reference[id_str] = {'type': type_val, 'description': desc_val}
+                    elif dimension == 'blooms' and id_str.startswith('KL'):
+                        reference[id_str] = {'type': type_val, 'description': desc_val}
+                    elif dimension == 'complexity' and id_str in ['Easy', 'Medium', 'Hard']:
                         reference[id_str] = {'type': type_val, 'description': desc_val}
 
             return reference
@@ -211,7 +215,9 @@ Rules:
                 'competency': 'Competency',
                 'objective': 'Objective',
                 'skill': 'Skill',
-                'nmc_competency': 'NMC Competency'
+                'nmc_competency': 'NMC Competency',
+                'blooms': 'Blooms Level',
+                'complexity': 'Complexity Level'
             }[dimension]
 
             prompt = f"""You are a curriculum mapping expert for medical education.
@@ -292,7 +298,9 @@ Rules:
                 'competency': 'Competency',
                 'objective': 'Objective',
                 'skill': 'Skill',
-                'nmc_competency': 'NMC Competency'
+                'nmc_competency': 'NMC Competency',
+                'blooms': 'Blooms Level',
+                'complexity': 'Complexity Level'
             }[dimension]
 
             prompt = f"""You are a curriculum mapping expert for medical education.
@@ -770,7 +778,9 @@ Rules:
                 'competency': 'Competency',
                 'objective': 'Objective',
                 'skill': 'Skill',
-                'nmc_competency': 'NMC Competency'
+                'nmc_competency': 'NMC Competency',
+                'blooms': 'Blooms Level',
+                'complexity': 'Complexity Level'
             }[dimension]
 
             questions_block = "\n\n".join([
