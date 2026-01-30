@@ -461,6 +461,8 @@
         .curriculum-item.skill { border-left-color: #ffa600; }
         .curriculum-item.topic { border-left-color: #9333ea; }
         .curriculum-item.nmc { border-left-color: #ef4444; }
+        .curriculum-item.blooms { border-left-color: #3b82f6; }
+        .curriculum-item.complexity { border-left-color: #f59e0b; }
 
         .curriculum-id {
             font-weight: 700;
@@ -1606,7 +1608,9 @@
                 (rMeta.objectives || []).length +
                 (rMeta.skills || []).length +
                 (rMeta.topics || []).length +
-                (rMeta.nmc_competencies || []).length;
+                (rMeta.nmc_competencies || []).length +
+                (rMeta.blooms || []).length +
+                (rMeta.complexity || []).length;
 
             rHtml += `
                 <div class="overview-stat">
@@ -1692,10 +1696,36 @@
                 });
             }
 
+            // Blooms Levels
+            if (rMeta.blooms && rMeta.blooms.length > 0) {
+                rHtml += `<div class="curriculum-type-header">Blooms Levels <span class="curriculum-count">${rMeta.blooms.length}</span></div>`;
+                rMeta.blooms.forEach(item => {
+                    rHtml += `
+                        <li class="curriculum-item blooms">
+                            <span class="curriculum-id">${item.id}</span>
+                            <span class="curriculum-desc">${item.description}</span>
+                        </li>
+                    `;
+                });
+            }
+
+            // Complexity Levels
+            if (rMeta.complexity && rMeta.complexity.length > 0) {
+                rHtml += `<div class="curriculum-type-header">Complexity Levels <span class="curriculum-count">${rMeta.complexity.length}</span></div>`;
+                rMeta.complexity.forEach(item => {
+                    rHtml += `
+                        <li class="curriculum-item complexity">
+                            <span class="curriculum-id">${item.id}</span>
+                            <span class="curriculum-desc">${item.description}</span>
+                        </li>
+                    `;
+                });
+            }
+
             rHtml += `</ul>`;
 
             if (totalItems === 0) {
-                rHtml = `<p style="color: #64748b; text-align: center; padding: 20px;">No curriculum items detected in reference file. Please ensure the file contains competencies (C1-C6), objectives (O1-O6), skills (S1-S5), or NMC codes (MI1.1, etc.).</p>`;
+                rHtml = `<p style="color: #64748b; text-align: center; padding: 20px;">No curriculum items detected in reference file. Please ensure the file contains competencies (C1-C6), objectives (O1-O6), skills (S1-S5), NMC codes (MI1.1, etc.), Blooms levels (KL1-KL6), or complexity levels (Easy/Medium/Hard).</p>`;
             }
 
             document.getElementById('referenceOverviewA').innerHTML = rHtml;

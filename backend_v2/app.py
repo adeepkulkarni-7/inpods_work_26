@@ -127,6 +127,8 @@ def extract_reference_metadata(file_path):
             'skills': [],
             'topics': [],
             'nmc_competencies': [],
+            'blooms': [],
+            'complexity': [],
             'raw_columns': [],
             'detected_type': None
         }
@@ -209,6 +211,48 @@ def extract_reference_metadata(file_path):
                     })
                     if not metadata['detected_type']:
                         metadata['detected_type'] = 'skill'
+
+                # Blooms Level codes (KL1-KL6)
+                elif len(cell_str) == 3 and cell_str[:2] == 'KL' and cell_str[2].isdigit():
+                    desc = ''
+                    if col_idx + 1 < len(row) and pd.notna(row.iloc[col_idx + 1]):
+                        next_val = str(row.iloc[col_idx + 1]).strip().lower()
+                        if next_val in ['blooms', 'type']:
+                            if col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
+                                desc = str(row.iloc[col_idx + 2]).strip()
+                        else:
+                            desc = str(row.iloc[col_idx + 1]).strip()
+                    elif col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
+                        desc = str(row.iloc[col_idx + 2]).strip()
+                    # Avoid duplicates
+                    if not any(b['id'] == cell_str for b in metadata['blooms']):
+                        metadata['blooms'].append({
+                            'id': cell_str,
+                            'description': desc
+                        })
+                    if not metadata['detected_type']:
+                        metadata['detected_type'] = 'blooms'
+
+                # Complexity levels (Easy, Medium, Hard)
+                elif cell_str.lower() in ['easy', 'medium', 'hard']:
+                    desc = ''
+                    if col_idx + 1 < len(row) and pd.notna(row.iloc[col_idx + 1]):
+                        next_val = str(row.iloc[col_idx + 1]).strip().lower()
+                        if next_val in ['complexity', 'type']:
+                            if col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
+                                desc = str(row.iloc[col_idx + 2]).strip()
+                        else:
+                            desc = str(row.iloc[col_idx + 1]).strip()
+                    elif col_idx + 2 < len(row) and pd.notna(row.iloc[col_idx + 2]):
+                        desc = str(row.iloc[col_idx + 2]).strip()
+                    # Avoid duplicates
+                    if not any(c['id'] == cell_str for c in metadata['complexity']):
+                        metadata['complexity'].append({
+                            'id': cell_str,
+                            'description': desc
+                        })
+                    if not metadata['detected_type']:
+                        metadata['detected_type'] = 'complexity'
 
         # Check for Topic Area format
         if df.shape[1] >= 2:
