@@ -410,30 +410,49 @@ def run_audit_efficient():
     """
     Tool: run_mapping_audit_batched
     Description: Map questions to curriculum topics (batched mode, 60-70% cost savings)
-    Inputs: {question_file, reference_file, dimension, batch_size}
+    Inputs: {question_file, reference_file, dimension, dimensions, batch_size}
     Outputs: {recommendations, coverage, gaps, dimension, total_questions, mapped_questions, batch_mode, batch_size}
+
+    V2.1: Supports 'dimensions' array for multi-dimension mapping in single API call
     """
     try:
         data = request.json
         question_file = data.get('question_file')
         reference_file = data.get('reference_file')
-        dimension = data.get('dimension')
+        dimensions = data.get('dimensions', [])  # V2.1: Array of dimensions
+        dimension = data.get('dimension')  # Backward compatibility
         batch_size = data.get('batch_size', 5)
 
-        if not all([question_file, reference_file, dimension]):
-            return jsonify({'error': 'Missing required parameters'}), 400
+        # V2.1: Handle dimensions array, fall back to single dimension for backward compat
+        if not dimensions and dimension:
+            dimensions = [dimension]
+        elif not dimensions:
+            return jsonify({'error': 'Missing required parameters: dimensions or dimension'}), 400
+
+        if not all([question_file, reference_file]):
+            return jsonify({'error': 'Missing required parameters: question_file, reference_file'}), 400
 
         batch_size = max(1, min(10, int(batch_size)))
 
         question_path = os.path.join(app.config['UPLOAD_FOLDER'], question_file)
         reference_path = os.path.join(app.config['UPLOAD_FOLDER'], reference_file)
 
-        result = audit_engine.run_audit_batched(
-            question_csv=question_path,
-            reference_csv=reference_path,
-            dimension=dimension,
-            batch_size=batch_size
-        )
+        # V2.1: Use multi-dimension method if multiple dimensions selected
+        if len(dimensions) > 1:
+            result = audit_engine.run_audit_batched_multi(
+                question_csv=question_path,
+                reference_csv=reference_path,
+                dimensions=dimensions,
+                batch_size=batch_size
+            )
+        else:
+            # Single dimension - use original method for backward compatibility
+            result = audit_engine.run_audit_batched(
+                question_csv=question_path,
+                reference_csv=reference_path,
+                dimension=dimensions[0],
+                batch_size=batch_size
+            )
 
         return jsonify(result)
 
@@ -446,21 +465,32 @@ def apply_and_save():
     """
     Tool: apply_mappings_and_save
     Description: Apply selected mappings, save to library, AND generate downloadable Excel
-    Inputs: {question_file, recommendations, selected_indices, dimension, name}
+    Inputs: {question_file, recommendations, selected_indices, dimension, dimensions, name}
     Outputs: {status, library_id, library_name, output_file, download_url}
 
     V2 Change: Combined save + download in single operation
+    V2.1: Supports dimensions array for multi-mapping
     """
     try:
         data = request.json
         question_file = data.get('question_file')
         recommendations = data.get('recommendations')
         selected_indices = data.get('selected_indices')
-        dimension = data.get('dimension')
+        dimensions = data.get('dimensions', [])  # V2.1: Array of dimensions
+        dimension = data.get('dimension')  # Backward compatibility
         name = data.get('name', f'Mapping_{datetime.now().strftime("%Y%m%d_%H%M%S")}')
 
-        if not all([question_file, recommendations, selected_indices is not None, dimension]):
+        # V2.1: Handle dimensions array
+        if not dimensions and dimension:
+            dimensions = [dimension]
+        elif dimensions:
+            dimension = dimensions[0]  # For backward compat
+
+        if not all([question_file, recommendations, selected_indices is not None]):
             return jsonify({'error': 'Missing required parameters'}), 400
+
+        if not dimension and not dimensions:
+            return jsonify({'error': 'Missing dimension parameter'}), 400
 
         question_path = os.path.join(app.config['UPLOAD_FOLDER'], question_file)
 
@@ -470,7 +500,8 @@ def apply_and_save():
             recommendations=recommendations,
             selected_indices=selected_indices,
             dimension=dimension,
-            output_folder=app.config['OUTPUT_FOLDER']
+            output_folder=app.config['OUTPUT_FOLDER'],
+            dimensions=dimensions  # V2.1: Pass dimensions array
         )
 
         # 2. Save to library (only selected recommendations)
@@ -618,15 +649,24 @@ def rate_mappings():
     """
     Tool: rate_existing_mappings
     Description: Rate existing mappings and suggest alternatives (Mode B)
-    Inputs: {mapped_file, reference_file, dimension, batch_size}
+    Inputs: {mapped_file, reference_file, dimension, dimensions, batch_size}
     Outputs: {ratings, summary, recommendations, dimension, total_questions}
+
+    V2.1: Supports dimensions array for multi-dimension rating
     """
     try:
         data = request.json
         mapped_file = data.get('mapped_file')
         reference_file = data.get('reference_file')
+        dimensions = data.get('dimensions', [])  # V2.1: Accept array
         dimension = data.get('dimension', 'area_topics')
         batch_size = data.get('batch_size', 5)
+
+        # V2.1: Handle dimensions array, fall back to single dimension
+        if not dimensions and dimension:
+            dimensions = [dimension]
+        elif not dimensions:
+            return jsonify({'error': 'Missing required parameters: dimensions or dimension'}), 400
 
         if not mapped_file:
             return jsonify({'error': 'mapped_file required'}), 400
@@ -639,12 +679,22 @@ def rate_mappings():
         mapped_path = os.path.join(app.config['UPLOAD_FOLDER'], mapped_file)
         reference_path = os.path.join(app.config['UPLOAD_FOLDER'], reference_file)
 
-        result = audit_engine.rate_existing_mappings(
-            mapped_file=mapped_path,
-            reference_csv=reference_path,
-            dimension=dimension,
-            batch_size=batch_size
-        )
+        # V2.1: Use multi-dimension method if multiple dimensions selected
+        if len(dimensions) > 1:
+            result = audit_engine.rate_existing_mappings_multi(
+                mapped_file=mapped_path,
+                reference_csv=reference_path,
+                dimensions=dimensions,
+                batch_size=batch_size
+            )
+        else:
+            # Single dimension - use original method for backward compatibility
+            result = audit_engine.rate_existing_mappings(
+                mapped_file=mapped_path,
+                reference_csv=reference_path,
+                dimension=dimensions[0],
+                batch_size=batch_size
+            )
 
         return jsonify(result)
 
@@ -657,21 +707,32 @@ def apply_corrections_and_save():
     """
     Tool: apply_corrections_and_save
     Description: Apply selected corrections, save to library, AND generate downloadable Excel
-    Inputs: {mapped_file, recommendations, selected_indices, dimension, name}
+    Inputs: {mapped_file, recommendations, selected_indices, dimension, dimensions, name}
     Outputs: {status, library_id, library_name, output_file, download_url}
 
     V2 Change: Combined save + download for Mode B
+    V2.1: Supports dimensions array
     """
     try:
         data = request.json
         mapped_file = data.get('mapped_file')
         recommendations = data.get('recommendations')
         selected_indices = data.get('selected_indices')
+        dimensions = data.get('dimensions', [])  # V2.1: Array of dimensions
         dimension = data.get('dimension')
         name = data.get('name', f'Corrections_{datetime.now().strftime("%Y%m%d_%H%M%S")}')
 
-        if not all([mapped_file, recommendations, selected_indices is not None, dimension]):
+        # V2.1: Handle dimensions array
+        if not dimensions and dimension:
+            dimensions = [dimension]
+        elif dimensions:
+            dimension = dimensions[0]
+
+        if not all([mapped_file, recommendations, selected_indices is not None]):
             return jsonify({'error': 'Missing required parameters'}), 400
+
+        if not dimension and not dimensions:
+            return jsonify({'error': 'Missing dimension parameter'}), 400
 
         mapped_path = os.path.join(app.config['UPLOAD_FOLDER'], mapped_file)
 
@@ -681,7 +742,8 @@ def apply_corrections_and_save():
             recommendations=recommendations,
             selected_indices=selected_indices,
             dimension=dimension,
-            output_folder=app.config['OUTPUT_FOLDER']
+            output_folder=app.config['OUTPUT_FOLDER'],
+            dimensions=dimensions  # V2.1: Pass dimensions array
         )
 
         # 2. Save to library (only selected corrections)
@@ -711,6 +773,33 @@ def apply_corrections_and_save():
 # MODE C: Generate Insights & Visualizations
 # ============================================
 
+def detect_mapped_dimensions(df):
+    """
+    Auto-detect which dimensions are present in the mapped data based on columns.
+    Returns a set of detected dimension types.
+    """
+    detected = set()
+    columns = [col.lower() for col in df.columns]
+
+    # Check for each dimension type based on column names
+    if any('mapped_competency' in c or 'competency_id' in c for c in columns):
+        detected.add('competency')
+    if any('mapped_objective' in c or 'objective_id' in c for c in columns):
+        detected.add('objective')
+    if any('mapped_skill' in c or 'skill_id' in c for c in columns):
+        detected.add('skill')
+    if any('mapped_nmc' in c or 'nmc_competency' in c for c in columns):
+        detected.add('nmc_competency')
+    if any('mapped_topic' in c for c in columns):
+        detected.add('area_topics')
+    if any('mapped_blooms' in c or 'blooms' in c for c in columns):
+        detected.add('blooms')
+    if any('mapped_complexity' in c or 'complexity' in c for c in columns):
+        detected.add('complexity')
+
+    return detected
+
+
 @app.route('/api/generate-insights', methods=['POST'])
 def generate_insights():
     """
@@ -718,6 +807,9 @@ def generate_insights():
     Description: Generate visualization charts from mapping data (Mode C)
     Inputs: {mapped_file, reference_file (optional)}
     Outputs: {status, charts, summary}
+
+    V2.1: Auto-detects dimensions from mapped data columns and only shows
+    relevant reference items in coverage table (fixes gap analysis filtering bug)
     """
     try:
         data = request.json
@@ -737,22 +829,33 @@ def generate_insights():
         else:
             mapped_df = pd.read_excel(mapped_path, engine='openpyxl')
 
-        # Build mapping data structure
+        # V2.1: Auto-detect which dimensions are present in mapped data
+        detected_dimensions = detect_mapped_dimensions(mapped_df)
+
+        # Build mapping data structure - now dimension-aware
         coverage = {}
         recommendations = []
 
-        for idx, row in mapped_df.iterrows():
-            # Check multiple possible column names for mappings
-            topic = None
-            for col in ['mapped_topic', 'mapped_objective', 'objective_id', 'Objective',
-                        'mapped_competency', 'competency_id', 'mapped_skill', 'skill_id',
-                        'mapped_nmc_competency', 'nmc_competency_id', 'mapped_id']:
-                if col in row and pd.notna(row.get(col)) and row.get(col):
-                    topic = str(row.get(col)).strip()
-                    break
+        # Define column mappings for each dimension
+        dimension_columns = {
+            'competency': ['mapped_competency', 'competency_id'],
+            'objective': ['mapped_objective', 'objective_id', 'Objective'],
+            'skill': ['mapped_skill', 'skill_id'],
+            'nmc_competency': ['mapped_nmc_competency', 'nmc_competency_id', 'mapped_nmc'],
+            'area_topics': ['mapped_topic'],
+            'blooms': ['mapped_blooms'],
+            'complexity': ['mapped_complexity']
+        }
 
-            if topic:
-                coverage[topic] = coverage.get(topic, 0) + 1
+        for idx, row in mapped_df.iterrows():
+            # Check all dimension columns that are present
+            for dim, cols in dimension_columns.items():
+                for col in cols:
+                    if col in mapped_df.columns and pd.notna(row.get(col)) and row.get(col):
+                        topic = str(row.get(col)).strip()
+                        if topic:
+                            coverage[topic] = coverage.get(topic, 0) + 1
+                        break  # Only count once per dimension per row
 
             confidence = row.get('confidence_score', 0.0)
             if pd.isna(confidence):
@@ -768,32 +871,64 @@ def generate_insights():
             'recommendations': recommendations
         }
 
-        # Get reference topics and definitions
+        # Get reference topics and definitions - ONLY for detected dimensions
         reference_topics = list(coverage.keys())
         reference_definitions = {}
+
         if reference_file:
             reference_path = os.path.join(app.config['UPLOAD_FOLDER'], reference_file)
             if os.path.exists(reference_path):
                 ref_metadata = extract_reference_metadata(reference_path)
-                # Build definitions from metadata
-                for item in ref_metadata.get('competencies', []):
-                    reference_definitions[item['id']] = item['description']
-                for item in ref_metadata.get('objectives', []):
-                    reference_definitions[item['id']] = item['description']
-                for item in ref_metadata.get('skills', []):
-                    reference_definitions[item['id']] = item['description']
-                for item in ref_metadata.get('nmc_competencies', []):
-                    reference_definitions[item['id']] = item['description']
-                for item in ref_metadata.get('topics', []):
-                    reference_definitions[item['topic']] = item.get('subtopics', '')
-                    reference_topics.append(item['topic'])
 
-                # Also check for standard columns
-                ref_df = pd.read_csv(reference_path) if reference_path.endswith('.csv') else pd.read_excel(reference_path)
-                if 'Topic Area (CBME)' in ref_df.columns:
-                    reference_topics = ref_df['Topic Area (CBME)'].dropna().tolist()
-                elif 'Topic Area' in ref_df.columns:
-                    reference_topics = ref_df['Topic Area'].dropna().tolist()
+                # V2.1: Only include reference items for detected dimensions
+                if 'competency' in detected_dimensions:
+                    for item in ref_metadata.get('competencies', []):
+                        reference_definitions[item['id']] = item['description']
+                        if item['id'] not in reference_topics:
+                            reference_topics.append(item['id'])
+
+                if 'objective' in detected_dimensions:
+                    for item in ref_metadata.get('objectives', []):
+                        reference_definitions[item['id']] = item['description']
+                        if item['id'] not in reference_topics:
+                            reference_topics.append(item['id'])
+
+                if 'skill' in detected_dimensions:
+                    for item in ref_metadata.get('skills', []):
+                        reference_definitions[item['id']] = item['description']
+                        if item['id'] not in reference_topics:
+                            reference_topics.append(item['id'])
+
+                if 'nmc_competency' in detected_dimensions:
+                    for item in ref_metadata.get('nmc_competencies', []):
+                        reference_definitions[item['id']] = item['description']
+                        if item['id'] not in reference_topics:
+                            reference_topics.append(item['id'])
+
+                if 'blooms' in detected_dimensions:
+                    for item in ref_metadata.get('blooms', []):
+                        reference_definitions[item['id']] = item['description']
+                        if item['id'] not in reference_topics:
+                            reference_topics.append(item['id'])
+
+                if 'complexity' in detected_dimensions:
+                    for item in ref_metadata.get('complexity', []):
+                        reference_definitions[item['id']] = item['description']
+                        if item['id'] not in reference_topics:
+                            reference_topics.append(item['id'])
+
+                if 'area_topics' in detected_dimensions:
+                    for item in ref_metadata.get('topics', []):
+                        reference_definitions[item['topic']] = item.get('subtopics', '')
+                        if item['topic'] not in reference_topics:
+                            reference_topics.append(item['topic'])
+
+                    # Also check for standard columns
+                    ref_df = pd.read_csv(reference_path) if reference_path.endswith('.csv') else pd.read_excel(reference_path)
+                    if 'Topic Area (CBME)' in ref_df.columns:
+                        reference_topics = ref_df['Topic Area (CBME)'].dropna().tolist()
+                    elif 'Topic Area' in ref_df.columns:
+                        reference_topics = ref_df['Topic Area'].dropna().tolist()
 
         # Generate all charts (including coverage_table)
         charts = viz_engine.generate_all_insights(mapping_data, reference_topics, reference_definitions)
@@ -807,15 +942,20 @@ def generate_insights():
             filename = os.path.basename(filepath)
             chart_urls[chart_name] = f'/api/insights/{filename}'
 
+        # Calculate gaps count
+        gaps_count = len([t for t in reference_topics if coverage.get(t, 0) == 0])
+
         return jsonify({
             'status': 'success',
             'charts': chart_urls,
             'coverage_table': coverage_table,
+            'detected_dimensions': list(detected_dimensions),
             'summary': {
                 'total_questions': len(recommendations),
                 'topics_covered': len(coverage),
                 'average_confidence': sum(r['confidence'] for r in recommendations) / len(recommendations) if recommendations else 0,
-                'coverage': coverage  # Include coverage data for summary table
+                'gaps_count': gaps_count,
+                'coverage': coverage
             }
         })
 

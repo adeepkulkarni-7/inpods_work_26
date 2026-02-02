@@ -543,6 +543,73 @@
             cursor: pointer;
         }
 
+        /* V2.1: Multi-select dimension checkboxes */
+        .dimension-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .dimension-checkboxes label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 10px 12px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+            margin-bottom: 0;
+        }
+
+        .dimension-checkboxes label:hover {
+            border-color: #00a8cc;
+            background: #f0f9ff;
+        }
+
+        .dimension-checkboxes input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .dimension-checkboxes input[type="checkbox"]:checked + .dim-label {
+            color: #00a8cc;
+            font-weight: 600;
+        }
+
+        .dim-label {
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .dim-code {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-left: auto;
+        }
+
+        .dimension-checkboxes label.selected {
+            border-color: #00a8cc;
+            background: #e0f7fa;
+        }
+
+        .dimension-validation-error {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .dimension-validation-error.show {
+            display: block;
+        }
+
         #loading {
             text-align: center;
             padding: 40px;
@@ -836,6 +903,157 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
+        /* Task Panel - Fixed bottom-right */
+        .task-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 360px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .task-panel.collapsed .task-panel-body {
+            max-height: 0;
+            padding: 0;
+        }
+
+        .task-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            cursor: pointer;
+        }
+
+        .task-panel-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .task-icon {
+            font-size: 16px;
+        }
+
+        .task-panel.has-active .task-icon {
+            animation: spin 2s linear infinite;
+        }
+
+        .task-count {
+            background: #00a8cc;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .task-count.zero {
+            background: #64748b;
+        }
+
+        .task-panel-body {
+            max-height: 350px;
+            overflow-y: auto;
+            padding: 12px;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .task-item {
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #64748b;
+        }
+
+        .task-item.running {
+            border-left-color: #00a8cc;
+            background: #e0f7fa;
+        }
+
+        .task-item.completed {
+            border-left-color: #10b981;
+            background: #d1fae5;
+        }
+
+        .task-item.failed {
+            border-left-color: #ef4444;
+            background: #fee2e2;
+        }
+
+        .task-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .task-item-type {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .task-item-status {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #64748b;
+            color: white;
+        }
+
+        .task-item-status.running {
+            background: #00a8cc;
+        }
+
+        .task-item-status.completed {
+            background: #10b981;
+        }
+
+        .task-item-status.failed {
+            background: #ef4444;
+        }
+
+        .task-item-desc {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .task-progress {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .task-progress-fill {
+            height: 100%;
+            background: #00a8cc;
+            transition: width 0.3s;
+        }
+
+        .task-item-time {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+
+        .task-empty {
+            text-align: center;
+            padding: 20px;
+            color: #94a3b8;
+        }
     </style>
 </head>
 <body>
@@ -847,6 +1065,22 @@
         <p class="subtitle">Analyze and improve question-to-curriculum mappings</p>
 
         <div id="status" class="status"></div>
+
+        <!-- Task Notification Panel -->
+        <div id="taskPanel" class="task-panel collapsed">
+            <div class="task-panel-header" onclick="toggleTaskPanel()">
+                <span class="task-panel-title">
+                    <span class="task-icon" id="taskSpinner">&#9881;</span> Tasks
+                    <span class="task-count" id="activeTaskCount">0</span>
+                </span>
+                <span id="taskPanelToggleIcon">&#9650;</span>
+            </div>
+            <div class="task-panel-body" id="taskPanelBody">
+                <div class="task-list" id="taskList">
+                    <div class="task-empty">No tasks yet</div>
+                </div>
+            </div>
+        </div>
 
         <!-- Mode Selection -->
         <div id="modeSelection">
@@ -907,16 +1141,45 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Dimension</label>
-                            <select id="dimensionA">
-                                <option value="nmc_competency">NMC Competency (MI1.1, MI1.2, etc.)</option>
-                                <option value="area_topics">Area Topics (Topic / Subtopic)</option>
-                                <option value="competency">Competency (C1-C6)</option>
-                                <option value="objective">Objective (O1-O6)</option>
-                                <option value="skill">Skill (S1-S5)</option>
-                                <option value="blooms">Blooms Level (KL1-KL6)</option>
-                                <option value="complexity">Complexity (Easy/Medium/Hard)</option>
-                            </select>
+                            <label>Map To Dimensions (select one or more)</label>
+                            <div class="dimension-checkboxes" id="dimensionsA">
+                                <label>
+                                    <input type="checkbox" value="competency" checked>
+                                    <span class="dim-label">Competency</span>
+                                    <span class="dim-code">C1-C6</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="objective">
+                                    <span class="dim-label">Objective</span>
+                                    <span class="dim-code">O1-O6</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="skill">
+                                    <span class="dim-label">Skill</span>
+                                    <span class="dim-code">S1-S5</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="nmc_competency">
+                                    <span class="dim-label">NMC Competency</span>
+                                    <span class="dim-code">MI1-MI3</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="area_topics">
+                                    <span class="dim-label">Topic Areas</span>
+                                    <span class="dim-code">Topic/Subtopic</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="blooms">
+                                    <span class="dim-label">Blooms Level</span>
+                                    <span class="dim-code">KL1-KL6</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="complexity">
+                                    <span class="dim-label">Complexity</span>
+                                    <span class="dim-code">Easy/Med/Hard</span>
+                                </label>
+                            </div>
+                            <div class="dimension-validation-error" id="dimensionErrorA">Please select at least one dimension to map</div>
                         </div>
 
                         <div class="form-group" style="background: #f0fdf4; padding: 15px; border-radius: 6px; border: 1px solid #bbf7d0;">
@@ -1058,16 +1321,45 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Dimension</label>
-                            <select id="dimensionB">
-                                <option value="nmc_competency">NMC Competency (MI1.1, MI1.2, etc.)</option>
-                                <option value="area_topics">Area Topics (Topic / Subtopic)</option>
-                                <option value="competency">Competency (C1-C6)</option>
-                                <option value="objective">Objective (O1-O6)</option>
-                                <option value="skill">Skill (S1-S5)</option>
-                                <option value="blooms">Blooms Level (KL1-KL6)</option>
-                                <option value="complexity">Complexity (Easy/Medium/Hard)</option>
-                            </select>
+                            <label>Rate Dimensions (select one or more)</label>
+                            <div class="dimension-checkboxes" id="dimensionsB">
+                                <label>
+                                    <input type="checkbox" value="competency" checked>
+                                    <span class="dim-label">Competency</span>
+                                    <span class="dim-code">C1-C6</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="objective">
+                                    <span class="dim-label">Objective</span>
+                                    <span class="dim-code">O1-O6</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="skill">
+                                    <span class="dim-label">Skill</span>
+                                    <span class="dim-code">S1-S5</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="nmc_competency">
+                                    <span class="dim-label">NMC Competency</span>
+                                    <span class="dim-code">MI1-MI3</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="area_topics">
+                                    <span class="dim-label">Topic Areas</span>
+                                    <span class="dim-code">Topic/Subtopic</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="blooms">
+                                    <span class="dim-label">Blooms Level</span>
+                                    <span class="dim-code">KL1-KL6</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="complexity">
+                                    <span class="dim-label">Complexity</span>
+                                    <span class="dim-code">Easy/Med/Hard</span>
+                                </label>
+                            </div>
+                            <div class="dimension-validation-error" id="dimensionErrorB">Please select at least one dimension to rate</div>
                         </div>
 
                         <div class="form-group">
@@ -1294,6 +1586,149 @@
         const API_URL = 'http://localhost:5001/api';
         const BASE_URL = 'http://localhost:5001';  // For direct file downloads
 
+        // ==================== TASK MANAGER ====================
+        const TaskState = {
+            PENDING: 'pending',
+            RUNNING: 'running',
+            COMPLETED: 'completed',
+            FAILED: 'failed'
+        };
+
+        class TaskManager {
+            constructor() {
+                this.tasks = new Map();
+                this.counter = 0;
+            }
+
+            create(type, description) {
+                const id = `task_${++this.counter}_${Date.now()}`;
+                const task = {
+                    id,
+                    type,
+                    description,
+                    state: TaskState.PENDING,
+                    progress: 0,
+                    startTime: null,
+                    endTime: null,
+                    result: null,
+                    error: null
+                };
+                this.tasks.set(id, task);
+                this.render();
+                return id;
+            }
+
+            async run(taskId, asyncFn) {
+                const task = this.tasks.get(taskId);
+                if (!task) return null;
+
+                task.state = TaskState.RUNNING;
+                task.startTime = Date.now();
+                this.render();
+
+                try {
+                    task.result = await asyncFn((p) => {
+                        task.progress = p;
+                        this.render();
+                    });
+                    task.state = TaskState.COMPLETED;
+                } catch (e) {
+                    task.state = TaskState.FAILED;
+                    task.error = e.message;
+                }
+
+                task.endTime = Date.now();
+                this.render();
+                this.notifyComplete(task);
+                return task;
+            }
+
+            notifyComplete(task) {
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    const icon = task.state === TaskState.COMPLETED ? '\u2713' : '\u2717';
+                    new Notification(`${icon} ${this.getTypeLabel(task.type)}`, {
+                        body: task.description
+                    });
+                }
+                // Also show status bar notification
+                const type = task.state === TaskState.COMPLETED ? 'success' : 'error';
+                showStatus(`${this.getTypeLabel(task.type)}: ${task.state === TaskState.COMPLETED ? 'Complete' : task.error}`, type);
+            }
+
+            getTypeLabel(type) {
+                const labels = {
+                    'mode_a': 'Mode A Mapping',
+                    'mode_b': 'Mode B Rating',
+                    'mode_c': 'Mode C Insights'
+                };
+                return labels[type] || type;
+            }
+
+            getActive() {
+                return [...this.tasks.values()].filter(t => t.state === TaskState.RUNNING);
+            }
+
+            getAll() {
+                return [...this.tasks.values()].sort((a, b) => (b.startTime || 0) - (a.startTime || 0));
+            }
+
+            render() {
+                const tasks = this.getAll();
+                const active = this.getActive();
+                const panel = document.getElementById('taskPanel');
+                const list = document.getElementById('taskList');
+                const count = document.getElementById('activeTaskCount');
+
+                count.textContent = active.length;
+                count.classList.toggle('zero', active.length === 0);
+                panel.classList.toggle('has-active', active.length > 0);
+
+                if (tasks.length === 0) {
+                    list.innerHTML = '<div class="task-empty">No tasks yet</div>';
+                    return;
+                }
+
+                list.innerHTML = tasks.slice(0, 10).map(t => {
+                    const dur = t.endTime
+                        ? this.formatDur(t.endTime - t.startTime)
+                        : t.startTime
+                            ? this.formatDur(Date.now() - t.startTime) + '...'
+                            : '';
+                    return `
+                        <div class="task-item ${t.state}">
+                            <div class="task-item-header">
+                                <span class="task-item-type">${this.getTypeLabel(t.type)}</span>
+                                <span class="task-item-status ${t.state}">${t.state}</span>
+                            </div>
+                            <div class="task-item-desc">${t.description}</div>
+                            ${t.state === 'running' ? `<div class="task-progress"><div class="task-progress-fill" style="width:${t.progress}%"></div></div>` : ''}
+                            ${dur ? `<div class="task-item-time">${dur}</div>` : ''}
+                            ${t.error ? `<div class="task-item-desc" style="color:#ef4444">${t.error}</div>` : ''}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            formatDur(ms) {
+                const s = Math.floor(ms / 1000);
+                return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${s % 60}s`;
+            }
+        }
+
+        const taskManager = new TaskManager();
+
+        function toggleTaskPanel() {
+            const panel = document.getElementById('taskPanel');
+            const icon = document.getElementById('taskPanelToggleIcon');
+            panel.classList.toggle('collapsed');
+            icon.textContent = panel.classList.contains('collapsed') ? '\u25B2' : '\u25BC';
+        }
+
+        // Request notification permission on load
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
         let currentMode = null;
         let currentLibraryId = null;
         let uploadedFilesA = { questionFile: null, referenceFile: null };
@@ -1301,6 +1736,8 @@
         let uploadedFilesC = { mappedFile: null, referenceFile: null };
         let recommendationsA = [];
         let referenceDefinitionsA = {};
+        let currentDimensionsA = [];  // V2.1: Track selected dimensions for Mode A
+        let currentDimensionsB = [];  // V2.1: Track selected dimensions for Mode B
         let ratingsB = [];
         let recommendationsB = [];
         let selectedIndicesA = [];
@@ -1457,11 +1894,14 @@
         }
 
         function openSaveModal(recommendations, mode, sourceFile) {
+            // V2.1: Get dimensions array from checkboxes
+            const dimensions = getSelectedDimensions(`dimensions${mode}`);
             pendingSaveData = {
                 recommendations,
                 mode,
                 sourceFile,
-                dimension: document.getElementById(`dimension${mode}`).value
+                dimensions: dimensions,
+                dimension: dimensions[0] || 'competency'  // Backward compat
             };
             document.getElementById('saveName').value = `Mapping_${new Date().toISOString().slice(0, 10)}`;
             document.getElementById('saveModal').classList.remove('hidden');
@@ -1487,6 +1927,7 @@
                         question_file: uploadedFilesA.questionFile,
                         recommendations: pendingSaveData.recommendations,
                         selected_indices: selectedIndicesA,
+                        dimensions: pendingSaveData.dimensions,  // V2.1: Send dimensions array
                         dimension: pendingSaveData.dimension,
                         name: name
                     };
@@ -1496,6 +1937,7 @@
                         mapped_file: uploadedFilesB.mappedFile,
                         recommendations: pendingSaveData.recommendations,
                         selected_indices: selectedIndicesB,
+                        dimensions: pendingSaveData.dimensions,  // V2.1: Send dimensions array
                         dimension: pendingSaveData.dimension,
                         name: name
                     };
@@ -1736,82 +2178,165 @@
             document.getElementById('uploadSectionA').classList.remove('hidden');
         }
 
+        // V2.1: Helper function to get selected dimensions from checkboxes
+        function getSelectedDimensions(containerId) {
+            const checkboxes = document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`);
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
         async function runAuditA() {
+            // V2.1: Get selected dimensions from checkboxes
+            const dimensions = getSelectedDimensions('dimensionsA');
+
+            // Validate at least one dimension selected
+            if (dimensions.length === 0) {
+                document.getElementById('dimensionErrorA').classList.add('show');
+                showStatus('Please select at least one dimension to map', 'error');
+                return;
+            }
+            document.getElementById('dimensionErrorA').classList.remove('show');
+
+            // Get question count and dimension names for task description
+            const qCount = uploadMetadataA?.question?.total_questions || '?';
+            const dimNames = dimensions.map(d => d.replace('_', ' ')).join(', ');
+
+            // Create task (non-blocking)
+            const taskId = taskManager.create('mode_a', `Mapping ${qCount} questions to ${dimNames}`);
+
+            // Show loading but allow interaction
             document.getElementById('fileOverviewA').classList.add('hidden');
             document.getElementById('loadingA').classList.remove('hidden');
 
-            try {
+            // Run async with task tracking
+            const task = await taskManager.run(taskId, async (updateProgress) => {
                 const useEfficient = document.getElementById('efficientModeA').checked;
                 const batchSize = parseInt(document.getElementById('batchSizeA').value);
-                const dimension = document.getElementById('dimensionA').value;
                 const endpoint = useEfficient ? '/run-audit-efficient' : '/run-audit';
 
-                const auditResponse = await fetch(`${API_URL}${endpoint}`, {
+                const response = await fetch(`${API_URL}${endpoint}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         question_file: uploadedFilesA.questionFile,
                         reference_file: uploadedFilesA.referenceFile,
-                        dimension: dimension,
+                        dimensions: dimensions,
+                        dimension: dimensions[0],
                         batch_size: batchSize
                     })
                 });
 
-                const auditData = await auditResponse.json();
-
-                if (auditResponse.ok) {
-                    recommendationsA = auditData.recommendations;
-                    referenceDefinitionsA = auditData.reference_definitions || {};
-                    displayRecommendationsA(recommendationsA, referenceDefinitionsA);
-
-                    // Display token usage
-                    if (auditData.token_usage) {
-                        displayTokenUsageA(auditData.token_usage);
-                    }
-
-                    document.getElementById('loadingA').classList.add('hidden');
-                    document.getElementById('recommendationsSectionA').classList.remove('hidden');
-                    showStatus(`Audit complete: ${auditData.mapped_questions} questions mapped`, 'success');
-                } else {
-                    document.getElementById('loadingA').classList.add('hidden');
-                    document.getElementById('fileOverviewA').classList.remove('hidden');
-                    showStatus(`Error: ${auditData.error}`, 'error');
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Audit failed');
                 }
-            } catch (error) {
-                document.getElementById('loadingA').classList.add('hidden');
+
+                return await response.json();
+            });
+
+            document.getElementById('loadingA').classList.add('hidden');
+
+            if (task.state === TaskState.COMPLETED) {
+                const data = task.result;
+                recommendationsA = data.recommendations;
+                referenceDefinitionsA = data.reference_definitions || {};
+                currentDimensionsA = dimensions;
+                displayRecommendationsA(recommendationsA, referenceDefinitionsA, dimensions);
+
+                if (data.token_usage) {
+                    displayTokenUsageA(data.token_usage);
+                }
+
+                document.getElementById('recommendationsSectionA').classList.remove('hidden');
+            } else {
                 document.getElementById('fileOverviewA').classList.remove('hidden');
-                showStatus(`Error: ${error.message}`, 'error');
             }
         }
 
-        function displayRecommendationsA(recs, definitions = {}) {
+        function displayRecommendationsA(recs, definitions = {}, dimensions = []) {
             const tbody = document.getElementById('recommendationsBodyA');
+            const thead = document.querySelector('#recommendationsSectionA thead tr');
             tbody.innerHTML = '';
             document.getElementById('totalCountA').textContent = recs.length;
 
+            // V2.1: Build dynamic column headers based on dimensions
+            const dimensionLabels = {
+                'competency': 'Competency',
+                'objective': 'Objective',
+                'skill': 'Skill',
+                'nmc_competency': 'NMC',
+                'area_topics': 'Topic',
+                'blooms': 'Blooms',
+                'complexity': 'Complexity'
+            };
+
+            // Update table headers for multi-dimension mode
+            if (dimensions.length > 1) {
+                let headerHtml = `
+                    <th style="width: 40px;"><input type="checkbox" class="checkbox" id="selectAllCheckboxA" onchange="toggleSelectAllA()"></th>
+                    <th style="width: 80px;">Q#</th>
+                    <th style="width: 300px;">Question</th>
+                `;
+                dimensions.forEach(dim => {
+                    headerHtml += `<th style="width: 100px;">${dimensionLabels[dim] || dim}</th>`;
+                });
+                headerHtml += `
+                    <th style="width: 80px;">Conf</th>
+                    <th>Justification</th>
+                `;
+                thead.innerHTML = headerHtml;
+            }
+
             recs.forEach((rec, index) => {
                 const row = document.createElement('tr');
-                const confidence = rec.confidence;
+                const confidence = rec.confidence || 0;
                 let confidenceClass = 'confidence-low';
                 if (confidence >= 0.85) confidenceClass = 'confidence-high';
                 else if (confidence >= 0.70) confidenceClass = 'confidence-medium';
 
-                // Get definition for the mapping code
-                const mappingCode = rec.recommended_mapping || rec.mapped_id || '';
-                const definition = definitions[mappingCode] || definitions[rec.mapped_id] || '';
+                // V2.1: Build row content based on dimensions
+                if (dimensions.length > 1) {
+                    // Multi-dimension mode - show each dimension in separate column
+                    let rowHtml = `
+                        <td><input type="checkbox" class="checkbox" data-index="${index}" onchange="updateSelectionA()"></td>
+                        <td>${rec.question_num}</td>
+                        <td class="question-text">
+                            <div class="question-text-full">${rec.question_text || ''}</div>
+                        </td>
+                    `;
 
-                // V2: Full question text + definition
-                row.innerHTML = `
-                    <td><input type="checkbox" class="checkbox" data-index="${index}" onchange="updateSelectionA()"></td>
-                    <td>${rec.question_num}</td>
-                    <td class="question-text">
-                        <div class="question-text-full">${rec.question_text || ''}</div>
-                    </td>
-                    <td><strong>${mappingCode}</strong></td>
-                    <td class="definition-text">${definition}</td>
-                    <td><span class="confidence-badge ${confidenceClass}">${Math.round(confidence * 100)}%</span></td>
-                    <td class="justification">${rec.justification}</td>
-                `;
+                    dimensions.forEach(dim => {
+                        let code = '';
+                        if (dim === 'area_topics') {
+                            code = rec.mapped_topic || rec[`mapped_${dim}_topic`] || '';
+                        } else {
+                            code = rec[`mapped_${dim}`] || '';
+                        }
+                        const def = definitions[code] || '';
+                        rowHtml += `<td><strong title="${def}">${code}</strong></td>`;
+                    });
+
+                    rowHtml += `
+                        <td><span class="confidence-badge ${confidenceClass}">${Math.round(confidence * 100)}%</span></td>
+                        <td class="justification">${rec.justification || ''}</td>
+                    `;
+                    row.innerHTML = rowHtml;
+                } else {
+                    // Single dimension mode - original display
+                    const mappingCode = rec.recommended_mapping || rec.mapped_id || rec.mapped_competency || rec.mapped_objective || '';
+                    const definition = definitions[mappingCode] || definitions[rec.mapped_id] || '';
+
+                    row.innerHTML = `
+                        <td><input type="checkbox" class="checkbox" data-index="${index}" onchange="updateSelectionA()"></td>
+                        <td>${rec.question_num}</td>
+                        <td class="question-text">
+                            <div class="question-text-full">${rec.question_text || ''}</div>
+                        </td>
+                        <td><strong>${mappingCode}</strong></td>
+                        <td class="definition-text">${definition}</td>
+                        <td><span class="confidence-badge ${confidenceClass}">${Math.round(confidence * 100)}%</span></td>
+                        <td class="justification">${rec.justification || ''}</td>
+                    `;
+                }
                 tbody.appendChild(row);
             });
         }
@@ -1857,6 +2382,7 @@
             // V2: Reset within mode - clears form and results, stays in Mode A
             recommendationsA = [];
             selectedIndicesA = [];
+            currentDimensionsA = [];
             uploadedFilesA = { questionFile: null, referenceFile: null };
             uploadMetadataA = null;
             document.getElementById('questionFileA').value = '';
@@ -1869,6 +2395,19 @@
             document.getElementById('totalCountA').textContent = '0';
             document.getElementById('recommendationsBodyA').innerHTML = '';
             document.getElementById('selectAllCheckboxA').checked = false;
+            // V2.1: Reset dimension checkboxes
+            document.getElementById('dimensionErrorA').classList.remove('show');
+            // Reset table header to default
+            const thead = document.querySelector('#recommendationsSectionA thead tr');
+            thead.innerHTML = `
+                <th style="width: 40px;"><input type="checkbox" class="checkbox" id="selectAllCheckboxA" onchange="toggleSelectAllA()"></th>
+                <th style="width: 80px;">Q#</th>
+                <th style="width: 350px;">Question (Full Text)</th>
+                <th style="width: 120px;">Mapping Code</th>
+                <th style="width: 280px;">Definition</th>
+                <th style="width: 100px;">Confidence</th>
+                <th>Justification</th>
+            `;
         }
 
         // ==================== MODE B FUNCTIONS ====================
@@ -1881,11 +2420,21 @@
                 return;
             }
 
+            // V2.1: Get selected dimensions from checkboxes
+            const dimensions = getSelectedDimensions('dimensionsB');
+            if (dimensions.length === 0) {
+                document.getElementById('dimensionErrorB').classList.add('show');
+                showStatus('Please select at least one dimension to rate', 'error');
+                return;
+            }
+            document.getElementById('dimensionErrorB').classList.remove('show');
+
             const formData = new FormData();
             formData.append('mapped_file', mappedFile);
             formData.append('reference_file', referenceFile);
 
             try {
+                // First upload the files
                 const uploadResponse = await fetch(`${API_URL}/upload-mapped`, { method: 'POST', body: formData });
                 const uploadData = await uploadResponse.json();
 
@@ -1897,40 +2446,54 @@
                 uploadedFilesB.mappedFile = uploadData.mapped_file;
                 uploadedFilesB.referenceFile = uploadData.reference_file;
 
+                // Get dimension names for task description
+                const dimNames = dimensions.map(d => d.replace('_', ' ')).join(', ');
+
+                // Create task for the rating operation
+                const taskId = taskManager.create('mode_b', `Rating mappings for ${dimNames}`);
+
                 document.getElementById('uploadSectionB').classList.add('hidden');
                 document.getElementById('loadingB').classList.remove('hidden');
 
-                const rateResponse = await fetch(`${API_URL}/rate-mappings`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        mapped_file: uploadedFilesB.mappedFile,
-                        reference_file: uploadedFilesB.referenceFile,
-                        dimension: document.getElementById('dimensionB').value,
-                        batch_size: parseInt(document.getElementById('batchSizeB').value)
-                    })
+                // Run async with task tracking
+                const task = await taskManager.run(taskId, async (updateProgress) => {
+                    const response = await fetch(`${API_URL}/rate-mappings`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            mapped_file: uploadedFilesB.mappedFile,
+                            reference_file: uploadedFilesB.referenceFile,
+                            dimensions: dimensions,
+                            dimension: dimensions[0],
+                            batch_size: parseInt(document.getElementById('batchSizeB').value)
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Rating failed');
+                    }
+
+                    return await response.json();
                 });
 
-                const rateData = await rateResponse.json();
+                document.getElementById('loadingB').classList.add('hidden');
 
-                if (rateResponse.ok) {
+                if (task.state === TaskState.COMPLETED) {
+                    const rateData = task.result;
                     ratingsB = rateData.ratings;
                     recommendationsB = rateData.recommendations;
                     referenceDefinitionsB = rateData.reference_definitions || {};
+                    currentDimensionsB = dimensions;
                     displayRatingsB(rateData, referenceDefinitionsB);
 
-                    // Display token usage
                     if (rateData.token_usage) {
                         displayTokenUsageB(rateData.token_usage);
                     }
 
-                    document.getElementById('loadingB').classList.add('hidden');
                     document.getElementById('ratingsSectionB').classList.remove('hidden');
-                    showStatus(`Analysis complete: ${rateData.summary.correct} correct, ${rateData.summary.incorrect} need review`, 'success');
                 } else {
-                    document.getElementById('loadingB').classList.add('hidden');
                     document.getElementById('uploadSectionB').classList.remove('hidden');
-                    showStatus(`Error: ${rateData.error}`, 'error');
                 }
             } catch (error) {
                 document.getElementById('loadingB').classList.add('hidden');
@@ -1957,52 +2520,129 @@
             referenceDefinitionsB = definitions;
 
             const tbody = document.getElementById('ratingsBodyB');
+            const thead = document.querySelector('#ratingsSectionB thead tr');
             tbody.innerHTML = '';
+
+            // V2.1: Check if multi-dimension mode (has dimensions array)
+            const isMultiDim = data.dimensions && data.dimensions.length > 1;
+            const dimensions = data.dimensions || currentDimensionsB || [];
+
+            const dimensionLabels = {
+                'competency': 'Comp',
+                'objective': 'Obj',
+                'skill': 'Skill',
+                'nmc_competency': 'NMC',
+                'area_topics': 'Topic',
+                'blooms': 'Blooms',
+                'complexity': 'Cmplx'
+            };
+
+            // V2.1: Update table headers for multi-dimension mode
+            if (isMultiDim) {
+                let headerHtml = `
+                    <th style="width: 40px;"><input type="checkbox" class="checkbox" id="selectAllCheckboxB" onchange="toggleSelectAllB()"></th>
+                    <th style="width: 60px;">Q#</th>
+                    <th style="width: 250px;">Question</th>
+                `;
+                dimensions.forEach(dim => {
+                    headerHtml += `<th style="width: 120px;">${dimensionLabels[dim] || dim}<br><small>Curr → Sugg</small></th>`;
+                });
+                headerHtml += `
+                    <th style="width: 80px;">Rating</th>
+                    <th style="width: 70px;">Conf</th>
+                    <th>Justification</th>
+                `;
+                thead.innerHTML = headerHtml;
+            }
 
             recommendationsB.forEach((rec, index) => {
                 const row = document.createElement('tr');
                 let ratingClass = 'rating-incorrect';
-                if (rec.rating === 'correct') ratingClass = 'rating-correct';
-                else if (rec.rating === 'partially_correct') ratingClass = 'rating-partial';
+                const overallRating = rec.rating || rec.overall_rating || 'unknown';
+                if (overallRating === 'correct') ratingClass = 'rating-correct';
+                else if (overallRating === 'partially_correct') ratingClass = 'rating-partial';
 
-                // Get original mapping - handle different formats
-                let originalCode = 'N/A';
-                if (rec.current_mapping) {
-                    if (rec.current_mapping.id) {
-                        originalCode = rec.current_mapping.id;
-                    } else if (rec.current_mapping.topic) {
-                        originalCode = rec.current_mapping.topic;
-                        if (rec.current_mapping.subtopic) {
-                            originalCode += ' / ' + rec.current_mapping.subtopic;
+                // V2.1: Multi-dimension display
+                if (isMultiDim && rec.dimension_ratings) {
+                    let rowHtml = `
+                        <td><input type="checkbox" class="checkbox" data-index="${index}" onchange="updateSelectionB()"></td>
+                        <td>${rec.question_num}</td>
+                        <td class="question-text">
+                            <div class="question-text-full">${rec.question_text || ''}</div>
+                        </td>
+                    `;
+
+                    dimensions.forEach(dim => {
+                        const dimRating = rec.dimension_ratings[dim] || {};
+                        const current = dimRating.current || rec.current_mapping?.[`mapped_${dim}`] || '-';
+                        const suggested = dimRating.suggested || current;
+                        const dimRatingVal = dimRating.rating || 'unknown';
+
+                        let dimClass = '';
+                        if (dimRatingVal === 'correct') dimClass = 'color: #065f46;';
+                        else if (dimRatingVal === 'incorrect') dimClass = 'color: #991b1b; font-weight: bold;';
+                        else if (dimRatingVal === 'partially_correct') dimClass = 'color: #92400e;';
+
+                        if (dimRatingVal === 'correct') {
+                            rowHtml += `<td style="${dimClass}"><strong>${current}</strong></td>`;
+                        } else {
+                            rowHtml += `<td style="${dimClass}"><span style="text-decoration: line-through;">${current}</span> → <strong>${suggested}</strong></td>`;
+                        }
+                    });
+
+                    const confidence = rec.confidence || 0;
+                    let confClass = 'confidence-low';
+                    if (confidence >= 0.85) confClass = 'confidence-high';
+                    else if (confidence >= 0.70) confClass = 'confidence-medium';
+
+                    rowHtml += `
+                        <td><span class="rating-badge ${ratingClass}">${overallRating.replace('_', ' ')}</span></td>
+                        <td><span class="confidence-badge ${confClass}">${Math.round(confidence * 100)}%</span></td>
+                        <td class="justification">${rec.justification || ''}</td>
+                    `;
+                    row.innerHTML = rowHtml;
+                } else {
+                    // Single dimension mode - original display
+                    let originalCode = 'N/A';
+                    if (rec.current_mapping) {
+                        if (rec.current_mapping.id) {
+                            originalCode = rec.current_mapping.id;
+                        } else if (rec.current_mapping.topic) {
+                            originalCode = rec.current_mapping.topic;
+                            if (rec.current_mapping.subtopic) {
+                                originalCode += ' / ' + rec.current_mapping.subtopic;
+                            }
+                        } else {
+                            // Try to get any mapped_* value
+                            const mappedKeys = Object.keys(rec.current_mapping).filter(k => k.startsWith('mapped_'));
+                            if (mappedKeys.length > 0) {
+                                originalCode = rec.current_mapping[mappedKeys[0]] || 'N/A';
+                            }
                         }
                     }
+
+                    const suggestedCode = rec.mapped_id || rec.mapped_topic || rec.recommended_mapping || '';
+                    const definition = definitions[suggestedCode] || definitions[rec.mapped_id] || definitions[rec.mapped_topic] || '';
+
+                    const confidence = rec.confidence || 0;
+                    let confClass = 'confidence-low';
+                    if (confidence >= 0.85) confClass = 'confidence-high';
+                    else if (confidence >= 0.70) confClass = 'confidence-medium';
+
+                    row.innerHTML = `
+                        <td><input type="checkbox" class="checkbox" data-index="${index}" onchange="updateSelectionB()"></td>
+                        <td>${rec.question_num}</td>
+                        <td class="question-text">
+                            <div class="question-text-full">${rec.question_text || ''}</div>
+                        </td>
+                        <td><strong>${originalCode}</strong></td>
+                        <td><span class="rating-badge ${ratingClass}">${overallRating.replace('_', ' ')}</span></td>
+                        <td><strong>${suggestedCode}</strong></td>
+                        <td class="definition-text">${definition}</td>
+                        <td><span class="confidence-badge ${confClass}">${Math.round(confidence * 100)}%</span></td>
+                        <td class="justification">${rec.justification || rec.suggestion_justification || ''}</td>
+                    `;
                 }
-
-                // Get suggested code
-                const suggestedCode = rec.mapped_id || rec.mapped_topic || rec.recommended_mapping || '';
-
-                // Get definition for the suggested mapping
-                const definition = definitions[suggestedCode] || definitions[rec.mapped_id] || definitions[rec.mapped_topic] || '';
-
-                // Confidence styling
-                const confidence = rec.confidence || 0;
-                let confClass = 'confidence-low';
-                if (confidence >= 0.85) confClass = 'confidence-high';
-                else if (confidence >= 0.70) confClass = 'confidence-medium';
-
-                row.innerHTML = `
-                    <td><input type="checkbox" class="checkbox" data-index="${index}" onchange="updateSelectionB()"></td>
-                    <td>${rec.question_num}</td>
-                    <td class="question-text">
-                        <div class="question-text-full">${rec.question_text || ''}</div>
-                    </td>
-                    <td><strong>${originalCode}</strong></td>
-                    <td><span class="rating-badge ${ratingClass}">${rec.rating.replace('_', ' ')}</span></td>
-                    <td><strong>${suggestedCode}</strong></td>
-                    <td class="definition-text">${definition}</td>
-                    <td><span class="confidence-badge ${confClass}">${Math.round(confidence * 100)}%</span></td>
-                    <td class="justification">${rec.justification || rec.suggestion_justification || ''}</td>
-                `;
                 tbody.appendChild(row);
             });
         }
@@ -2075,6 +2715,7 @@
             }
 
             try {
+                // First upload the files
                 const uploadResponse = await fetch(`${API_URL}/upload-mapped`, { method: 'POST', body: formData });
                 const uploadData = await uploadResponse.json();
 
@@ -2086,29 +2727,38 @@
                 uploadedFilesC.mappedFile = uploadData.mapped_file;
                 uploadedFilesC.referenceFile = uploadData.reference_file;
 
+                // Create task for insights generation
+                const taskId = taskManager.create('mode_c', `Generating insights from ${mappedFile.name}`);
+
                 document.getElementById('uploadSectionC').classList.add('hidden');
                 document.getElementById('loadingC').classList.remove('hidden');
 
-                const insightsResponse = await fetch(`${API_URL}/generate-insights`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        mapped_file: uploadedFilesC.mappedFile,
-                        reference_file: uploadedFilesC.referenceFile
-                    })
+                // Run async with task tracking
+                const task = await taskManager.run(taskId, async (updateProgress) => {
+                    const response = await fetch(`${API_URL}/generate-insights`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            mapped_file: uploadedFilesC.mappedFile,
+                            reference_file: uploadedFilesC.referenceFile
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Insights generation failed');
+                    }
+
+                    return await response.json();
                 });
 
-                const insightsData = await insightsResponse.json();
+                document.getElementById('loadingC').classList.add('hidden');
 
-                if (insightsResponse.ok) {
-                    displayInsightsC(insightsData);
-                    document.getElementById('loadingC').classList.add('hidden');
+                if (task.state === TaskState.COMPLETED) {
+                    displayInsightsC(task.result);
                     document.getElementById('insightsSectionC').classList.remove('hidden');
-                    showStatus('Insights generated successfully', 'success');
                 } else {
-                    document.getElementById('loadingC').classList.add('hidden');
                     document.getElementById('uploadSectionC').classList.remove('hidden');
-                    showStatus(`Error: ${insightsData.error}`, 'error');
                 }
             } catch (error) {
                 document.getElementById('loadingC').classList.add('hidden');
@@ -2118,7 +2768,7 @@
         }
 
         function displayInsightsC(data) {
-            // Summary stats
+            // Summary stats (kept minimal since executive_summary chart has details)
             const statsDiv = document.getElementById('summaryStatsC');
             statsDiv.innerHTML = `
                 <div class="stat-card">
@@ -2134,22 +2784,28 @@
                     <div class="stat-label">Avg Confidence</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">${Object.keys(data.charts).length}</div>
-                    <div class="stat-label">Charts Generated</div>
+                    <div class="stat-value">${data.summary.gaps_count || 0}</div>
+                    <div class="stat-label">Curriculum Gaps</div>
                 </div>
             `;
 
-            // Charts
+            // Charts - New infographic style
             const chartsDiv = document.getElementById('chartsGridC');
             chartsDiv.innerHTML = '';
 
-            const chartOrder = ['summary_dashboard', 'topic_bar_chart', 'topic_pie_chart', 'confidence_histogram', 'gap_analysis'];
+            // Chart display order and layout configuration
+            const chartConfig = [
+                { key: 'executive_summary', fullWidth: true, label: 'Executive Summary' },
+                { key: 'coverage_heatmap', fullWidth: false, label: 'Coverage Intensity' },
+                { key: 'confidence_gauge', fullWidth: false, label: 'Confidence Level' },
+                { key: 'gap_analysis', fullWidth: true, label: 'Gap Analysis' }
+            ];
 
-            chartOrder.forEach(chartName => {
-                if (data.charts[chartName]) {
+            chartConfig.forEach(chart => {
+                if (data.charts[chart.key]) {
                     const container = document.createElement('div');
-                    container.className = chartName === 'summary_dashboard' ? 'chart-container full-width' : 'chart-container';
-                    container.innerHTML = `<img src="${BASE_URL}${data.charts[chartName]}" alt="${chartName}">`;
+                    container.className = chart.fullWidth ? 'chart-container full-width' : 'chart-container';
+                    container.innerHTML = `<img src="${BASE_URL}${data.charts[chart.key]}" alt="${chart.label}">`;
                     chartsDiv.appendChild(container);
                 }
             });

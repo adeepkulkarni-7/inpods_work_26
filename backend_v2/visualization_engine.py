@@ -2,12 +2,17 @@
 Visualization Engine for Curriculum Mapping Insights
 Generates static charts (PNG) for stakeholder reporting
 
-V2: Same as V1 - no changes needed
+V2.3: Clean infographic-style visualizations
 """
 
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')  # Non-interactive backend for server use
+import matplotlib.patches as mpatches
+from matplotlib.patches import FancyBboxPatch, Circle
+import seaborn as sns
+import numpy as np
+import pandas as pd
 
 import os
 from datetime import datetime
@@ -21,318 +26,353 @@ class VisualizationEngine:
         self.output_folder = output_folder
         os.makedirs(output_folder, exist_ok=True)
 
-        # Set style
-        plt.style.use('seaborn-v0_8-whitegrid')
-        self.colors = ['#00a8cc', '#00d4aa', '#ffa600', '#ff6b6b', '#845ec2', '#4b8bbe', '#f9c74f']
+        # Set seaborn theme
+        sns.set_theme(style="whitegrid", context="notebook", font_scale=1.1)
+        self.palette = sns.color_palette("husl", 12)
 
-    def generate_topic_bar_chart(self, coverage_data, title="Questions per Topic Area"):
+        # Brand colors
+        self.colors = {
+            'primary': '#0077b6',
+            'success': '#10b981',
+            'warning': '#f59e0b',
+            'danger': '#ef4444',
+            'info': '#6366f1',
+            'dark': '#1e293b',
+            'light': '#f8fafc',
+            'muted': '#94a3b8'
+        }
+
+        # Dimension-specific colors
+        self.dimension_colors = {
+            'competency': '#0077b6',
+            'objective': '#2a9d8f',
+            'skill': '#e9c46a',
+            'blooms': '#9b5de5',
+            'complexity': '#f72585',
+            'area_topics': '#4361ee',
+            'nmc_competency': '#fb8500'
+        }
+
+    def _save_chart(self, fig, prefix):
+        """Helper to save a chart and return the filepath"""
+        filename = f"{prefix}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+        filepath = os.path.join(self.output_folder, filename)
+        plt.savefig(filepath, dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+        plt.close()
+        return filepath
+
+    # ==================== INFOGRAPHIC CHART 1: Executive Summary ====================
+    def generate_executive_summary(self, total_questions, coverage_data, confidence_scores,
+                                   gaps_count, dimensions_mapped=None):
         """
-        Generate bar chart showing question count per topic area
-
-        Args:
-            coverage_data (dict): {topic: count, ...}
-            title (str): Chart title
-
-        Returns:
-            str: Path to saved PNG file
+        Clean executive summary card with key metrics
         """
-        fig, ax = plt.subplots(figsize=(12, 6))
+        fig, ax = plt.subplots(figsize=(14, 6))
+        ax.set_xlim(0, 14)
+        ax.set_ylim(0, 6)
+        ax.axis('off')
 
-        topics = list(coverage_data.keys())
-        counts = list(coverage_data.values())
+        # Background
+        fig.patch.set_facecolor('#f8fafc')
+
+        # Title bar
+        ax.add_patch(FancyBboxPatch((0.2, 5.2), 13.6, 0.6, boxstyle="round,pad=0.02",
+                                     facecolor=self.colors['dark'], edgecolor='none'))
+        ax.text(7, 5.5, 'CURRICULUM MAPPING SUMMARY', ha='center', va='center',
+                fontsize=16, fontweight='bold', color='white')
+
+        # === Metric Cards ===
+        card_y = 3.2
+        card_height = 1.8
+        card_width = 3.0
+
+        # Card 1: Total Questions
+        self._draw_metric_card(ax, 0.5, card_y, card_width, card_height,
+                              str(total_questions), 'Questions Mapped', self.colors['primary'])
+
+        # Card 2: Topics Covered
+        topics_covered = len([k for k, v in coverage_data.items() if v > 0])
+        total_topics = len(coverage_data)
+        self._draw_metric_card(ax, 3.8, card_y, card_width, card_height,
+                              f"{topics_covered}/{total_topics}", 'Topics Covered', self.colors['info'])
+
+        # Card 3: Avg Confidence
+        avg_conf = sum(confidence_scores) / len(confidence_scores) if confidence_scores else 0
+        conf_color = self.colors['success'] if avg_conf >= 0.85 else (self.colors['warning'] if avg_conf >= 0.7 else self.colors['danger'])
+        self._draw_metric_card(ax, 7.1, card_y, card_width, card_height,
+                              f"{avg_conf:.0%}", 'Avg Confidence', conf_color)
+
+        # Card 4: Gaps
+        gap_color = self.colors['success'] if gaps_count == 0 else (self.colors['warning'] if gaps_count <= 2 else self.colors['danger'])
+        self._draw_metric_card(ax, 10.4, card_y, card_width, card_height,
+                              str(gaps_count), 'Curriculum Gaps', gap_color)
+
+        # === Confidence Breakdown Bar ===
+        if confidence_scores:
+            high = sum(1 for c in confidence_scores if c >= 0.85)
+            med = sum(1 for c in confidence_scores if 0.7 <= c < 0.85)
+            low = sum(1 for c in confidence_scores if c < 0.7)
+            total = len(confidence_scores)
+
+            bar_y = 1.2
+            bar_height = 0.5
+            bar_width = 12.6
+
+            ax.text(0.5, bar_y + 0.9, 'Confidence Distribution', fontsize=11, fontweight='bold', color=self.colors['dark'])
+
+            # Stacked bar
+            x_start = 0.5
+            if high > 0:
+                w = (high / total) * bar_width
+                ax.add_patch(FancyBboxPatch((x_start, bar_y), w, bar_height,
+                            boxstyle="round,pad=0.02", facecolor=self.colors['success'], edgecolor='none'))
+                if w > 1:
+                    ax.text(x_start + w/2, bar_y + bar_height/2, f'{high} High',
+                           ha='center', va='center', fontsize=9, color='white', fontweight='bold')
+                x_start += w
+
+            if med > 0:
+                w = (med / total) * bar_width
+                ax.add_patch(FancyBboxPatch((x_start, bar_y), w, bar_height,
+                            boxstyle="round,pad=0.02", facecolor=self.colors['warning'], edgecolor='none'))
+                if w > 1:
+                    ax.text(x_start + w/2, bar_y + bar_height/2, f'{med} Med',
+                           ha='center', va='center', fontsize=9, color='white', fontweight='bold')
+                x_start += w
+
+            if low > 0:
+                w = (low / total) * bar_width
+                ax.add_patch(FancyBboxPatch((x_start, bar_y), w, bar_height,
+                            boxstyle="round,pad=0.02", facecolor=self.colors['danger'], edgecolor='none'))
+                if w > 1:
+                    ax.text(x_start + w/2, bar_y + bar_height/2, f'{low} Low',
+                           ha='center', va='center', fontsize=9, color='white', fontweight='bold')
+
+        # Footer
+        ax.text(7, 0.3, f'Generated: {datetime.now().strftime("%Y-%m-%d %H:%M")}',
+               ha='center', va='center', fontsize=9, color=self.colors['muted'])
+
+        return self._save_chart(fig, 'executive_summary')
+
+    def _draw_metric_card(self, ax, x, y, width, height, value, label, color):
+        """Helper to draw a metric card"""
+        ax.add_patch(FancyBboxPatch((x, y), width, height, boxstyle="round,pad=0.05",
+                                     facecolor='white', edgecolor=color, linewidth=2))
+        ax.text(x + width/2, y + height*0.65, value, ha='center', va='center',
+                fontsize=24, fontweight='bold', color=color)
+        ax.text(x + width/2, y + height*0.25, label, ha='center', va='center',
+                fontsize=10, color=self.colors['muted'])
+
+    # ==================== INFOGRAPHIC CHART 2: Coverage Heatmap ====================
+    def generate_coverage_heatmap(self, coverage_data, title="Topic Coverage Intensity"):
+        """
+        Heatmap-style visualization of coverage across all topics
+        """
+        if not coverage_data:
+            return None
 
         # Sort by count descending
-        sorted_pairs = sorted(zip(counts, topics), reverse=True)
-        counts, topics = zip(*sorted_pairs) if sorted_pairs else ([], [])
+        sorted_items = sorted(coverage_data.items(), key=lambda x: -x[1])
+        codes = [item[0] for item in sorted_items]
+        counts = [item[1] for item in sorted_items]
+        max_count = max(counts) if counts else 1
 
-        bars = ax.barh(topics, counts, color=self.colors[:len(topics)])
+        # Create figure
+        n_items = len(codes)
+        fig_height = max(4, n_items * 0.4 + 1)
+        fig, ax = plt.subplots(figsize=(10, fig_height))
+
+        # Create horizontal bars with gradient based on intensity
+        y_positions = range(len(codes))
+
+        # Normalize counts for color intensity
+        norm_counts = [c / max_count for c in counts]
+        colors = [plt.cm.Blues(0.3 + 0.7 * nc) for nc in norm_counts]
+
+        bars = ax.barh(y_positions, counts, color=colors, edgecolor='white', height=0.7)
 
         # Add value labels
-        for bar, count in zip(bars, counts):
-            ax.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height()/2,
-                    str(count), va='center', fontsize=10, fontweight='bold')
+        for i, (bar, count) in enumerate(zip(bars, counts)):
+            # Label inside or outside based on bar width
+            if count > max_count * 0.3:
+                ax.text(count - max_count*0.02, i, str(count), ha='right', va='center',
+                       fontsize=10, fontweight='bold', color='white')
+            else:
+                ax.text(count + max_count*0.02, i, str(count), ha='left', va='center',
+                       fontsize=10, fontweight='bold', color=self.colors['dark'])
 
-        ax.set_xlabel('Number of Questions', fontsize=12)
-        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        ax.set_yticks(y_positions)
+        ax.set_yticklabels(codes, fontsize=10)
+        ax.set_xlabel('Number of Questions', fontsize=11)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=15, color=self.colors['dark'])
         ax.invert_yaxis()
 
-        plt.tight_layout()
-
-        filename = f"topic_bar_chart_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
-        filepath = os.path.join(self.output_folder, filename)
-        plt.savefig(filepath, dpi=150, bbox_inches='tight')
-        plt.close()
-
-        return filepath
-
-    def generate_percentage_pie_chart(self, coverage_data, title="Topic Distribution (%)"):
-        """
-        Generate pie/donut chart showing percentage distribution
-
-        Args:
-            coverage_data (dict): {topic: count, ...}
-            title (str): Chart title
-
-        Returns:
-            str: Path to saved PNG file
-        """
-        fig, ax = plt.subplots(figsize=(10, 8))
-
-        topics = list(coverage_data.keys())
-        counts = list(coverage_data.values())
-        total = sum(counts) if counts else 1  # Avoid division by zero
-
-        # Create labels with percentages
-        labels = [f"{t}\n({c}, {c/total*100:.1f}%)" for t, c in zip(topics, counts)]
-
-        # Donut chart
-        wedges, texts = ax.pie(counts, labels=None, colors=self.colors[:len(topics)],
-                               wedgeprops=dict(width=0.6), startangle=90)
-
-        # Add legend
-        ax.legend(wedges, labels, title="Topic Areas", loc="center left",
-                  bbox_to_anchor=(1, 0, 0.5, 1), fontsize=9)
-
-        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
-
-        # Center text
-        ax.text(0, 0, f'Total\n{total}', ha='center', va='center', fontsize=16, fontweight='bold')
+        # Clean up
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.spines['left'].set_visible(False)
+        ax.tick_params(left=False)
 
         plt.tight_layout()
+        return self._save_chart(fig, 'coverage_heatmap')
 
-        filename = f"topic_pie_chart_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
-        filepath = os.path.join(self.output_folder, filename)
-        plt.savefig(filepath, dpi=150, bbox_inches='tight')
-        plt.close()
-
-        return filepath
-
-    def generate_confidence_histogram(self, confidence_scores, title="Confidence Score Distribution"):
+    # ==================== INFOGRAPHIC CHART 3: Confidence Gauge ====================
+    def generate_confidence_gauge(self, confidence_scores, title="Overall Mapping Confidence"):
         """
-        Generate histogram of confidence scores
-
-        Args:
-            confidence_scores (list): List of confidence values (0.0-1.0)
-            title (str): Chart title
-
-        Returns:
-            str: Path to saved PNG file
+        Clean gauge/meter showing overall confidence level
         """
-        fig, ax = plt.subplots(figsize=(10, 6))
+        if not confidence_scores:
+            return None
 
-        # Define bins
-        bins = [0, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 1.0]
-        bin_labels = ['<50%', '50-60%', '60-70%', '70-80%', '80-85%', '85-90%', '90-95%', '95-100%']
+        avg_conf = sum(confidence_scores) / len(confidence_scores)
 
-        # Create histogram
-        counts, edges, patches = ax.hist(confidence_scores, bins=bins, edgecolor='white', linewidth=1.2)
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.set_xlim(-1.5, 1.5)
+        ax.set_ylim(-0.2, 1.2)
+        ax.axis('off')
+        fig.patch.set_facecolor('white')
 
-        # Color code: red (<70%), yellow (70-85%), green (>85%)
-        for i, patch in enumerate(patches):
-            if edges[i] < 0.7:
-                patch.set_facecolor('#ff6b6b')
-            elif edges[i] < 0.85:
-                patch.set_facecolor('#ffa600')
-            else:
-                patch.set_facecolor('#00d4aa')
+        # Draw gauge arc background
+        theta = np.linspace(np.pi, 0, 100)
+        r = 1
 
-        # Add count labels on bars
-        for count, patch in zip(counts, patches):
-            if count > 0:
-                ax.text(patch.get_x() + patch.get_width()/2, patch.get_height() + 0.5,
-                        int(count), ha='center', va='bottom', fontsize=10, fontweight='bold')
+        # Background arc (gray)
+        x_bg = r * np.cos(theta)
+        y_bg = r * np.sin(theta)
+        ax.plot(x_bg, y_bg, color='#e2e8f0', linewidth=25, solid_capstyle='round')
 
-        ax.set_xlabel('Confidence Score', fontsize=12)
-        ax.set_ylabel('Number of Questions', fontsize=12)
-        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        # Colored sections
+        # Red section (0-70%)
+        theta_red = np.linspace(np.pi, np.pi * 0.65, 30)
+        ax.plot(r * np.cos(theta_red), r * np.sin(theta_red),
+               color=self.colors['danger'], linewidth=22, solid_capstyle='butt')
 
-        # Add legend
-        from matplotlib.patches import Patch
-        legend_elements = [
-            Patch(facecolor='#ff6b6b', label='Low (<70%)'),
-            Patch(facecolor='#ffa600', label='Medium (70-85%)'),
-            Patch(facecolor='#00d4aa', label='High (>85%)')
-        ]
-        ax.legend(handles=legend_elements, loc='upper left')
+        # Yellow section (70-85%)
+        theta_yellow = np.linspace(np.pi * 0.65, np.pi * 0.425, 15)
+        ax.plot(r * np.cos(theta_yellow), r * np.sin(theta_yellow),
+               color=self.colors['warning'], linewidth=22, solid_capstyle='butt')
 
-        # Stats annotation
-        avg_conf = sum(confidence_scores) / len(confidence_scores) if confidence_scores else 0
-        high_conf = sum(1 for c in confidence_scores if c >= 0.85)
-        stats_text = f"Avg: {avg_conf:.1%} | High Confidence: {high_conf}/{len(confidence_scores)}"
-        ax.text(0.98, 0.98, stats_text, transform=ax.transAxes, ha='right', va='top',
-                fontsize=10, bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+        # Green section (85-100%)
+        theta_green = np.linspace(np.pi * 0.425, 0, 30)
+        ax.plot(r * np.cos(theta_green), r * np.sin(theta_green),
+               color=self.colors['success'], linewidth=22, solid_capstyle='butt')
 
-        plt.tight_layout()
+        # Needle
+        needle_angle = np.pi * (1 - avg_conf)
+        needle_x = 0.7 * np.cos(needle_angle)
+        needle_y = 0.7 * np.sin(needle_angle)
+        ax.annotate('', xy=(needle_x, needle_y), xytext=(0, 0),
+                   arrowprops=dict(arrowstyle='->', color=self.colors['dark'], lw=3))
 
-        filename = f"confidence_histogram_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
-        filepath = os.path.join(self.output_folder, filename)
-        plt.savefig(filepath, dpi=150, bbox_inches='tight')
-        plt.close()
+        # Center circle
+        circle = Circle((0, 0), 0.1, color=self.colors['dark'], zorder=10)
+        ax.add_patch(circle)
 
-        return filepath
+        # Value display
+        conf_color = self.colors['success'] if avg_conf >= 0.85 else (self.colors['warning'] if avg_conf >= 0.7 else self.colors['danger'])
+        ax.text(0, -0.15, f'{avg_conf:.0%}', ha='center', va='top',
+               fontsize=32, fontweight='bold', color=conf_color)
 
-    def generate_gap_analysis_chart(self, coverage_data, reference_topics, title="Curriculum Coverage & Gaps"):
-        """
-        Generate chart highlighting topics with zero or low coverage
-
-        Args:
-            coverage_data (dict): {topic: count, ...}
-            reference_topics (list): All possible topics from reference
-            title (str): Chart title
-
-        Returns:
-            str: Path to saved PNG file
-        """
-        fig, ax = plt.subplots(figsize=(12, 6))
-
-        # Ensure all reference topics are included
-        all_topics = {}
-        for topic in reference_topics:
-            all_topics[topic] = coverage_data.get(topic, 0)
-
-        topics = list(all_topics.keys())
-        counts = list(all_topics.values())
-
-        # Sort by count
-        sorted_pairs = sorted(zip(counts, topics))
-        counts, topics = zip(*sorted_pairs) if sorted_pairs else ([], [])
-
-        # Color based on coverage
-        colors = []
-        for count in counts:
-            if count == 0:
-                colors.append('#ff6b6b')  # Red - gap
-            elif count <= 2:
-                colors.append('#ffa600')  # Yellow - low coverage
-            else:
-                colors.append('#00d4aa')  # Green - good coverage
-
-        bars = ax.barh(topics, counts, color=colors)
-
-        # Add value labels
-        for bar, count in zip(bars, counts):
-            label = str(count) if count > 0 else 'GAP'
-            color = 'white' if count == 0 else 'black'
-            ax.text(max(bar.get_width(), 0.5), bar.get_y() + bar.get_height()/2,
-                    label, va='center', fontsize=10, fontweight='bold', color=color)
-
-        ax.set_xlabel('Number of Questions', fontsize=12)
-        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        # Labels
+        ax.text(-1.2, -0.05, '0%', ha='center', fontsize=10, color=self.colors['muted'])
+        ax.text(1.2, -0.05, '100%', ha='center', fontsize=10, color=self.colors['muted'])
+        ax.text(0, 1.1, title, ha='center', fontsize=14, fontweight='bold', color=self.colors['dark'])
 
         # Legend
-        from matplotlib.patches import Patch
-        legend_elements = [
-            Patch(facecolor='#ff6b6b', label='Gap (0 questions)'),
-            Patch(facecolor='#ffa600', label='Low (1-2 questions)'),
-            Patch(facecolor='#00d4aa', label='Good (3+ questions)')
-        ]
-        ax.legend(handles=legend_elements, loc='lower right')
+        ax.text(-0.9, 0.6, 'Low', fontsize=9, color=self.colors['danger'])
+        ax.text(0, 0.85, 'Med', fontsize=9, color=self.colors['warning'])
+        ax.text(0.8, 0.6, 'High', fontsize=9, color=self.colors['success'])
+
+        return self._save_chart(fig, 'confidence_gauge')
+
+    # ==================== INFOGRAPHIC CHART 4: Gap Alert Panel ====================
+    def generate_gap_analysis(self, coverage_data, reference_topics, title="Coverage Analysis"):
+        """
+        Clean visual showing gaps and coverage status
+        """
+        if not reference_topics:
+            return None
+
+        # Categorize topics
+        gaps = []
+        low_coverage = []
+        good_coverage = []
+
+        for topic in reference_topics:
+            count = coverage_data.get(topic, 0)
+            if count == 0:
+                gaps.append(topic)
+            elif count <= 2:
+                low_coverage.append((topic, count))
+            else:
+                good_coverage.append((topic, count))
+
+        # Sort by count
+        low_coverage.sort(key=lambda x: x[1])
+        good_coverage.sort(key=lambda x: -x[1])
+
+        # Create figure
+        fig, axes = plt.subplots(1, 3, figsize=(14, 5))
+        fig.suptitle(title, fontsize=16, fontweight='bold', y=1.02, color=self.colors['dark'])
+
+        # Panel 1: Gaps (Red)
+        ax1 = axes[0]
+        ax1.set_xlim(0, 10)
+        ax1.set_ylim(0, max(6, len(gaps) + 2))
+        ax1.axis('off')
+
+        ax1.add_patch(FancyBboxPatch((0.5, 0.5), 9, max(5, len(gaps) + 1.5),
+                     boxstyle="round,pad=0.05", facecolor='#fef2f2', edgecolor=self.colors['danger'], linewidth=2))
+        ax1.text(5, max(5, len(gaps) + 1.5) - 0.3, f"GAPS ({len(gaps)})", ha='center', va='top',
+                fontsize=12, fontweight='bold', color=self.colors['danger'])
+
+        for i, gap in enumerate(gaps[:10]):  # Limit to 10
+            ax1.text(5, max(5, len(gaps) + 1.5) - 1.2 - i*0.5, f"• {gap}", ha='center', va='top',
+                    fontsize=10, color=self.colors['dark'])
+        if len(gaps) == 0:
+            ax1.text(5, 3, "No gaps!", ha='center', va='center', fontsize=11,
+                    color=self.colors['success'], fontweight='bold')
+
+        # Panel 2: Low Coverage (Yellow)
+        ax2 = axes[1]
+        ax2.set_xlim(0, 10)
+        ax2.set_ylim(0, max(6, len(low_coverage) + 2))
+        ax2.axis('off')
+
+        ax2.add_patch(FancyBboxPatch((0.5, 0.5), 9, max(5, len(low_coverage) + 1.5),
+                     boxstyle="round,pad=0.05", facecolor='#fffbeb', edgecolor=self.colors['warning'], linewidth=2))
+        ax2.text(5, max(5, len(low_coverage) + 1.5) - 0.3, f"LOW COVERAGE ({len(low_coverage)})",
+                ha='center', va='top', fontsize=12, fontweight='bold', color=self.colors['warning'])
+
+        for i, (topic, count) in enumerate(low_coverage[:10]):
+            ax2.text(5, max(5, len(low_coverage) + 1.5) - 1.2 - i*0.5, f"• {topic} ({count})",
+                    ha='center', va='top', fontsize=10, color=self.colors['dark'])
+        if len(low_coverage) == 0:
+            ax2.text(5, 3, "All topics have\ngood coverage!", ha='center', va='center',
+                    fontsize=11, color=self.colors['success'], fontweight='bold')
+
+        # Panel 3: Good Coverage (Green)
+        ax3 = axes[2]
+        ax3.set_xlim(0, 10)
+        ax3.set_ylim(0, max(6, min(len(good_coverage), 10) + 2))
+        ax3.axis('off')
+
+        ax3.add_patch(FancyBboxPatch((0.5, 0.5), 9, max(5, min(len(good_coverage), 10) + 1.5),
+                     boxstyle="round,pad=0.05", facecolor='#f0fdf4', edgecolor=self.colors['success'], linewidth=2))
+        ax3.text(5, max(5, min(len(good_coverage), 10) + 1.5) - 0.3, f"GOOD COVERAGE ({len(good_coverage)})",
+                ha='center', va='top', fontsize=12, fontweight='bold', color=self.colors['success'])
+
+        for i, (topic, count) in enumerate(good_coverage[:10]):
+            ax3.text(5, max(5, min(len(good_coverage), 10) + 1.5) - 1.2 - i*0.5, f"• {topic} ({count})",
+                    ha='center', va='top', fontsize=10, color=self.colors['dark'])
 
         plt.tight_layout()
+        return self._save_chart(fig, 'gap_analysis')
 
-        filename = f"gap_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
-        filepath = os.path.join(self.output_folder, filename)
-        plt.savefig(filepath, dpi=150, bbox_inches='tight')
-        plt.close()
-
-        return filepath
-
-    def generate_summary_dashboard(self, coverage_data, confidence_scores, reference_topics,
-                                   title="Curriculum Mapping Summary"):
-        """
-        Generate a combined dashboard with multiple charts
-
-        Args:
-            coverage_data (dict): {topic: count, ...}
-            confidence_scores (list): List of confidence values
-            reference_topics (list): All possible topics
-            title (str): Dashboard title
-
-        Returns:
-            str: Path to saved PNG file
-        """
-        fig = plt.figure(figsize=(16, 12))
-
-        # Title
-        fig.suptitle(title, fontsize=18, fontweight='bold', y=0.98)
-
-        # 2x2 grid
-        ax1 = fig.add_subplot(2, 2, 1)  # Bar chart
-        ax2 = fig.add_subplot(2, 2, 2)  # Pie chart
-        ax3 = fig.add_subplot(2, 2, 3)  # Confidence histogram
-        ax4 = fig.add_subplot(2, 2, 4)  # Summary stats
-
-        # 1. Bar chart
-        topics = list(coverage_data.keys())
-        counts = list(coverage_data.values())
-        sorted_pairs = sorted(zip(counts, topics), reverse=True)
-        if sorted_pairs:
-            counts, topics = zip(*sorted_pairs)
-            ax1.barh(topics, counts, color=self.colors[:len(topics)])
-            ax1.set_xlabel('Questions')
-            ax1.set_title('Questions per Topic', fontweight='bold')
-            ax1.invert_yaxis()
-
-        # 2. Pie chart
-        if coverage_data:
-            ax2.pie(list(coverage_data.values()), labels=list(coverage_data.keys()),
-                    colors=self.colors[:len(coverage_data)], autopct='%1.1f%%', startangle=90)
-            ax2.set_title('Topic Distribution', fontweight='bold')
-
-        # 3. Confidence histogram
-        if confidence_scores:
-            bins = [0, 0.7, 0.85, 1.0]
-            colors_hist = ['#ff6b6b', '#ffa600', '#00d4aa']
-            ax3.hist(confidence_scores, bins=bins, color=self.colors[0], edgecolor='white')
-            ax3.set_xlabel('Confidence Score')
-            ax3.set_ylabel('Count')
-            ax3.set_title('Confidence Distribution', fontweight='bold')
-
-        # 4. Summary stats
-        ax4.axis('off')
-        total_questions = sum(coverage_data.values()) if coverage_data else 0
-        avg_confidence = sum(confidence_scores) / len(confidence_scores) if confidence_scores else 0
-        high_conf = sum(1 for c in confidence_scores if c >= 0.85)
-        gaps = [t for t in reference_topics if coverage_data.get(t, 0) == 0]
-        high_conf_pct = (high_conf / total_questions * 100) if total_questions > 0 else 0
-
-        stats_text = f"""
-        SUMMARY STATISTICS
-        ─────────────────────────────
-        Total Questions Mapped: {total_questions}
-        Topics Covered: {len([t for t in coverage_data if coverage_data[t] > 0])} / {len(reference_topics)}
-
-        Average Confidence: {avg_confidence:.1%}
-        High Confidence (≥85%): {high_conf} ({high_conf_pct:.1f}%)
-
-        Curriculum Gaps: {len(gaps)}
-        {', '.join(gaps) if gaps else 'None'}
-        """
-
-        ax4.text(0.1, 0.9, stats_text, transform=ax4.transAxes, fontsize=12,
-                 verticalalignment='top', fontfamily='monospace',
-                 bbox=dict(boxstyle='round', facecolor='#f0f0f0', alpha=0.8))
-
-        plt.tight_layout(rect=[0, 0, 1, 0.96])
-
-        filename = f"summary_dashboard_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
-        filepath = os.path.join(self.output_folder, filename)
-        plt.savefig(filepath, dpi=150, bbox_inches='tight')
-        plt.close()
-
-        return filepath
-
+    # ==================== Coverage Table (Data Only) ====================
     def generate_coverage_table(self, coverage_data, reference_data, total_questions):
         """
         Generate coverage table data: Code → Definition → Mapped Questions → %
-
-        Args:
-            coverage_data (dict): {code: count, ...}
-            reference_data (dict or list): Reference definitions
-            total_questions (int): Total number of questions mapped
-
-        Returns:
-            list: [{code, definition, count, percentage}, ...]
         """
         table_data = []
 
@@ -347,7 +387,7 @@ class VisualizationEngine:
             count = coverage_data.get(code, 0)
             definition = reference_data.get(code, '')
 
-            # Handle nested dict (for area_topics which may have subtopics)
+            # Handle nested dict
             if isinstance(definition, dict):
                 definition = definition.get('description', str(definition))
 
@@ -355,52 +395,57 @@ class VisualizationEngine:
 
             table_data.append({
                 'code': code,
-                'definition': str(definition)[:200] if definition else '',  # Truncate long definitions
+                'definition': str(definition)[:200] if definition else '',
                 'count': count,
                 'percentage': percentage
             })
 
-        # Sort by count descending, gaps at the end
+        # Sort by count descending
         table_data.sort(key=lambda x: (-x['count'], x['code']))
-
         return table_data
 
+    # ==================== Main Entry Point ====================
     def generate_all_insights(self, mapping_data, reference_topics, reference_definitions=None):
         """
         Generate all insight charts from mapping data
 
-        Args:
-            mapping_data (dict): Result from audit engine containing:
-                - recommendations: list of mapping recommendations
-                - coverage: dict of topic counts
-            reference_topics (list): All possible topics from reference
-            reference_definitions (dict): Optional - {code: definition, ...}
-
-        Returns:
-            dict: {chart_name: filepath, ..., coverage_table: [...]}
+        Returns clean infographic-style visualizations
         """
         coverage = mapping_data.get('coverage', {})
         recommendations = mapping_data.get('recommendations', [])
         confidence_scores = [r.get('confidence', 0) for r in recommendations]
         total_questions = len(recommendations)
 
+        # Calculate gaps
+        gaps_count = len([t for t in reference_topics if coverage.get(t, 0) == 0])
+
         charts = {}
 
-        # Generate individual charts
-        charts['topic_bar_chart'] = self.generate_topic_bar_chart(coverage)
-        charts['topic_pie_chart'] = self.generate_percentage_pie_chart(coverage)
-        charts['confidence_histogram'] = self.generate_confidence_histogram(confidence_scores)
-        charts['gap_analysis'] = self.generate_gap_analysis_chart(coverage, reference_topics)
-        charts['summary_dashboard'] = self.generate_summary_dashboard(
-            coverage, confidence_scores, reference_topics
+        # 1. Executive Summary (main infographic)
+        charts['executive_summary'] = self.generate_executive_summary(
+            total_questions, coverage, confidence_scores, gaps_count
         )
 
-        # Generate coverage table data
+        # 2. Coverage Heatmap
+        charts['coverage_heatmap'] = self.generate_coverage_heatmap(coverage)
+
+        # 3. Confidence Gauge
+        charts['confidence_gauge'] = self.generate_confidence_gauge(confidence_scores)
+
+        # 4. Gap Analysis Panel
+        charts['gap_analysis'] = self.generate_gap_analysis(coverage, reference_topics)
+
+        # Coverage Table Data (for HTML display)
         ref_defs = reference_definitions or mapping_data.get('reference_definitions', {})
         if not ref_defs:
-            # Create simple reference dict from topics list
             ref_defs = {topic: '' for topic in reference_topics}
-
         charts['coverage_table'] = self.generate_coverage_table(coverage, ref_defs, total_questions)
 
         return charts
+
+
+# For backward compatibility - keep old method names mapping to new ones
+VisualizationEngine.generate_topic_bar_chart = lambda self, *args, **kwargs: self.generate_coverage_heatmap(*args, **kwargs)
+VisualizationEngine.generate_summary_dashboard = lambda self, coverage, conf, ref, **kwargs: self.generate_executive_summary(
+    len(conf) if conf else 0, coverage, conf, len([t for t in ref if coverage.get(t, 0) == 0])
+)
