@@ -1,0 +1,120 @@
+================================================================================
+INPODS CURRICULUM MAPPING SYSTEM - SETUP INSTRUCTIONS
+================================================================================
+
+WHAT THIS IS:
+An AI-powered web app that maps exam questions to curriculum topics using 
+Azure OpenAI (GPT-4). Three modes: Map questions, Validate mappings, Generate charts.
+
+--------------------------------------------------------------------------------
+PREREQUISITES
+--------------------------------------------------------------------------------
+- Python 3.9 or higher installed
+- Internet connection
+- Azure OpenAI credentials (provided separately)
+
+--------------------------------------------------------------------------------
+STEP-BY-STEP SETUP
+--------------------------------------------------------------------------------
+
+STEP 1: DOWNLOAD
+   Go to: https://github.com/adeepkulkarni-7/inpods_work_26
+   Click green "Code" button → "Download ZIP"
+
+STEP 2: EXTRACT
+   Right-click the ZIP file → "Extract All" → Choose location (e.g., Desktop)
+
+STEP 3: OPEN TERMINAL
+   Windows: Press Win+R, type "cmd", press Enter
+   Mac: Press Cmd+Space, type "Terminal", press Enter
+
+STEP 4: GO TO BACKEND FOLDER
+   Type this command (adjust path if needed):
+   
+   cd Desktop/inpods_work_26-master/backend_v2
+
+STEP 5: INSTALL PYTHON PACKAGES
+   Type:
+   
+   pip install -r requirements.txt
+   
+   Wait for it to finish (may take 1-2 minutes)
+
+STEP 6: CREATE CREDENTIALS FILE
+   In the backend_v2 folder, create a new file named exactly:  .env
+   
+   Open it with Notepad and paste the credentials provided to you.
+   (4 lines starting with AZURE_OPENAI_...)
+   
+   Save and close.
+
+STEP 7: START BACKEND SERVER
+   In the terminal, type:
+   
+   python app.py
+   
+   You should see:
+   [OK] Azure OpenAI connected successfully
+   [*] Backend running on http://localhost:5001
+   
+   KEEP THIS TERMINAL OPEN.
+
+STEP 8: OPEN A SECOND TERMINAL
+   (Same as Step 3 - open another terminal window)
+
+STEP 9: GO TO MAIN PROJECT FOLDER
+   Type:
+   
+   cd Desktop/inpods_work_26-master
+
+STEP 10: START FRONTEND SERVER
+   Type:
+   
+   python -m http.server 8002
+   
+   You should see:
+   Serving HTTP on :: port 8002
+   
+   KEEP THIS TERMINAL OPEN.
+
+STEP 11: OPEN BROWSER
+   Go to any of these URLs:
+   
+   http://localhost:8002/app_mapping/    (Map unmapped questions)
+   http://localhost:8002/app_rating/     (Validate existing mappings)
+   http://localhost:8002/app_insights/   (Generate charts)
+
+STEP 12: USE THE APP
+   - Upload your question CSV file
+   - Upload your reference/curriculum CSV file
+   - Select dimension (Competency, Blooms, etc.)
+   - Click the action button
+   - Download results as Excel
+
+--------------------------------------------------------------------------------
+TO STOP THE APP
+--------------------------------------------------------------------------------
+Press Ctrl+C in both terminal windows.
+
+--------------------------------------------------------------------------------
+TROUBLESHOOTING
+--------------------------------------------------------------------------------
+Problem: "pip not found"
+Solution: Install Python from python.org, check "Add to PATH" during install
+
+Problem: "Connection failed" on startup
+Solution: Check .env file exists and has correct content
+
+Problem: Browser shows "Failed to fetch"
+Solution: Make sure backend is running (Step 7) before using the app
+
+Problem: Port already in use
+Solution: Change 8002 to another number like 8003
+
+--------------------------------------------------------------------------------
+TEST FILES INCLUDED
+--------------------------------------------------------------------------------
+- test_10_questions_unmapped.csv  (sample questions to test mapping)
+- test_reference_simple.csv       (sample curriculum reference)
+
+================================================================================
