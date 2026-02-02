@@ -443,6 +443,96 @@ class VisualizationEngine:
 
         return charts
 
+    # ==================== V2.4: Per-Dimension Entry Point ====================
+    def generate_all_insights_v2(self, mapping_data, dimensions, reference_by_dimension):
+        """
+        Generate insight charts with per-dimension separation
+
+        Args:
+            mapping_data: {coverage, coverage_by_dimension, recommendations}
+            dimensions: list of dimension names to analyze
+            reference_by_dimension: {dim: {topics: [], definitions: {}}}
+
+        Returns charts dict with:
+            - executive_summary (global)
+            - confidence_gauge (global)
+            - coverage_heatmap_{dim} (per dimension)
+            - gap_analysis_{dim} (per dimension)
+            - coverage_tables (per dimension)
+        """
+        coverage = mapping_data.get('coverage', {})
+        coverage_by_dimension = mapping_data.get('coverage_by_dimension', {})
+        recommendations = mapping_data.get('recommendations', [])
+        confidence_scores = [r.get('confidence', 0) for r in recommendations]
+        total_questions = len(recommendations)
+
+        # Calculate total gaps across all dimensions
+        total_gaps = 0
+        for dim in dimensions:
+            ref_topics = reference_by_dimension.get(dim, {}).get('topics', [])
+            dim_coverage = coverage_by_dimension.get(dim, {})
+            total_gaps += len([t for t in ref_topics if dim_coverage.get(t, 0) == 0])
+
+        charts = {}
+
+        # 1. Executive Summary (global - uses combined coverage)
+        charts['executive_summary'] = self.generate_executive_summary(
+            total_questions, coverage, confidence_scores, total_gaps, dimensions
+        )
+
+        # 2. Confidence Gauge (global)
+        charts['confidence_gauge'] = self.generate_confidence_gauge(confidence_scores)
+
+        # 3. Per-dimension charts
+        coverage_tables = {}
+
+        for dim in dimensions:
+            dim_coverage = coverage_by_dimension.get(dim, {})
+            ref_data = reference_by_dimension.get(dim, {})
+            ref_topics = ref_data.get('topics', list(dim_coverage.keys()))
+            ref_defs = ref_data.get('definitions', {})
+
+            if not dim_coverage:
+                continue
+
+            # Dimension label for chart titles
+            dim_label = self._format_dimension_label(dim)
+
+            # Coverage heatmap for this dimension
+            charts[f'coverage_heatmap_{dim}'] = self.generate_coverage_heatmap(
+                dim_coverage,
+                title=f"{dim_label} Coverage"
+            )
+
+            # Gap analysis for this dimension
+            charts[f'gap_analysis_{dim}'] = self.generate_gap_analysis(
+                dim_coverage,
+                ref_topics,
+                title=f"{dim_label} Gap Analysis"
+            )
+
+            # Coverage table for this dimension
+            coverage_tables[dim] = self.generate_coverage_table(
+                dim_coverage, ref_defs, total_questions
+            )
+
+        charts['coverage_tables'] = coverage_tables
+
+        return charts
+
+    def _format_dimension_label(self, dim):
+        """Format dimension name for display"""
+        labels = {
+            'competency': 'Competency',
+            'objective': 'Objective',
+            'skill': 'Skill',
+            'nmc_competency': 'NMC Competency',
+            'area_topics': 'Topic Areas',
+            'blooms': 'Blooms Level',
+            'complexity': 'Complexity'
+        }
+        return labels.get(dim, dim.replace('_', ' ').title())
+
 
 # For backward compatibility - keep old method names mapping to new ones
 VisualizationEngine.generate_topic_bar_chart = lambda self, *args, **kwargs: self.generate_coverage_heatmap(*args, **kwargs)

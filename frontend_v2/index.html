@@ -1477,6 +1477,53 @@
                             <input type="file" id="referenceFileC" accept=".csv,.xlsx,.xls">
                         </div>
 
+                        <div class="form-group">
+                            <label>Visualize Dimensions (select one or more)</label>
+                            <p style="font-size: 13px; color: #64748b; margin-bottom: 10px;">
+                                Select which dimensions to analyze. Separate charts will be generated for each dimension.
+                            </p>
+                            <div class="dimension-checkboxes" id="dimensionsC">
+                                <label>
+                                    <input type="checkbox" value="competency">
+                                    <span class="dim-label">Competency</span>
+                                    <span class="dim-code">C1-C6</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="objective">
+                                    <span class="dim-label">Objective</span>
+                                    <span class="dim-code">O1-O6</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="skill">
+                                    <span class="dim-label">Skill</span>
+                                    <span class="dim-code">S1-S5</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="nmc_competency">
+                                    <span class="dim-label">NMC Competency</span>
+                                    <span class="dim-code">MI1-MI3</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="area_topics">
+                                    <span class="dim-label">Topic Areas</span>
+                                    <span class="dim-code">Topic/Subtopic</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="blooms">
+                                    <span class="dim-label">Blooms Level</span>
+                                    <span class="dim-code">KL1-KL6</span>
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="complexity">
+                                    <span class="dim-label">Complexity</span>
+                                    <span class="dim-code">Easy/Med/Hard</span>
+                                </label>
+                            </div>
+                            <p style="font-size: 12px; color: #94a3b8; margin-top: 8px;">
+                                Leave empty to auto-detect dimensions from file
+                            </p>
+                        </div>
+
                         <button onclick="generateInsightsC()">Generate Insights</button>
                     </div>
 
@@ -2706,6 +2753,9 @@
                 return;
             }
 
+            // Get selected dimensions (empty array means auto-detect)
+            const selectedDimensions = getSelectedDimensions('dimensionsC');
+
             const formData = new FormData();
             formData.append('mapped_file', mappedFile);
 
@@ -2727,8 +2777,11 @@
                 uploadedFilesC.mappedFile = uploadData.mapped_file;
                 uploadedFilesC.referenceFile = uploadData.reference_file;
 
-                // Create task for insights generation
-                const taskId = taskManager.create('mode_c', `Generating insights from ${mappedFile.name}`);
+                // Create task description
+                const dimDesc = selectedDimensions.length > 0
+                    ? selectedDimensions.map(d => d.replace('_', ' ')).join(', ')
+                    : 'auto-detect';
+                const taskId = taskManager.create('mode_c', `Generating insights (${dimDesc}) from ${mappedFile.name}`);
 
                 document.getElementById('uploadSectionC').classList.add('hidden');
                 document.getElementById('loadingC').classList.remove('hidden');
@@ -2740,7 +2793,8 @@
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
                             mapped_file: uploadedFilesC.mappedFile,
-                            reference_file: uploadedFilesC.referenceFile
+                            reference_file: uploadedFilesC.referenceFile,
+                            dimensions: selectedDimensions
                         })
                     });
 
@@ -2777,31 +2831,42 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">${data.summary.topics_covered}</div>
-                    <div class="stat-label">Topics Covered</div>
+                    <div class="stat-label">Items Covered</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">${Math.round(data.summary.average_confidence * 100)}%</div>
                     <div class="stat-label">Avg Confidence</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">${data.summary.gaps_count || 0}</div>
-                    <div class="stat-label">Curriculum Gaps</div>
+                    <div class="stat-value">${(data.detected_dimensions || []).length}</div>
+                    <div class="stat-label">Dimensions Analyzed</div>
                 </div>
             `;
 
-            // Charts - New infographic style
+            // Charts - New infographic style with dimension separation
             const chartsDiv = document.getElementById('chartsGridC');
             chartsDiv.innerHTML = '';
 
-            // Chart display order and layout configuration
-            const chartConfig = [
+            // Display detected dimensions
+            const detectedDims = data.detected_dimensions || [];
+            if (detectedDims.length > 0) {
+                const dimBadges = document.createElement('div');
+                dimBadges.className = 'dimension-badges';
+                dimBadges.style.cssText = 'margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;';
+                dimBadges.innerHTML = `
+                    <span style="color: #64748b; font-size: 14px; margin-right: 5px;">Dimensions:</span>
+                    ${detectedDims.map(d => `<span style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 500;">${formatDimensionName(d)}</span>`).join('')}
+                `;
+                chartsDiv.appendChild(dimBadges);
+            }
+
+            // Executive Summary and Confidence Gauge (global charts)
+            const globalCharts = [
                 { key: 'executive_summary', fullWidth: true, label: 'Executive Summary' },
-                { key: 'coverage_heatmap', fullWidth: false, label: 'Coverage Intensity' },
-                { key: 'confidence_gauge', fullWidth: false, label: 'Confidence Level' },
-                { key: 'gap_analysis', fullWidth: true, label: 'Gap Analysis' }
+                { key: 'confidence_gauge', fullWidth: false, label: 'Overall Confidence' }
             ];
 
-            chartConfig.forEach(chart => {
+            globalCharts.forEach(chart => {
                 if (data.charts[chart.key]) {
                     const container = document.createElement('div');
                     container.className = chart.fullWidth ? 'chart-container full-width' : 'chart-container';
@@ -2810,27 +2875,93 @@
                 }
             });
 
-            // Coverage Table
-            const coverageTable = data.coverage_table || [];
+            // Per-dimension charts (coverage heatmap and gap analysis)
+            detectedDims.forEach(dim => {
+                const dimLabel = formatDimensionName(dim);
+
+                // Section header for this dimension
+                const sectionHeader = document.createElement('div');
+                sectionHeader.className = 'dimension-section-header';
+                sectionHeader.style.cssText = 'width: 100%; margin: 25px 0 15px 0; padding: 12px 20px; background: linear-gradient(135deg, #1e293b, #334155); color: white; border-radius: 8px; font-weight: 600; font-size: 16px;';
+                sectionHeader.textContent = `${dimLabel} Analysis`;
+                chartsDiv.appendChild(sectionHeader);
+
+                // Coverage heatmap for this dimension
+                const heatmapKey = `coverage_heatmap_${dim}`;
+                if (data.charts[heatmapKey]) {
+                    const container = document.createElement('div');
+                    container.className = 'chart-container';
+                    container.innerHTML = `<img src="${BASE_URL}${data.charts[heatmapKey]}" alt="${dimLabel} Coverage">`;
+                    chartsDiv.appendChild(container);
+                }
+
+                // Gap analysis for this dimension
+                const gapKey = `gap_analysis_${dim}`;
+                if (data.charts[gapKey]) {
+                    const container = document.createElement('div');
+                    container.className = 'chart-container';
+                    container.innerHTML = `<img src="${BASE_URL}${data.charts[gapKey]}" alt="${dimLabel} Gap Analysis">`;
+                    chartsDiv.appendChild(container);
+                }
+            });
+
+            // Coverage Tables - one per dimension
+            const coverageTables = data.coverage_tables || {};
+            const tableSection = document.getElementById('coverageTableSectionC');
             const tableBody = document.getElementById('coverageTableBodyC');
+
+            // Clear existing content
             tableBody.innerHTML = '';
 
-            if (coverageTable.length > 0) {
-                coverageTable.forEach(item => {
-                    const row = document.createElement('tr');
+            // If we have per-dimension tables, show them with headers
+            if (Object.keys(coverageTables).length > 0) {
+                Object.entries(coverageTables).forEach(([dim, tableData]) => {
+                    if (tableData && tableData.length > 0) {
+                        // Dimension header row
+                        const headerRow = document.createElement('tr');
+                        headerRow.className = 'dimension-table-header';
+                        headerRow.innerHTML = `<td colspan="4" style="background: #1e293b; color: white; font-weight: 600; padding: 12px 16px;">${formatDimensionName(dim)}</td>`;
+                        tableBody.appendChild(headerRow);
 
-                    // Determine row class based on coverage
+                        // Data rows for this dimension
+                        tableData.forEach(item => {
+                            const row = document.createElement('tr');
+                            let rowClass = '';
+                            if (item.count === 0) rowClass = 'gap-row';
+                            else if (item.count <= 2) rowClass = 'low-row';
+                            row.className = rowClass;
+
+                            let barClass = 'high';
+                            if (item.percentage < 5) barClass = 'low';
+                            else if (item.percentage < 15) barClass = 'medium';
+                            const barWidth = Math.min(item.percentage * 2, 60);
+
+                            row.innerHTML = `
+                                <td class="code-cell">${item.code}</td>
+                                <td class="definition-cell">${item.definition || '-'}</td>
+                                <td class="count-cell">${item.count}</td>
+                                <td class="percentage-cell">
+                                    ${item.percentage}%
+                                    <span class="percentage-bar ${barClass}" style="width: ${barWidth}px;"></span>
+                                </td>
+                            `;
+                            tableBody.appendChild(row);
+                        });
+                    }
+                });
+                tableSection.classList.remove('hidden');
+            } else if (data.coverage_table && data.coverage_table.length > 0) {
+                // Fallback to single coverage table (backward compatibility)
+                data.coverage_table.forEach(item => {
+                    const row = document.createElement('tr');
                     let rowClass = '';
                     if (item.count === 0) rowClass = 'gap-row';
                     else if (item.count <= 2) rowClass = 'low-row';
                     row.className = rowClass;
 
-                    // Determine bar class based on percentage
                     let barClass = 'high';
                     if (item.percentage < 5) barClass = 'low';
                     else if (item.percentage < 15) barClass = 'medium';
-
-                    // Calculate bar width (max 60px)
                     const barWidth = Math.min(item.percentage * 2, 60);
 
                     row.innerHTML = `
@@ -2844,10 +2975,24 @@
                     `;
                     tableBody.appendChild(row);
                 });
-                document.getElementById('coverageTableSectionC').classList.remove('hidden');
+                tableSection.classList.remove('hidden');
             } else {
-                document.getElementById('coverageTableSectionC').classList.add('hidden');
+                tableSection.classList.add('hidden');
             }
+        }
+
+        // Helper to format dimension names for display
+        function formatDimensionName(dim) {
+            const names = {
+                'competency': 'Competency',
+                'objective': 'Objective',
+                'skill': 'Skill',
+                'nmc_competency': 'NMC Competency',
+                'area_topics': 'Topic Areas',
+                'blooms': 'Blooms Level',
+                'complexity': 'Complexity'
+            };
+            return names[dim] || dim.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
         }
 
         function startOverC() {
@@ -2861,6 +3006,8 @@
             document.getElementById('summaryStatsC').innerHTML = '';
             document.getElementById('chartsGridC').innerHTML = '';
             document.getElementById('coverageTableBodyC').innerHTML = '';
+            // Clear dimension checkboxes
+            document.querySelectorAll('#dimensionsC input[type="checkbox"]').forEach(cb => cb.checked = false);
         }
     </script>
 </body>

@@ -179,19 +179,24 @@ MI1.2,NMC,Team collaboration
 
 ### Mode C: Generate Insights
 
-**Purpose:** Visualize mapping coverage and identify gaps.
+**Purpose:** Visualize mapping coverage and identify gaps per dimension.
 
 **Workflow:**
 1. Upload mapped questions file
 2. (Optional) Upload reference for gap analysis
-3. Click "Generate Insights"
-4. View 4 infographic charts + coverage table
+3. **Select dimensions to visualize** (or leave empty to auto-detect)
+   - Each dimension gets separate charts (no more mixing NMC codes with complexity levels)
+4. Click "Generate Insights"
+5. View organized charts grouped by dimension + coverage tables
 
-**Output:** PNG charts:
-- **Executive Summary** - Key metrics dashboard
-- **Coverage Heatmap** - Topic intensity visualization
-- **Confidence Gauge** - Overall confidence meter
-- **Gap Analysis** - Gaps/Low/Good categorization
+**Output:** PNG charts organized by dimension:
+- **Executive Summary** - Key metrics dashboard (global)
+- **Confidence Gauge** - Overall confidence meter (global)
+- **Coverage Heatmap (per dimension)** - Topic intensity for each selected dimension
+- **Gap Analysis (per dimension)** - Gaps/Low/Good categorization for each dimension
+- **Coverage Tables (per dimension)** - Detailed breakdown with percentages
+
+**Why Dimension Filtering?** Without filtering, charts would mix unrelated attributes (e.g., "Easy" complexity with "MI1.1" NMC code) making visualization meaningless. With filtering, you get clean, meaningful charts for each dimension.
 
 ---
 
@@ -256,6 +261,13 @@ Clean, presentation-ready charts:
 - **Coverage Heatmap**: Blue gradient intensity by question count
 - **Confidence Gauge**: Semicircular meter with needle indicator
 - **Gap Analysis**: 3-panel (Gaps/Low/Good) categorization
+
+### Per-Dimension Insights (V2.4)
+Separate visualizations for each dimension:
+- Select which dimensions to analyze in Mode C
+- No more mixing unrelated attributes (NMC codes vs complexity levels)
+- Each dimension gets its own coverage heatmap and gap analysis
+- Coverage tables organized by dimension for clear reporting
 
 ### Efficient Batch Mode
 - Processes 5-10 questions per API call
@@ -327,6 +339,7 @@ numpy<2
 | V2.1 | Multi-dimension mapping, Blooms & Complexity |
 | V2.2 | Async task panel, notifications |
 | V2.3 | Infographic visualizations, seaborn charts |
+| V2.4 | Per-dimension insights, dimension filtering in Mode C |
 
 ---
 
@@ -337,4 +350,4 @@ numpy<2
 
 ---
 
-*Generated for Inpods Curriculum Mapping System V2.3*
+*Generated for Inpods Curriculum Mapping System V2.4*

@@ -805,16 +805,17 @@ def generate_insights():
     """
     Tool: generate_insight_charts
     Description: Generate visualization charts from mapping data (Mode C)
-    Inputs: {mapped_file, reference_file (optional)}
-    Outputs: {status, charts, summary}
+    Inputs: {mapped_file, reference_file (optional), dimensions (optional)}
+    Outputs: {status, charts, summary, coverage_tables}
 
-    V2.1: Auto-detects dimensions from mapped data columns and only shows
-    relevant reference items in coverage table (fixes gap analysis filtering bug)
+    V2.4: Per-dimension charts - generates separate coverage and gap analysis
+    for each dimension instead of mixing all attributes together.
     """
     try:
         data = request.json
         mapped_file = data.get('mapped_file')
         reference_file = data.get('reference_file')
+        requested_dimensions = data.get('dimensions', [])  # User-selected dimensions
 
         if not mapped_file:
             return jsonify({'error': 'mapped_file required'}), 400
@@ -829,12 +830,17 @@ def generate_insights():
         else:
             mapped_df = pd.read_excel(mapped_path, engine='openpyxl')
 
-        # V2.1: Auto-detect which dimensions are present in mapped data
+        # Auto-detect which dimensions are present in mapped data
         detected_dimensions = detect_mapped_dimensions(mapped_df)
 
-        # Build mapping data structure - now dimension-aware
-        coverage = {}
-        recommendations = []
+        # Use requested dimensions if provided, otherwise use auto-detected
+        if requested_dimensions:
+            # Filter to only dimensions that exist in the data
+            active_dimensions = [d for d in requested_dimensions if d in detected_dimensions]
+            if not active_dimensions:
+                active_dimensions = list(detected_dimensions)
+        else:
+            active_dimensions = list(detected_dimensions)
 
         # Define column mappings for each dimension
         dimension_columns = {
@@ -847,15 +853,22 @@ def generate_insights():
             'complexity': ['mapped_complexity']
         }
 
+        # Build per-dimension coverage data
+        coverage_by_dimension = {dim: {} for dim in active_dimensions}
+        combined_coverage = {}
+        recommendations = []
+
         for idx, row in mapped_df.iterrows():
             # Check all dimension columns that are present
-            for dim, cols in dimension_columns.items():
+            for dim in active_dimensions:
+                cols = dimension_columns.get(dim, [])
                 for col in cols:
                     if col in mapped_df.columns and pd.notna(row.get(col)) and row.get(col):
                         topic = str(row.get(col)).strip()
                         if topic:
-                            coverage[topic] = coverage.get(topic, 0) + 1
-                        break  # Only count once per dimension per row
+                            coverage_by_dimension[dim][topic] = coverage_by_dimension[dim].get(topic, 0) + 1
+                            combined_coverage[topic] = combined_coverage.get(topic, 0) + 1
+                        break
 
             confidence = row.get('confidence_score', 0.0)
             if pd.isna(confidence):
@@ -866,100 +879,96 @@ def generate_insights():
                 'question_num': row.get('Question Number', f'Q{idx+1}')
             })
 
-        mapping_data = {
-            'coverage': coverage,
-            'recommendations': recommendations
-        }
-
-        # Get reference topics and definitions - ONLY for detected dimensions
-        reference_topics = list(coverage.keys())
-        reference_definitions = {}
+        # Get reference data per dimension
+        reference_by_dimension = {dim: {'topics': [], 'definitions': {}} for dim in active_dimensions}
 
         if reference_file:
             reference_path = os.path.join(app.config['UPLOAD_FOLDER'], reference_file)
             if os.path.exists(reference_path):
                 ref_metadata = extract_reference_metadata(reference_path)
 
-                # V2.1: Only include reference items for detected dimensions
-                if 'competency' in detected_dimensions:
-                    for item in ref_metadata.get('competencies', []):
-                        reference_definitions[item['id']] = item['description']
-                        if item['id'] not in reference_topics:
-                            reference_topics.append(item['id'])
+                # Map reference metadata to dimensions
+                dim_ref_mapping = {
+                    'competency': 'competencies',
+                    'objective': 'objectives',
+                    'skill': 'skills',
+                    'nmc_competency': 'nmc_competencies',
+                    'blooms': 'blooms',
+                    'complexity': 'complexity',
+                    'area_topics': 'topics'
+                }
 
-                if 'objective' in detected_dimensions:
-                    for item in ref_metadata.get('objectives', []):
-                        reference_definitions[item['id']] = item['description']
-                        if item['id'] not in reference_topics:
-                            reference_topics.append(item['id'])
+                for dim in active_dimensions:
+                    ref_key = dim_ref_mapping.get(dim)
+                    if ref_key and ref_key in ref_metadata:
+                        items = ref_metadata[ref_key]
+                        for item in items:
+                            if dim == 'area_topics':
+                                topic_id = item.get('topic', '')
+                                desc = item.get('subtopics', '')
+                            else:
+                                topic_id = item.get('id', '')
+                                desc = item.get('description', '')
 
-                if 'skill' in detected_dimensions:
-                    for item in ref_metadata.get('skills', []):
-                        reference_definitions[item['id']] = item['description']
-                        if item['id'] not in reference_topics:
-                            reference_topics.append(item['id'])
+                            if topic_id:
+                                reference_by_dimension[dim]['topics'].append(topic_id)
+                                reference_by_dimension[dim]['definitions'][topic_id] = desc
 
-                if 'nmc_competency' in detected_dimensions:
-                    for item in ref_metadata.get('nmc_competencies', []):
-                        reference_definitions[item['id']] = item['description']
-                        if item['id'] not in reference_topics:
-                            reference_topics.append(item['id'])
+        # Add any topics from coverage that aren't in reference
+        for dim in active_dimensions:
+            for topic in coverage_by_dimension[dim].keys():
+                if topic not in reference_by_dimension[dim]['topics']:
+                    reference_by_dimension[dim]['topics'].append(topic)
 
-                if 'blooms' in detected_dimensions:
-                    for item in ref_metadata.get('blooms', []):
-                        reference_definitions[item['id']] = item['description']
-                        if item['id'] not in reference_topics:
-                            reference_topics.append(item['id'])
+        # Prepare mapping data for visualization engine
+        mapping_data = {
+            'coverage': combined_coverage,
+            'coverage_by_dimension': coverage_by_dimension,
+            'recommendations': recommendations
+        }
 
-                if 'complexity' in detected_dimensions:
-                    for item in ref_metadata.get('complexity', []):
-                        reference_definitions[item['id']] = item['description']
-                        if item['id'] not in reference_topics:
-                            reference_topics.append(item['id'])
+        # Generate charts with per-dimension support
+        charts = viz_engine.generate_all_insights_v2(
+            mapping_data,
+            active_dimensions,
+            reference_by_dimension
+        )
 
-                if 'area_topics' in detected_dimensions:
-                    for item in ref_metadata.get('topics', []):
-                        reference_definitions[item['topic']] = item.get('subtopics', '')
-                        if item['topic'] not in reference_topics:
-                            reference_topics.append(item['topic'])
-
-                    # Also check for standard columns
-                    ref_df = pd.read_csv(reference_path) if reference_path.endswith('.csv') else pd.read_excel(reference_path)
-                    if 'Topic Area (CBME)' in ref_df.columns:
-                        reference_topics = ref_df['Topic Area (CBME)'].dropna().tolist()
-                    elif 'Topic Area' in ref_df.columns:
-                        reference_topics = ref_df['Topic Area'].dropna().tolist()
-
-        # Generate all charts (including coverage_table)
-        charts = viz_engine.generate_all_insights(mapping_data, reference_topics, reference_definitions)
-
-        # Separate coverage_table from charts (it's data, not a file path)
+        # Separate coverage tables from charts (it's data, not file paths)
+        coverage_tables = charts.pop('coverage_tables', {})
         coverage_table = charts.pop('coverage_table', [])
 
         # Return chart URLs
         chart_urls = {}
         for chart_name, filepath in charts.items():
-            filename = os.path.basename(filepath)
-            chart_urls[chart_name] = f'/api/insights/{filename}'
+            if filepath:
+                filename = os.path.basename(filepath)
+                chart_urls[chart_name] = f'/api/insights/{filename}'
 
-        # Calculate gaps count
-        gaps_count = len([t for t in reference_topics if coverage.get(t, 0) == 0])
+        # Calculate total gaps across all dimensions
+        total_gaps = sum(
+            len([t for t in ref['topics'] if coverage_by_dimension[dim].get(t, 0) == 0])
+            for dim, ref in reference_by_dimension.items()
+        )
 
         return jsonify({
             'status': 'success',
             'charts': chart_urls,
             'coverage_table': coverage_table,
-            'detected_dimensions': list(detected_dimensions),
+            'coverage_tables': coverage_tables,
+            'detected_dimensions': active_dimensions,
             'summary': {
                 'total_questions': len(recommendations),
-                'topics_covered': len(coverage),
+                'topics_covered': sum(len(cov) for cov in coverage_by_dimension.values()),
                 'average_confidence': sum(r['confidence'] for r in recommendations) / len(recommendations) if recommendations else 0,
-                'gaps_count': gaps_count,
-                'coverage': coverage
+                'gaps_count': total_gaps,
+                'coverage': combined_coverage
             }
         })
 
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 
