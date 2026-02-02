@@ -329,11 +329,15 @@ class InpodsAgent {
     }
 
     renderCharts(charts) {
+        if (!charts || Object.keys(charts).length === 0) {
+            return `<div class="inpods-charts-error">No charts generated. Try uploading a mapped file with more data.</div>`;
+        }
         const chartHtml = Object.entries(charts).slice(0, 4).map(([key, url]) => {
             const fullWidth = key === 'executive_summary' ? 'full-width' : '';
+            const chartUrl = this.api.getChartUrl(url);
             return `
                 <div class="inpods-chart-thumb ${fullWidth}">
-                    <img src="${this.api.getChartUrl(url)}" alt="${key}">
+                    <img src="${chartUrl}" alt="${key}" onerror="this.parentElement.innerHTML='<div style=\\'padding:20px;color:#999;\\'>Chart failed to load</div>'" style="min-height: 100px;">
                 </div>
             `;
         }).join('');
@@ -1037,6 +1041,8 @@ Would you like to generate charts from this data?`, {
                     this.selectedDimensions
                 );
 
+                console.log('Insights result:', result);
+                console.log('Charts:', result.charts);
                 this.insights = result;
 
                 this.state = AgentState.COMPLETE;

@@ -311,6 +311,16 @@
     grid-column: span 2;
 }
 
+.inpods-charts-error {
+    padding: 20px;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    color: #92400e;
+    text-align: center;
+    margin-top: 12px;
+}
+
 /* =========================================================================
    QUICK ACTIONS (Buttons)
    ========================================================================= */
