@@ -1,0 +1,49 @@
+{
+  "session_id": "cd886431-83df-4447-bf4f-8f0e9c1e7192",
+  "created_at": "2026-01-29T17:46:14.087788",
+  "updated_at": "2026-01-29T17:46:33.624190",
+  "current_step": "upload_questions",
+  "mode": "A",
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "Hello! I'm your Curriculum Mapping Assistant.\n\nI can help you with:\n\u2022 **Map Questions** - Map exam questions to curriculum topics/competencies\n\u2022 **Review Mappings** - Analyze and improve existing mappings\n\u2022 **Generate Insights** - Create visual reports from your data\n\nWhat would you like to do today?",
+      "timestamp": "2026-01-29T17:46:14.087788",
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "Map Questions",
+      "timestamp": "2026-01-29T17:46:21.867549",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "Great! Let's map your questions to the curriculum.\n\n**Mode A: Map Unmapped Questions**\n\nPlease upload your files:\n1. **Question file** - Excel/CSV with your exam questions\n2. **Reference file** - Excel/CSV with curriculum topics/competencies\n\nYou can upload both files, or one at a time.",
+      "timestamp": "2026-01-29T17:46:21.867549",
+      "metadata": {}
+    },
+    {
+      "role": "user",
+      "content": "No Review Mappings",
+      "timestamp": "2026-01-29T17:46:33.624190",
+      "metadata": {}
+    },
+    {
+      "role": "assistant",
+      "content": "I'm waiting for your file upload. Please:\n\n1. Click the upload button to select your file(s)\n2. Or drag and drop your Excel/CSV files here\n\nSupported formats: .xlsx, .xls, .csv, .ods",
+      "timestamp": "2026-01-29T17:46:33.624190",
+      "metadata": {}
+    }
+  ],
+  "files": {},
+  "selected_dimensions": [],
+  "current_dimension": null,
+  "results": {},
+  "insights": {},
+  "last_error": null,
+  "is_processing": false,
+  "processing_progress": 0.0,
+  "processing_message": "",
+  "preferences": {}
+}

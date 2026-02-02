@@ -1018,17 +1018,26 @@ Rules:
                 mask = questions_df['Question Number'].astype(str) == str(question_num)
 
                 # V2.1: Handle multi-dimension mappings
-                # Extract all mapped_* fields from the recommendation
+                # Extract all mapped_* fields from the recommendation (except mapped_id which needs special handling)
                 for key, value in rec.items():
-                    if key.startswith('mapped_') and value:
+                    if key.startswith('mapped_') and key != 'mapped_id' and value:
                         questions_df.loc[mask, key] = value
 
-                # Backward compatibility for single dimension
+                # Handle mapped_id - convert to proper dimension column name
+                if 'mapped_id' in rec and rec['mapped_id']:
+                    # For single-dimension mapping, save to proper column name
+                    if dimension and dimension != 'area_topics':
+                        questions_df.loc[mask, f'mapped_{dimension}'] = rec['mapped_id']
+                    elif not dimension and dimensions:
+                        # Use first dimension from dimensions array
+                        first_dim = dimensions[0] if dimensions else 'competency'
+                        if first_dim != 'area_topics':
+                            questions_df.loc[mask, f'mapped_{first_dim}'] = rec['mapped_id']
+
+                # Backward compatibility for area_topics
                 if dimension == 'area_topics' and 'mapped_topic' not in rec:
                     questions_df.loc[mask, 'mapped_topic'] = rec.get('mapped_topic', '')
                     questions_df.loc[mask, 'mapped_subtopic'] = rec.get('mapped_subtopic', '')
-                elif dimension and dimension != 'area_topics' and f'mapped_{dimension}' not in rec:
-                    questions_df.loc[mask, f'mapped_{dimension}'] = rec.get('mapped_id', rec.get(f'mapped_{dimension}', ''))
 
                 questions_df.loc[mask, 'confidence_score'] = rec.get('confidence', 0.0)
                 questions_df.loc[mask, 'justification'] = rec.get('justification', '')

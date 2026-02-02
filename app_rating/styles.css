@@ -1,0 +1,62 @@
+/* Mode B Specific Styles - Rating Validation */
+
+/* Rating Summary */
+.rating-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.rating-stat {
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.rating-stat.correct {
+    background: #d1fae5;
+}
+
+.rating-stat.partial {
+    background: #fef3c7;
+}
+
+.rating-stat.incorrect {
+    background: #fee2e2;
+}
+
+.rating-stat .stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.rating-stat .stat-label {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 5px;
+}
+
+/* Rating badge overrides for table */
+.rating-badge.rating-correct {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.rating-badge.rating-partial {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.rating-badge.rating-incorrect {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .rating-summary {
+        grid-template-columns: 1fr;
+    }
+}

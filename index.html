@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inpods Curriculum Mapping - App Launcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            color: #1e293b;
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 18px;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: #00a8cc;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            border-top: 5px solid transparent;
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .app-card.mapping {
+            border-top-color: #00a8cc;
+        }
+
+        .app-card.rating {
+            border-top-color: #00d4aa;
+        }
+
+        .app-card.insights {
+            border-top-color: #ffa600;
+        }
+
+        .app-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .app-label {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .app-card.mapping .app-label {
+            background: #e0f7fa;
+            color: #006064;
+        }
+
+        .app-card.rating .app-label {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .app-card.insights .app-label {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .app-card h3 {
+            color: #1e293b;
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .app-card p {
+            color: #64748b;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .combined-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .combined-link a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .combined-link a:hover {
+            color: #00a8cc;
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        @media (max-width: 900px) {
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Inpods Curriculum Mapping</h1>
+            <p class="subtitle">Choose a tool to get started</p>
+            <span class="version-badge">V2.4</span>
+        </div>
+
+        <div class="apps-grid">
+            <a href="app_mapping/index.html" class="app-card mapping">
+                <div class="app-icon">&#128269;</div>
+                <span class="app-label">Mode A</span>
+                <h3>Question Mapping</h3>
+                <p>Upload questions without mappings and get AI-recommended curriculum mappings with confidence scores.</p>
+            </a>
+
+            <a href="app_rating/index.html" class="app-card rating">
+                <div class="app-icon">&#9733;</div>
+                <span class="app-label">Mode B</span>
+                <h3>Mapping Validator</h3>
+                <p>Upload pre-mapped questions to evaluate accuracy and get alternative recommendations where needed.</p>
+            </a>
+
+            <a href="app_insights/index.html" class="app-card insights">
+                <div class="app-icon">&#128202;</div>
+                <span class="app-label">Mode C</span>
+                <h3>Curriculum Insights</h3>
+                <p>Visualize mapping distribution, confidence scores, and curriculum coverage gaps.</p>
+            </a>
+        </div>
+
+        <div class="combined-link">
+            <a href="frontend_v2/index.html">Or use the combined app with all modes &rarr;</a>
+        </div>
+
+        <div class="footer">
+            <p>Backend runs on localhost:5001 | Start with: cd backend_v2 && python app.py</p>
+        </div>
+    </div>
+</body>
+</html>

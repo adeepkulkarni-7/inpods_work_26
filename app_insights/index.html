@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inpods Curriculum Insights</title>
+    <link rel="stylesheet" href="../shared/common.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Inpods Curriculum Insights</h1>
+            <span class="version-badge">V2.4</span>
+        </div>
+        <p class="subtitle">Visualize mapping distribution, confidence scores, and curriculum coverage gaps</p>
+
+        <div id="status" class="status"></div>
+
+        <!-- Task Notification Panel -->
+        <div id="taskPanel" class="task-panel collapsed">
+            <div class="task-panel-header" onclick="toggleTaskPanel()">
+                <span class="task-panel-title">
+                    <span class="task-icon" id="taskSpinner">&#9881;</span> Tasks
+                    <span class="task-count" id="activeTaskCount">0</span>
+                </span>
+                <span id="taskPanelToggleIcon">&#9650;</span>
+            </div>
+            <div class="task-panel-body" id="taskPanelBody">
+                <div class="task-list" id="taskList">
+                    <div class="task-empty">No tasks yet</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="card" id="uploadSection">
+            <div class="section-title">Generate Curriculum Insights</div>
+
+            <div class="form-group">
+                <label>Mapped Questions File</label>
+                <input type="file" id="mappedFile" accept=".csv,.xlsx,.xls,.ods">
+            </div>
+
+            <div class="form-group">
+                <label>Reference Sheet CSV (optional, for gap analysis)</label>
+                <input type="file" id="referenceFile" accept=".csv,.xlsx,.xls">
+            </div>
+
+            <div class="form-group">
+                <label>Visualize Dimensions (select one or more)</label>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 10px;">
+                    Select which dimensions to analyze. Separate charts will be generated for each dimension.
+                </p>
+                <div class="dimension-checkboxes" id="dimensions">
+                    <label>
+                        <input type="checkbox" value="competency">
+                        <span class="dim-label">Competency</span>
+                        <span class="dim-code">C1-C6</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="objective">
+                        <span class="dim-label">Objective</span>
+                        <span class="dim-code">O1-O6</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="skill">
+                        <span class="dim-label">Skill</span>
+                        <span class="dim-code">S1-S5</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="nmc_competency">
+                        <span class="dim-label">NMC Competency</span>
+                        <span class="dim-code">MI1-MI3</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="area_topics">
+                        <span class="dim-label">Topic Areas</span>
+                        <span class="dim-code">Topic/Subtopic</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="blooms">
+                        <span class="dim-label">Blooms Level</span>
+                        <span class="dim-code">KL1-KL6</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="complexity">
+                        <span class="dim-label">Complexity</span>
+                        <span class="dim-code">Easy/Med/Hard</span>
+                    </label>
+                </div>
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 8px;">
+                    Leave empty to auto-detect dimensions from file
+                </p>
+            </div>
+
+            <button onclick="generateInsights()">Generate Insights</button>
+        </div>
+
+        <!-- Loading Section -->
+        <div class="card hidden" id="loading">
+            <div class="spinner"></div>
+            <p style="text-align: center; color: #64748b;">Generating visualizations...</p>
+        </div>
+
+        <!-- Insights Section -->
+        <div class="card hidden" id="insightsSection">
+            <div class="section-title">Curriculum Mapping Insights</div>
+
+            <div class="summary-stats" id="summaryStats">
+                <!-- Populated by JS -->
+            </div>
+
+            <div class="charts-grid" id="chartsGrid">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Coverage Table -->
+            <div class="coverage-table-section" id="coverageTableSection">
+                <h4>Coverage Analysis: Code - Definition - Questions - Percentage</h4>
+                <div class="table-wrapper">
+                    <table class="coverage-table" id="coverageTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Code</th>
+                                <th>Definition</th>
+                                <th style="width: 100px; text-align: center;">Questions</th>
+                                <th style="width: 120px; text-align: center;">Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coverageTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="secondary" onclick="startOver()">Start Over</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../shared/utils.js"></script>
+    <script src="../shared/task-manager.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

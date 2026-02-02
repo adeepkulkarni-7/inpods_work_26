@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inpods Question Mapping</title>
+    <link rel="stylesheet" href="../shared/common.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Inpods Question Mapping</h1>
+            <span class="version-badge">V2.4</span>
+        </div>
+        <p class="subtitle">Map unmapped questions to curriculum dimensions with AI-powered recommendations</p>
+
+        <div id="status" class="status"></div>
+
+        <!-- Task Notification Panel -->
+        <div id="taskPanel" class="task-panel collapsed">
+            <div class="task-panel-header" onclick="toggleTaskPanel()">
+                <span class="task-panel-title">
+                    <span class="task-icon" id="taskSpinner">&#9881;</span> Tasks
+                    <span class="task-count" id="activeTaskCount">0</span>
+                </span>
+                <span id="taskPanelToggleIcon">&#9650;</span>
+            </div>
+            <div class="task-panel-body" id="taskPanelBody">
+                <div class="task-list" id="taskList">
+                    <div class="task-empty">No tasks yet</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="card" id="uploadSection">
+            <div class="section-title">Upload Files for Mapping</div>
+
+            <div class="form-group">
+                <label>Question Bank CSV (unmapped)</label>
+                <input type="file" id="questionFile" accept=".csv,.xlsx,.xls">
+            </div>
+
+            <div class="form-group">
+                <label>Reference Sheet CSV</label>
+                <input type="file" id="referenceFile" accept=".csv,.xlsx,.xls">
+            </div>
+
+            <div class="form-group">
+                <label>Map To Dimensions (select one or more)</label>
+                <div class="dimension-checkboxes" id="dimensions">
+                    <label>
+                        <input type="checkbox" value="competency" checked>
+                        <span class="dim-label">Competency</span>
+                        <span class="dim-code">C1-C6</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="objective">
+                        <span class="dim-label">Objective</span>
+                        <span class="dim-code">O1-O6</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="skill">
+                        <span class="dim-label">Skill</span>
+                        <span class="dim-code">S1-S5</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="nmc_competency">
+                        <span class="dim-label">NMC Competency</span>
+                        <span class="dim-code">MI1-MI3</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="area_topics">
+                        <span class="dim-label">Topic Areas</span>
+                        <span class="dim-code">Topic/Subtopic</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="blooms">
+                        <span class="dim-label">Blooms Level</span>
+                        <span class="dim-code">KL1-KL6</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" value="complexity">
+                        <span class="dim-label">Complexity</span>
+                        <span class="dim-code">Easy/Med/Hard</span>
+                    </label>
+                </div>
+                <div class="dimension-validation-error" id="dimensionError">Please select at least one dimension to map</div>
+            </div>
+
+            <div class="form-group efficient-mode-box">
+                <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <input type="checkbox" id="efficientMode" checked style="width: 18px; height: 18px;">
+                    <span>Use Efficient Mode (Recommended)</span>
+                </label>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 10px;">
+                    Processes questions in batches to reduce API costs by 60-70%.
+                </p>
+                <div id="batchSizeGroup">
+                    <label style="font-size: 13px;">Batch Size:</label>
+                    <select id="batchSize" style="width: auto; padding: 6px 10px;">
+                        <option value="3">3 questions per batch</option>
+                        <option value="5" selected>5 questions per batch (Recommended)</option>
+                        <option value="7">7 questions per batch</option>
+                        <option value="10">10 questions per batch</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="uploadAndPreview()">Upload & Preview</button>
+        </div>
+
+        <!-- File Overview Section -->
+        <div class="card hidden" id="fileOverview">
+            <div class="section-title">File Overview</div>
+            <p style="color: #64748b; margin-bottom: 20px;">Review the uploaded files before running the audit.</p>
+
+            <!-- Question File Overview -->
+            <div class="overview-section">
+                <h4 style="color: #1e293b; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 20px;">&#128196;</span> Question Bank
+                </h4>
+                <div id="questionOverview" class="overview-content">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Reference File Overview -->
+            <div class="overview-section" style="margin-top: 25px;">
+                <h4 style="color: #1e293b; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 20px;">&#128218;</span> Curriculum Reference
+                </h4>
+                <div id="referenceOverview" class="overview-content">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="actions" style="margin-top: 25px;">
+                <button onclick="runAudit()">Run Audit</button>
+                <button class="secondary" onclick="backToUpload()">Change Files</button>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div class="card hidden" id="loading">
+            <div class="spinner"></div>
+            <p style="text-align: center; color: #64748b;">Running audit... This may take a few minutes depending on the number of questions.</p>
+        </div>
+
+        <!-- Recommendations Section -->
+        <div class="card hidden" id="recommendationsSection">
+            <div class="section-title">Review Recommendations</div>
+
+            <!-- Token Usage Display -->
+            <div class="token-usage" id="tokenUsage">
+                <span class="token-usage-title">API Token Usage</span>
+                <div class="token-stat">
+                    <span class="token-stat-value" id="promptTokens">0</span>
+                    <span class="token-stat-label">Prompt</span>
+                </div>
+                <div class="token-stat">
+                    <span class="token-stat-value" id="completionTokens">0</span>
+                    <span class="token-stat-label">Completion</span>
+                </div>
+                <div class="token-stat total">
+                    <span class="token-stat-value" id="totalTokens">0</span>
+                    <span class="token-stat-label">Total</span>
+                </div>
+                <div class="token-stat api-calls">
+                    <span class="token-stat-value" id="apiCalls">0</span>
+                    <span class="token-stat-label">API Calls</span>
+                </div>
+            </div>
+
+            <div class="selection-info">
+                <span id="selectionCount">0</span> of <span id="totalCount">0</span> recommendations selected
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <button class="small" onclick="selectAll()">Select All</button>
+                <button class="small secondary" onclick="selectNone()">Select None</button>
+                <button class="small" onclick="selectHighConfidence()">Select High Confidence (&ge;0.85)</button>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="recommendations-table">
+                    <thead>
+                        <tr id="tableHeader">
+                            <th style="width: 40px;">
+                                <input type="checkbox" class="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                            </th>
+                            <th style="width: 80px;">Q#</th>
+                            <th style="width: 350px;">Question (Full Text)</th>
+                            <th style="width: 120px;">Mapping Code</th>
+                            <th style="width: 280px;">Definition</th>
+                            <th style="width: 100px;">Confidence</th>
+                            <th>Justification</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recommendationsBody"></tbody>
+                </table>
+            </div>
+
+            <div class="actions">
+                <button class="success" onclick="saveAndDownload()">Save & Download</button>
+                <button class="secondary" onclick="startOver()">Start Over</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Modal -->
+    <div id="saveModal" class="modal-overlay hidden">
+        <div class="modal">
+            <h3>Save & Download</h3>
+            <div class="form-group">
+                <label>Name for this mapping set</label>
+                <input type="text" id="saveName" placeholder="Enter a name for this mapping set">
+            </div>
+            <p style="font-size: 13px; color: #64748b; margin-top: 10px;">
+                This will save to your library AND download an Excel file.
+            </p>
+            <div class="modal-actions">
+                <button class="secondary" onclick="closeSaveModal()">Cancel</button>
+                <button onclick="confirmSaveAndDownload()">Save & Download</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../shared/utils.js"></script>
+    <script src="../shared/task-manager.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

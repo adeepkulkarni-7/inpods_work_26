@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inpods Agent - Test Runner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            color: #569cd6;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #808080;
+            font-size: 14px;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #1177bb;
+        }
+
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .summary {
+            background: #252526;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .summary.visible {
+            display: block;
+        }
+
+        .summary-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 10px;
+        }
+
+        .stat {
+            font-size: 18px;
+        }
+
+        .stat.passed {
+            color: #4ec9b0;
+        }
+
+        .stat.failed {
+            color: #f14c4c;
+        }
+
+        .stat.total {
+            color: #dcdcaa;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .progress-fill.success {
+            background: #4ec9b0;
+        }
+
+        .progress-fill.failure {
+            background: #f14c4c;
+        }
+
+        .output {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .test-group {
+            margin-bottom: 15px;
+        }
+
+        .test-group-header {
+            color: #c586c0;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .test-result {
+            padding: 6px 0;
+            padding-left: 20px;
+            border-left: 3px solid transparent;
+            margin-bottom: 4px;
+        }
+
+        .test-result.pass {
+            border-left-color: #4ec9b0;
+            color: #4ec9b0;
+        }
+
+        .test-result.fail {
+            border-left-color: #f14c4c;
+            color: #f14c4c;
+        }
+
+        .test-result .name {
+            color: #d4d4d4;
+        }
+
+        .test-result .duration {
+            color: #808080;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .test-result .error {
+            color: #f14c4c;
+            font-size: 12px;
+            margin-top: 4px;
+            padding-left: 20px;
+        }
+
+        .icon {
+            margin-right: 8px;
+        }
+
+        .running {
+            color: #dcdcaa;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧪 Inpods Agent Test Suite</h1>
+        <p class="subtitle">17 test cases for the conversational agent</p>
+    </div>
+
+    <div class="controls">
+        <button id="runBtn" onclick="runTests()">Run All Tests</button>
+        <button onclick="clearOutput()">Clear Output</button>
+    </div>
+
+    <div id="summary" class="summary">
+        <div class="summary-stats">
+            <span class="stat passed">✓ <span id="passedCount">0</span> passed</span>
+            <span class="stat failed">✗ <span id="failedCount">0</span> failed</span>
+            <span class="stat total">Total: <span id="totalCount">0</span></span>
+        </div>
+        <div class="progress-bar">
+            <div id="progressFill" class="progress-fill success" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <div id="output" class="output">
+        <p style="color: #808080;">Click "Run All Tests" to start...</p>
+    </div>
+
+    <script src="agent.test.js"></script>
+    <script>
+        const outputDiv = document.getElementById('output');
+        const summaryDiv = document.getElementById('summary');
+        const runBtn = document.getElementById('runBtn');
+
+        function clearOutput() {
+            outputDiv.innerHTML = '<p style="color: #808080;">Click "Run All Tests" to start...</p>';
+            summaryDiv.classList.remove('visible');
+        }
+
+        function log(message, type = 'info') {
+            const p = document.createElement('div');
+            p.className = `test-result ${type}`;
+
+            if (type === 'pass') {
+                p.innerHTML = `<span class="icon">✓</span><span class="name">${message}</span>`;
+            } else if (type === 'fail') {
+                p.innerHTML = `<span class="icon">✗</span><span class="name">${message}</span>`;
+            } else if (type === 'group') {
+                p.className = 'test-group-header';
+                p.textContent = message;
+            } else {
+                p.style.color = '#808080';
+                p.textContent = message;
+            }
+
+            outputDiv.appendChild(p);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        }
+
+        function updateSummary(passed, failed) {
+            document.getElementById('passedCount').textContent = passed;
+            document.getElementById('failedCount').textContent = failed;
+            document.getElementById('totalCount').textContent = passed + failed;
+
+            const total = passed + failed;
+            const percentage = total > 0 ? (passed / total) * 100 : 0;
+
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = percentage + '%';
+            progressFill.className = 'progress-fill ' + (failed > 0 ? 'failure' : 'success');
+
+            summaryDiv.classList.add('visible');
+        }
+
+        async function runTests() {
+            outputDiv.innerHTML = '';
+            runBtn.disabled = true;
+            runBtn.textContent = 'Running...';
+
+            log('🧪 Starting Inpods Agent Test Suite...', 'info');
+            log('');
+
+            try {
+                // Override console.log to capture test output
+                const originalLog = console.log;
+                const originalError = console.error;
+
+                console.log = function(...args) {
+                    const msg = args.join(' ');
+                    if (msg.startsWith('✓')) {
+                        log(msg.substring(2), 'pass');
+                    } else if (msg.includes('Tests')) {
+                        // Group header
+                    } else if (msg.startsWith('\n📁') || msg.startsWith('\n🔍') ||
+                               msg.startsWith('\n🗺️') || msg.startsWith('\n⭐') ||
+                               msg.startsWith('\n📊') || msg.startsWith('\n💬')) {
+                        log(msg.trim(), 'group');
+                    }
+                    originalLog.apply(console, args);
+                };
+
+                console.error = function(...args) {
+                    const msg = args.join(' ');
+                    if (msg.startsWith('✗')) {
+                        const parts = msg.split(':');
+                        log(parts[0].substring(2), 'fail');
+                        if (parts.length > 1) {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'test-result';
+                            errorDiv.innerHTML = `<div class="error">Error: ${parts.slice(1).join(':')}</div>`;
+                            outputDiv.appendChild(errorDiv);
+                        }
+                    }
+                    originalError.apply(console, args);
+                };
+
+                const result = await runAgentTests();
+
+                console.log = originalLog;
+                console.error = originalError;
+
+                log('');
+                log('='.repeat(50), 'info');
+                updateSummary(result.passed, result.failed);
+
+                if (result.failed === 0) {
+                    log('All tests passed! ✨', 'info');
+                } else {
+                    log(`${result.failed} test(s) failed.`, 'info');
+                }
+
+            } catch (error) {
+                log(`Error running tests: ${error.message}`, 'fail');
+            }
+
+            runBtn.disabled = false;
+            runBtn.textContent = 'Run All Tests';
+        }
+    </script>
+</body>
+</html>

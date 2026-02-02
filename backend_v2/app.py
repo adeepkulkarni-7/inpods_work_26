@@ -504,6 +504,19 @@ def apply_and_save():
             dimensions=dimensions  # V2.1: Pass dimensions array
         )
 
+        # 1b. Also save a CSV version to uploads folder for subsequent operations (validation/insights)
+        # This allows the agent to chain Mode A -> Mode B -> Mode C
+        mapped_csv_filename = f'mapped_{os.path.basename(question_file).rsplit(".", 1)[0]}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        mapped_csv_path = os.path.join(app.config['UPLOAD_FOLDER'], mapped_csv_filename)
+
+        # Read the Excel we just created and save as CSV
+        try:
+            mapped_df = pd.read_excel(output_path, engine='openpyxl')
+            mapped_df.to_csv(mapped_csv_path, index=False)
+        except Exception as csv_err:
+            print(f"Warning: Could not save CSV copy: {csv_err}")
+            mapped_csv_filename = None
+
         # 2. Save to library (only selected recommendations)
         selected_recommendations = [recommendations[i] for i in selected_indices if i < len(recommendations)]
 
@@ -515,13 +528,19 @@ def apply_and_save():
             source_file=question_file
         )
 
-        return jsonify({
+        response_data = {
             'status': 'success',
             'library_id': library_result['id'],
             'library_name': library_result['name'],
             'output_file': os.path.basename(output_path),
             'download_url': f'/api/download/{os.path.basename(output_path)}'
-        })
+        }
+
+        # Include the saved CSV filename for chaining operations
+        if mapped_csv_filename:
+            response_data['saved_file'] = mapped_csv_filename
+
+        return jsonify(response_data)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -746,6 +765,17 @@ def apply_corrections_and_save():
             dimensions=dimensions  # V2.1: Pass dimensions array
         )
 
+        # 1b. Also save a CSV version to uploads folder for subsequent operations (insights)
+        corrected_csv_filename = f'corrected_{os.path.basename(mapped_file).rsplit(".", 1)[0]}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        corrected_csv_path = os.path.join(app.config['UPLOAD_FOLDER'], corrected_csv_filename)
+
+        try:
+            corrected_df = pd.read_excel(output_path, engine='openpyxl')
+            corrected_df.to_csv(corrected_csv_path, index=False)
+        except Exception as csv_err:
+            print(f"Warning: Could not save CSV copy: {csv_err}")
+            corrected_csv_filename = None
+
         # 2. Save to library (only selected corrections)
         selected_recommendations = [recommendations[i] for i in selected_indices if i < len(recommendations)]
 
@@ -757,13 +787,19 @@ def apply_corrections_and_save():
             source_file=mapped_file
         )
 
-        return jsonify({
+        response_data = {
             'status': 'success',
             'library_id': library_result['id'],
             'library_name': library_result['name'],
             'output_file': os.path.basename(output_path),
             'download_url': f'/api/download/{os.path.basename(output_path)}'
-        })
+        }
+
+        # Include the saved CSV filename for chaining operations
+        if corrected_csv_filename:
+            response_data['saved_file'] = corrected_csv_filename
+
+        return jsonify(response_data)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -796,6 +832,12 @@ def detect_mapped_dimensions(df):
         detected.add('blooms')
     if any('mapped_complexity' in c or 'complexity' in c for c in columns):
         detected.add('complexity')
+
+    # Fallback: if we have mapped_id column but no specific dimension detected,
+    # try to infer from confidence_score presence (indicates mapping was done)
+    if not detected and any('mapped_id' in c for c in columns):
+        # Default to competency as the most common single-dimension mapping
+        detected.add('competency')
 
     return detected
 
@@ -843,14 +885,15 @@ def generate_insights():
             active_dimensions = list(detected_dimensions)
 
         # Define column mappings for each dimension
+        # Include 'mapped_id' as fallback for single-dimension mappings
         dimension_columns = {
-            'competency': ['mapped_competency', 'competency_id'],
-            'objective': ['mapped_objective', 'objective_id', 'Objective'],
-            'skill': ['mapped_skill', 'skill_id'],
-            'nmc_competency': ['mapped_nmc_competency', 'nmc_competency_id', 'mapped_nmc'],
+            'competency': ['mapped_competency', 'competency_id', 'mapped_id'],
+            'objective': ['mapped_objective', 'objective_id', 'Objective', 'mapped_id'],
+            'skill': ['mapped_skill', 'skill_id', 'mapped_id'],
+            'nmc_competency': ['mapped_nmc_competency', 'nmc_competency_id', 'mapped_nmc', 'mapped_id'],
             'area_topics': ['mapped_topic'],
-            'blooms': ['mapped_blooms'],
-            'complexity': ['mapped_complexity']
+            'blooms': ['mapped_blooms', 'mapped_id'],
+            'complexity': ['mapped_complexity', 'mapped_id']
         }
 
         # Build per-dimension coverage data

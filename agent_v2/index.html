@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inpods Curriculum Mapping Agent</title>
+    <link rel="stylesheet" href="agent.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .demo-container {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .demo-info {
+            color: white;
+            max-width: 400px;
+        }
+
+        .demo-info h1 {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+
+        .demo-info p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .demo-info ul {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .demo-info li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .demo-info li::before {
+            content: '✓';
+            background: rgba(255,255,255,0.2);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .demo-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .demo-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .demo-links a:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .agent-wrapper {
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 900px) {
+            .demo-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .demo-info {
+                text-align: center;
+                max-width: 100%;
+            }
+
+            .demo-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-info">
+            <h1>Curriculum Mapping Agent</h1>
+            <p>An intelligent conversational assistant that helps you map exam questions to curriculum dimensions, validate existing mappings, and generate insights.</p>
+
+            <ul>
+                <li>Upload questions & reference files</li>
+                <li>Auto-detect mapped vs unmapped</li>
+                <li>Map to Competency, Blooms, NMC, etc.</li>
+                <li>Validate existing mappings</li>
+                <li>Generate visual charts</li>
+                <li>Export to Excel</li>
+            </ul>
+
+            <div class="demo-links">
+                <a href="../index.html">← Back to Launcher</a>
+                <a href="tests/test-runner.html">Run Tests</a>
+                <a href="README.md">Documentation</a>
+            </div>
+        </div>
+
+        <div class="agent-wrapper">
+            <div id="agent-container"></div>
+        </div>
+    </div>
+
+    <script src="api-client.js"></script>
+    <script src="agent.js"></script>
+    <script>
+        // Initialize the agent
+        const agent = InpodsAgent.init({
+            container: '#agent-container',
+            apiUrl: 'http://localhost:5001',
+            mode: 'embedded',
+            onComplete: (result) => {
+                console.log('Agent completed:', result);
+            }
+        });
+
+        // Make agent available globally for debugging
+        window.agent = agent;
+    </script>
+</body>
+</html>
