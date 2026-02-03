@@ -69,7 +69,10 @@ class InpodsAgent {
     init() {
         this.render();
         this.bindEvents();
-        this.addAgentMessage(this.getGreeting());
+        this.addAgentMessage(this.getGreeting(), {
+            fileUpload: { type: 'question' }
+        });
+        this.state = AgentState.AWAIT_QUESTION_FILE;
     }
 
     render() {
@@ -148,6 +151,29 @@ class InpodsAgent {
         this.messagesEl.addEventListener('change', (e) => {
             if (e.target.classList.contains('inpods-file-input')) {
                 this.handleFileSelect(e.target.files[0], e.target.dataset.type);
+            }
+        });
+
+        // Drag and drop support
+        this.messagesEl.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const dropzone = e.target.closest('.inpods-file-dropzone');
+            if (dropzone) dropzone.classList.add('dragover');
+        });
+
+        this.messagesEl.addEventListener('dragleave', (e) => {
+            const dropzone = e.target.closest('.inpods-file-dropzone');
+            if (dropzone) dropzone.classList.remove('dragover');
+        });
+
+        this.messagesEl.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const dropzone = e.target.closest('.inpods-file-dropzone');
+            if (dropzone) {
+                dropzone.classList.remove('dragover');
+                const type = dropzone.dataset.type;
+                const file = e.dataTransfer?.files?.[0];
+                if (file) this.handleFileSelect(file, type);
             }
         });
     }
@@ -430,14 +456,14 @@ class InpodsAgent {
     // =========================================================================
 
     getGreeting() {
-        return `Hi! I'm the Inpods Curriculum Mapping Assistant. 👋
+        return `Welcome to Inpods Curriculum Mapping! 👋
 
-I can help you:
-• <strong>Map</strong> unmapped questions to curriculum
-• <strong>Validate</strong> existing mappings
-• <strong>Generate</strong> visual insights
+I'll help you:
+• <strong>Map</strong> questions to competencies, objectives, or skills
+• <strong>Validate</strong> existing mappings and suggest corrections
+• <strong>Generate</strong> visual coverage reports and charts
 
-To get started, please upload your <strong>question file</strong>.`;
+<strong>Quick start:</strong> Upload your question file (CSV or Excel) to begin.`;
     }
 
     // =========================================================================
