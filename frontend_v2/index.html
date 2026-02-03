@@ -1230,7 +1230,7 @@
                         </div>
 
                         <div class="actions" style="margin-top: 25px;">
-                            <button onclick="runAuditA()">Run Audit</button>
+                            <button onclick="runAuditA()">Map Questions</button>
                             <button class="secondary" onclick="backToUploadA()">Change Files</button>
                         </div>
                     </div>
@@ -1238,7 +1238,7 @@
                     <!-- Loading State -->
                     <div class="card hidden" id="loadingA">
                         <div class="spinner"></div>
-                        <p>Running audit... This may take a few minutes depending on the number of questions.</p>
+                        <p>Mapping questions... This may take a few minutes depending on the number of questions.</p>
                     </div>
 
                     <!-- Recommendations -->
@@ -1428,6 +1428,7 @@
 
                         <div style="margin-bottom: 15px;">
                             <button class="small" onclick="selectAllIncorrectB()">Select All Incorrect</button>
+                            <button class="small" onclick="selectAllPartialB()">Select All Partial</button>
                             <button class="small secondary" onclick="selectNoneB()">Select None</button>
                         </div>
 
@@ -2710,6 +2711,13 @@
         function selectAllIncorrectB() {
             document.querySelectorAll('#ratingsBodyB input[type="checkbox"]').forEach((cb, i) => {
                 cb.checked = recommendationsB[i].rating === 'incorrect';
+            });
+            updateSelectionB();
+        }
+
+        function selectAllPartialB() {
+            document.querySelectorAll('#ratingsBodyB input[type="checkbox"]').forEach((cb, i) => {
+                cb.checked = recommendationsB[i].rating === 'partially_correct';
             });
             updateSelectionB();
         }
