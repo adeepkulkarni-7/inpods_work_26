@@ -329,15 +329,20 @@ class InpodsAgent {
     }
 
     renderCharts(charts) {
+        console.log('renderCharts called with:', charts);
         if (!charts || Object.keys(charts).length === 0) {
+            console.warn('No charts to render');
             return `<div class="inpods-charts-error">No charts generated. Try uploading a mapped file with more data.</div>`;
         }
-        const chartHtml = Object.entries(charts).slice(0, 4).map(([key, url]) => {
+        const chartEntries = Object.entries(charts).filter(([key, url]) => url && !key.includes('table'));
+        console.log('Filtered chart entries:', chartEntries);
+        const chartHtml = chartEntries.slice(0, 4).map(([key, url]) => {
             const fullWidth = key === 'executive_summary' ? 'full-width' : '';
             const chartUrl = this.api.getChartUrl(url);
+            console.log(`Chart ${key}: ${chartUrl}`);
             return `
                 <div class="inpods-chart-thumb ${fullWidth}">
-                    <img src="${chartUrl}" alt="${key}" onerror="this.parentElement.innerHTML='<div style=\\'padding:20px;color:#999;\\'>Chart failed to load</div>'" style="min-height: 100px;">
+                    <img src="${chartUrl}" alt="${key}" onerror="console.error('Failed to load chart:', '${chartUrl}'); this.parentElement.innerHTML='<div style=\\'padding:20px;color:#999;\\'>Chart failed to load</div>'" style="min-height: 100px;">
                 </div>
             `;
         }).join('');
@@ -932,8 +937,8 @@ Would you like to generate charts from this data?`, {
                 name
             );
 
-            // Now use the saved file for validation
-            const mappedFileName = saveResult.saved_file || saveResult.filename;
+            // Now use the saved file for validation (saved_file is CSV in uploads folder)
+            const mappedFileName = saveResult.saved_file || saveResult.output_file;
 
             this.updateLastMessage(`Validating mappings...`, { progress: { percent: 40, text: 'Analyzing each question...' } });
 
@@ -1029,8 +1034,8 @@ Would you like to generate charts from this data?`, {
                     name
                 );
 
-                // Use the saved mapped file for insights
-                const mappedFileName = saveResult.saved_file || saveResult.filename;
+                // Use the saved mapped file for insights (saved_file is CSV in uploads folder)
+                const mappedFileName = saveResult.saved_file || saveResult.output_file;
                 this.savedMappedFile = mappedFileName;
 
                 this.updateLastMessage(`Generating charts...`, { progress: { percent: 50, text: 'Creating visualizations...' } });

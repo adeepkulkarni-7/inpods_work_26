@@ -862,7 +862,13 @@ def generate_insights():
         if not mapped_file:
             return jsonify({'error': 'mapped_file required'}), 400
 
+        # Check both UPLOAD_FOLDER and OUTPUT_FOLDER for the mapped file
         mapped_path = os.path.join(app.config['UPLOAD_FOLDER'], mapped_file)
+        if not os.path.exists(mapped_path):
+            # Try OUTPUT_FOLDER as fallback (for Excel files from apply-and-save)
+            mapped_path = os.path.join(app.config['OUTPUT_FOLDER'], mapped_file)
+            if not os.path.exists(mapped_path):
+                return jsonify({'error': f'Mapped file not found: {mapped_file}'}), 404
 
         # Load mapped data
         if mapped_path.endswith('.csv'):
