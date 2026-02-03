@@ -334,19 +334,56 @@ class InpodsAgent {
             console.warn('No charts to render');
             return `<div class="inpods-charts-error">No charts generated. Try uploading a mapped file with more data.</div>`;
         }
+
         const chartEntries = Object.entries(charts).filter(([key, url]) => url && !key.includes('table'));
         console.log('Filtered chart entries:', chartEntries);
+
+        if (chartEntries.length === 0) {
+            return `<div class="inpods-charts-error">No chart images available.</div>`;
+        }
+
+        // Sort to show executive_summary first
+        chartEntries.sort((a, b) => {
+            if (a[0] === 'executive_summary') return -1;
+            if (b[0] === 'executive_summary') return 1;
+            return 0;
+        });
+
         const chartHtml = chartEntries.slice(0, 4).map(([key, url]) => {
             const fullWidth = key === 'executive_summary' ? 'full-width' : '';
             const chartUrl = this.api.getChartUrl(url);
+            const chartLabel = this.formatChartLabel(key);
             console.log(`Chart ${key}: ${chartUrl}`);
             return `
-                <div class="inpods-chart-thumb ${fullWidth}">
-                    <img src="${chartUrl}" alt="${key}" onerror="console.error('Failed to load chart:', '${chartUrl}'); this.parentElement.innerHTML='<div style=\\'padding:20px;color:#999;\\'>Chart failed to load</div>'" style="min-height: 100px;">
+                <div class="inpods-chart-thumb ${fullWidth}" data-chart-url="${chartUrl}" onclick="window.open('${chartUrl}', '_blank')">
+                    <div class="inpods-chart-loading">Loading...</div>
+                    <img src="${chartUrl}" alt="${chartLabel}"
+                         onload="this.previousElementSibling.style.display='none'; this.style.display='block';"
+                         onerror="console.error('Failed to load:', '${chartUrl}'); this.previousElementSibling.innerHTML='⚠️ Failed to load';"
+                         style="display:none; min-height: 80px; cursor: pointer;">
+                    <div class="inpods-chart-label">${chartLabel}</div>
                 </div>
             `;
         }).join('');
-        return `<div class="inpods-charts-grid">${chartHtml}</div>`;
+
+        return `
+            <div class="inpods-charts-grid">${chartHtml}</div>
+            <div class="inpods-charts-hint">Click any chart to view full size</div>
+        `;
+    }
+
+    formatChartLabel(key) {
+        const labels = {
+            'executive_summary': 'Summary',
+            'confidence_gauge': 'Confidence',
+            'coverage_heatmap': 'Coverage',
+            'gap_analysis': 'Gap Analysis'
+        };
+        // Handle dimension-specific charts like coverage_heatmap_competency
+        for (const [prefix, label] of Object.entries(labels)) {
+            if (key.startsWith(prefix)) return label;
+        }
+        return key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
 
     showTyping() {
@@ -507,6 +544,10 @@ Type "start over" to begin again.`);
 
             case 'visualize':
                 this.startInsightsAfterMapping();
+                break;
+
+            case 'save_and_visualize':
+                this.saveAndGenerateCharts();
                 break;
 
             case 'validate_new':
@@ -741,7 +782,7 @@ This may take a moment...`, { progress: { percent: 0, text: 'Starting...' } });
 
             this.state = AgentState.SHOW_RESULTS;
             this.lastAction = 'mapping';
-            this.addAgentMessage(`Done! Here are the results:`, {
+            this.addAgentMessage(`Done! Mapped ${this.recommendations.length} questions with ${Math.round(avgConfidence * 100)}% average confidence.`, {
                 results: {
                     type: 'mapping',
                     total: this.recommendations.length,
@@ -749,8 +790,9 @@ This may take a moment...`, { progress: { percent: 0, text: 'Starting...' } });
                     avgConfidence: avgConfidence
                 },
                 quickActions: [
-                    { label: 'Save & Download', action: 'save', primary: true },
-                    { label: 'Validate Mappings', action: 'validate_new' },
+                    { label: 'Save & Generate Charts', action: 'save_and_visualize', primary: true },
+                    { label: 'Save Only', action: 'save' },
+                    { label: 'Validate First', action: 'validate_new' },
                     { label: 'Start Over', action: 'start_over' }
                 ]
             });
@@ -801,16 +843,22 @@ Analyzing each question...`, { progress: { percent: 0, text: 'Starting...' } });
             this.recommendations = result.recommendations || [];
 
             this.state = AgentState.SHOW_RESULTS;
-            this.addAgentMessage(`Validation complete!`, {
+            const correct = result.summary?.correct || 0;
+            const partial = result.summary?.partially_correct || 0;
+            const incorrect = result.summary?.incorrect || 0;
+            const total = correct + partial + incorrect;
+            const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+            this.addAgentMessage(`Validation complete! ${accuracy}% accuracy (${correct}/${total} correct)`, {
                 results: {
                     type: 'rating',
-                    correct: result.summary?.correct || 0,
-                    partial: result.summary?.partially_correct || 0,
-                    incorrect: result.summary?.incorrect || 0
+                    correct: correct,
+                    partial: partial,
+                    incorrect: incorrect
                 },
                 quickActions: [
-                    { label: 'Save Corrections', action: 'save', primary: true },
-                    { label: 'Generate Charts', action: 'visualize' },
+                    { label: 'Save & Generate Charts', action: 'save_and_visualize', primary: true },
+                    { label: 'Save Corrections Only', action: 'save' },
                     { label: 'Start Over', action: 'start_over' }
                 ]
             });
@@ -962,16 +1010,22 @@ Would you like to generate charts from this data?`, {
             this.recommendations = result.recommendations || [];
 
             this.state = AgentState.SHOW_RESULTS;
-            this.addAgentMessage(`Validation complete!`, {
+            const correct = result.summary?.correct || 0;
+            const partial = result.summary?.partially_correct || 0;
+            const incorrect = result.summary?.incorrect || 0;
+            const total = correct + partial + incorrect;
+            const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+            this.addAgentMessage(`Validation complete! ${accuracy}% accuracy (${correct}/${total} correct)`, {
                 results: {
                     type: 'rating',
-                    correct: result.summary?.correct || 0,
-                    partial: result.summary?.partially_correct || 0,
-                    incorrect: result.summary?.incorrect || 0
+                    correct: correct,
+                    partial: partial,
+                    incorrect: incorrect
                 },
                 quickActions: [
-                    { label: 'Save Corrections', action: 'save', primary: true },
-                    { label: 'Generate Charts', action: 'visualize' },
+                    { label: 'Save & Generate Charts', action: 'save_and_visualize', primary: true },
+                    { label: 'Save Corrections Only', action: 'save' },
                     { label: 'Start Over', action: 'start_over' }
                 ]
             });
@@ -1069,6 +1123,64 @@ Would you like to generate charts from this data?`, {
         } else {
             // Fall back to regular insights (for already-mapped files)
             this.startInsights();
+        }
+    }
+
+    async saveAndGenerateCharts() {
+        // Combined operation: Save mappings and generate charts in one flow
+        this.state = AgentState.PROCESSING;
+        this.addAgentMessage(`Saving mappings and generating charts...`, { progress: { percent: 10, text: 'Saving...' } });
+
+        try {
+            const name = `Mapping_${new Date().toISOString().slice(0, 10)}`;
+            this.selectedIndices = this.recommendations.map((_, i) => i);
+
+            // Step 1: Save mappings
+            const saveResult = await this.api.saveAndDownloadMappings(
+                this.uploadedQuestionFile,
+                this.recommendations,
+                this.selectedIndices,
+                this.selectedDimensions,
+                name
+            );
+
+            const mappedFileName = saveResult.saved_file || saveResult.output_file;
+            this.savedMappedFile = mappedFileName;
+
+            // Trigger download
+            this.api.downloadFile(saveResult.download_url);
+
+            this.updateLastMessage(`Saved! Now generating charts...`, { progress: { percent: 50, text: 'Creating visualizations...' } });
+
+            // Step 2: Generate insights
+            const result = await this.api.generateInsights(
+                mappedFileName,
+                this.uploadedReferenceFile,
+                this.selectedDimensions
+            );
+
+            this.insights = result;
+            this.state = AgentState.COMPLETE;
+
+            this.addAgentMessage(`All done! Your Excel file is downloading and here are your insights:`, {
+                charts: result.charts,
+                quickActions: [
+                    { label: 'Validate Mappings', action: 'validate_new' },
+                    { label: 'Start Over', action: 'start_over' }
+                ]
+            });
+
+            this.onComplete({ type: 'save_and_insights', data: { save: saveResult, insights: result } });
+
+        } catch (error) {
+            this.addAgentMessage(`Error: ${error.message}`, {
+                quickActions: [
+                    { label: 'Try Again', action: 'save_and_visualize' },
+                    { label: 'Save Only', action: 'save' },
+                    { label: 'Start Over', action: 'start_over' }
+                ]
+            });
+            this.state = AgentState.SHOW_RESULTS;
         }
     }
 

@@ -321,6 +321,35 @@
     margin-top: 12px;
 }
 
+.inpods-chart-loading {
+    padding: 30px 20px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 12px;
+    background: #f1f5f9;
+}
+
+.inpods-chart-label {
+    padding: 6px 10px;
+    background: #f8fafc;
+    font-size: 11px;
+    color: #64748b;
+    text-align: center;
+    border-top: 1px solid #e2e8f0;
+}
+
+.inpods-charts-hint {
+    font-size: 11px;
+    color: #94a3b8;
+    text-align: center;
+    margin-top: 8px;
+}
+
+.inpods-chart-thumb:hover .inpods-chart-label {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
 /* =========================================================================
    QUICK ACTIONS (Buttons)
    ========================================================================= */
