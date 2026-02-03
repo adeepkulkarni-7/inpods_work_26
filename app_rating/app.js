@@ -268,6 +268,13 @@ function selectAllIncorrect() {
     updateSelection();
 }
 
+function selectAllPartial() {
+    document.querySelectorAll('#ratingsBody input[type="checkbox"]').forEach((cb, i) => {
+        cb.checked = recommendations[i].rating === 'partially_correct';
+    });
+    updateSelection();
+}
+
 function selectNone() {
     document.querySelectorAll('#ratingsBody input[type="checkbox"]').forEach(cb => cb.checked = false);
     document.getElementById('selectAllCheckbox').checked = false;

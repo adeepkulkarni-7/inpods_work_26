@@ -1142,14 +1142,20 @@ Respond in JSON format:
             "question_id": "...",
             "rating": "correct" | "partially_correct" | "incorrect",
             "agreement_score": 0.XX,
-            "rating_justification": "Brief reason...",
+            "rating_justification": "Explain why this rating was given (REQUIRED for all)",
             "suggested_id": "...",
             "suggestion_confidence": 0.XX,
-            "suggestion_justification": "Brief reason if different..."
+            "suggestion_justification": "Explain why this alternative is better (REQUIRED if suggesting change)"
         }},
         ...
     ]
 }}
+
+IMPORTANT RULES:
+- ONLY suggest IDs from the AVAILABLE {dimension_name.upper()}S list above
+- Never suggest IDs from other dimensions (e.g., if rating Competencies, only suggest C1-C6, not O1 or S1)
+- rating_justification is REQUIRED for every question
+- suggestion_justification is REQUIRED whenever suggested_id differs from current mapping
 """
 
         return prompt
