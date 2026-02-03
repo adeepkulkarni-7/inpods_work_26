@@ -112,6 +112,33 @@ class InpodsAgent {
         this.messagesEl = document.getElementById('agentMessages');
         this.inputEl = document.getElementById('agentInput');
         this.sendBtn = document.getElementById('agentSendBtn');
+        this.statusEl = document.querySelector('.inpods-agent-status');
+    }
+
+    updateStatus(status) {
+        if (!this.statusEl) return;
+        const statusConfig = {
+            'ready': { color: '#4ade80', title: 'Ready', pulse: true },
+            'processing': { color: '#fbbf24', title: 'Processing...', pulse: true },
+            'error': { color: '#f87171', title: 'Error', pulse: false },
+            'complete': { color: '#60a5fa', title: 'Complete', pulse: false }
+        };
+        const config = statusConfig[status] || statusConfig['ready'];
+        this.statusEl.style.backgroundColor = config.color;
+        this.statusEl.title = config.title;
+        this.statusEl.style.animation = config.pulse ? 'pulse 2s infinite' : 'none';
+    }
+
+    setState(newState) {
+        this.state = newState;
+        // Update status indicator based on state
+        if (newState === AgentState.PROCESSING || newState === AgentState.ANALYZING) {
+            this.updateStatus('processing');
+        } else if (newState === AgentState.COMPLETE) {
+            this.updateStatus('complete');
+        } else {
+            this.updateStatus('ready');
+        }
     }
 
     bindEvents() {
@@ -496,15 +523,33 @@ I'll help you:
 
         // Help
         if (lower === 'help' || lower === '?') {
-            this.addAgentMessage(`Here's what I can do:
+            this.addAgentMessage(`<strong>Available Commands:</strong>
 
-• <strong>Map questions</strong> - Upload unmapped questions + reference file
-• <strong>Validate mappings</strong> - Check accuracy of existing mappings
-• <strong>Generate insights</strong> - Create visualizations from mapped data
+• Type <strong>"start over"</strong> or <strong>"reset"</strong> to begin fresh
+• Type <strong>"help"</strong> to see this message
 
-Current state: <strong>${this.state}</strong>
+<strong>Workflow:</strong>
+1. Upload question file (CSV/Excel)
+2. Upload reference/curriculum file
+3. Choose: Map, Validate, or Generate Insights
+4. Save results and view charts
 
-Type "start over" to begin again.`);
+<strong>Supported Dimensions:</strong>
+• Competency (C1-C6)
+• Objective (O1-On)
+• Skill (S1-Sn)
+• Blooms Level (KL1-KL6)
+• NMC Competency
+• Complexity (Easy/Medium/Hard)
+
+<strong>Tips:</strong>
+• Drag & drop files directly onto upload zone
+• Click charts to view full-size
+• Use "Save & Generate Charts" for one-click results`, {
+                quickActions: [
+                    { label: 'Start Over', action: 'start_over', primary: true }
+                ]
+            });
             return;
         }
 
@@ -702,7 +747,7 @@ Type "start over" to begin again.`);
     // =========================================================================
 
     async analyzeFiles() {
-        this.state = AgentState.ANALYZING;
+        this.setState(AgentState.ANALYZING);
         this.showTyping();
 
         try {
@@ -775,7 +820,7 @@ Please check your files and try again.`, {
     }
 
     async startMapping() {
-        this.state = AgentState.PROCESSING;
+        this.setState(AgentState.PROCESSING);
         const dimLabels = this.selectedDimensions.map(d => DIMENSION_INFO[d]?.label).join(', ');
 
         this.addAgentMessage(`Mapping your questions to: <strong>${dimLabels}</strong>
@@ -806,7 +851,7 @@ This may take a moment...`, { progress: { percent: 0, text: 'Starting...' } });
             const highConfidence = this.recommendations.filter(r => r.confidence >= 0.85).length;
             const avgConfidence = this.recommendations.reduce((sum, r) => sum + (r.confidence || 0), 0) / this.recommendations.length;
 
-            this.state = AgentState.SHOW_RESULTS;
+            this.setState(AgentState.SHOW_RESULTS);
             this.lastAction = 'mapping';
             this.addAgentMessage(`Done! Mapped ${this.recommendations.length} questions with ${Math.round(avgConfidence * 100)}% average confidence.`, {
                 results: {
@@ -832,7 +877,7 @@ This may take a moment...`, { progress: { percent: 0, text: 'Starting...' } });
     }
 
     async startRating() {
-        this.state = AgentState.PROCESSING;
+        this.setState(AgentState.PROCESSING);
 
         if (!this.selectedDimensions.length) {
             this.selectedDimensions = this.detectedDimensions.slice(0, 2);
@@ -868,7 +913,7 @@ Analyzing each question...`, { progress: { percent: 0, text: 'Starting...' } });
             this.ratings = result;
             this.recommendations = result.recommendations || [];
 
-            this.state = AgentState.SHOW_RESULTS;
+            this.setState(AgentState.SHOW_RESULTS);
             const correct = result.summary?.correct || 0;
             const partial = result.summary?.partially_correct || 0;
             const incorrect = result.summary?.incorrect || 0;
@@ -898,7 +943,7 @@ Analyzing each question...`, { progress: { percent: 0, text: 'Starting...' } });
     }
 
     async startInsights() {
-        this.state = AgentState.PROCESSING;
+        this.setState(AgentState.PROCESSING);
         this.addAgentMessage(`Generating visualizations...`, { progress: { percent: 30, text: 'Creating charts...' } });
 
         try {
@@ -917,7 +962,7 @@ Analyzing each question...`, { progress: { percent: 0, text: 'Starting...' } });
 
             this.insights = result;
 
-            this.state = AgentState.COMPLETE;
+            this.setState(AgentState.COMPLETE);
             this.addAgentMessage(`Charts generated!`, {
                 charts: result.charts,
                 quickActions: [
@@ -931,7 +976,7 @@ Analyzing each question...`, { progress: { percent: 0, text: 'Starting...' } });
             this.addAgentMessage(`Error generating charts: ${error.message}`, {
                 quickActions: [{ label: 'Try Again', action: 'visualize' }, { label: 'Start Over', action: 'start_over' }]
             });
-            this.state = AgentState.SHOW_RESULTS;
+            this.setState(AgentState.SHOW_RESULTS);
         }
     }
 
@@ -970,7 +1015,7 @@ Analyzing each question...`, { progress: { percent: 0, text: 'Starting...' } });
                 this.savedMappedFile = result.saved_file;
             }
 
-            this.state = AgentState.COMPLETE;
+            this.setState(AgentState.COMPLETE);
             this.addAgentMessage(`Saved! Your Excel file is downloading.
 
 Would you like to generate charts from this data?`, {
@@ -995,7 +1040,7 @@ Would you like to generate charts from this data?`, {
 
     async validateNewMappings() {
         // First, save the mappings to create a mapped file
-        this.state = AgentState.PROCESSING;
+        this.setState(AgentState.PROCESSING);
         this.addAgentMessage(`Preparing to validate...`, { progress: { percent: 10, text: 'Saving mappings...' } });
 
         try {
@@ -1035,7 +1080,7 @@ Would you like to generate charts from this data?`, {
             this.ratings = result;
             this.recommendations = result.recommendations || [];
 
-            this.state = AgentState.SHOW_RESULTS;
+            this.setState(AgentState.SHOW_RESULTS);
             const correct = result.summary?.correct || 0;
             const partial = result.summary?.partially_correct || 0;
             const incorrect = result.summary?.incorrect || 0;
@@ -1060,14 +1105,14 @@ Would you like to generate charts from this data?`, {
             this.addAgentMessage(`Error during validation: ${error.message}`, {
                 quickActions: [{ label: 'Try Again', action: 'validate_new' }, { label: 'Start Over', action: 'start_over' }]
             });
-            this.state = AgentState.SHOW_RESULTS;
+            this.setState(AgentState.SHOW_RESULTS);
         }
     }
 
     async startInsightsAfterMapping() {
         // Check if we already have a saved mapped file from a previous save operation
         if (this.savedMappedFile) {
-            this.state = AgentState.PROCESSING;
+            this.setState(AgentState.PROCESSING);
             this.addAgentMessage(`Generating charts...`, { progress: { percent: 30, text: 'Creating visualizations...' } });
 
             try {
@@ -1079,7 +1124,7 @@ Would you like to generate charts from this data?`, {
 
                 this.insights = result;
 
-                this.state = AgentState.COMPLETE;
+                this.setState(AgentState.COMPLETE);
                 this.addAgentMessage(`Charts generated!`, {
                     charts: result.charts,
                     quickActions: [
@@ -1093,12 +1138,12 @@ Would you like to generate charts from this data?`, {
                 this.addAgentMessage(`Error generating charts: ${error.message}`, {
                     quickActions: [{ label: 'Try Again', action: 'visualize' }, { label: 'Start Over', action: 'start_over' }]
                 });
-                this.state = AgentState.SHOW_RESULTS;
+                this.setState(AgentState.SHOW_RESULTS);
             }
         }
         // If we have recommendations from mapping but haven't saved yet, save first
         else if (this.recommendations.length > 0 && !this.ratings) {
-            this.state = AgentState.PROCESSING;
+            this.setState(AgentState.PROCESSING);
             this.addAgentMessage(`Preparing visualizations...`, { progress: { percent: 10, text: 'Saving mappings first...' } });
 
             try {
@@ -1130,7 +1175,7 @@ Would you like to generate charts from this data?`, {
                 console.log('Charts:', result.charts);
                 this.insights = result;
 
-                this.state = AgentState.COMPLETE;
+                this.setState(AgentState.COMPLETE);
                 this.addAgentMessage(`Charts generated!`, {
                     charts: result.charts,
                     quickActions: [
@@ -1144,7 +1189,7 @@ Would you like to generate charts from this data?`, {
                 this.addAgentMessage(`Error generating charts: ${error.message}`, {
                     quickActions: [{ label: 'Try Again', action: 'visualize' }, { label: 'Start Over', action: 'start_over' }]
                 });
-                this.state = AgentState.SHOW_RESULTS;
+                this.setState(AgentState.SHOW_RESULTS);
             }
         } else {
             // Fall back to regular insights (for already-mapped files)
@@ -1154,7 +1199,7 @@ Would you like to generate charts from this data?`, {
 
     async saveAndGenerateCharts() {
         // Combined operation: Save mappings and generate charts in one flow
-        this.state = AgentState.PROCESSING;
+        this.setState(AgentState.PROCESSING);
         this.addAgentMessage(`Saving mappings and generating charts...`, { progress: { percent: 10, text: 'Saving...' } });
 
         try {
@@ -1186,7 +1231,7 @@ Would you like to generate charts from this data?`, {
             );
 
             this.insights = result;
-            this.state = AgentState.COMPLETE;
+            this.setState(AgentState.COMPLETE);
 
             this.addAgentMessage(`All done! Your Excel file is downloading and here are your insights:`, {
                 charts: result.charts,
@@ -1206,7 +1251,7 @@ Would you like to generate charts from this data?`, {
                     { label: 'Start Over', action: 'start_over' }
                 ]
             });
-            this.state = AgentState.SHOW_RESULTS;
+            this.setState(AgentState.SHOW_RESULTS);
         }
     }
 
